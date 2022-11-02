@@ -1,2 +1,2 @@
 # aptospad-move
-Move smartcontract for AptosPad
+Move Smart Contract for AptosPad
