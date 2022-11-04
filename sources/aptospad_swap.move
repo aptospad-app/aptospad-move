@@ -58,22 +58,16 @@ module aptospad::aptospad_swap {
 
     /// swap AptosCoin to AptosPad
     /// expect min amount account!
-    public entry fun swap(
-        account: &signer,
-        aptosAmount: u64,
-        aptosPadMinExpect: u64,
+    public entry fun swap(account: &signer, aptosAmount: u64, aptosPadMinExpect: u64,
     ) acquires AptosPadSwapConfig, AptosPadCapsStore {
         let (isEnabled, r1, _, _, _, _) = getConfig();
         assert!(isEnabled, ERR_NOT_ENABLED);
         let aptosPadAmt = r1* aptosAmount;
-
         assert!(aptosAmount >= aptosPadMinExpect, ERR_NOT_ENABLED);
 
-        //transfer aptos
         let aptosCoin = coin::withdraw<AptosCoin>(account, aptosAmount);
         coin::deposit(getResourceAddress(), aptosCoin);
 
-        //transfer aptos
         let resourceSigner = &borrow_global<AptosPadCapsStore>(@aptospad_admin).signer_cap;
         let aptosPadCoin = coin::withdraw<AptosPadCoin>(&account::create_signer_with_capability(resourceSigner), aptosPadAmt);
         coin::deposit(signer::address_of(account), aptosPadCoin);
