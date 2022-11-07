@@ -1,4 +1,4 @@
-module aptospad::aptospad_swap {
+module aptospad::swap {
     use std::signer;
     use aptos_framework::account::{Self, SignerCapability};
     use aptos_framework::coin::{Self, MintCapability, BurnCapability, FreezeCapability};
