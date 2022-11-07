@@ -5,9 +5,16 @@ module aptospad::config {
     use aptos_framework::aptos_coin::{AptosCoin};
     use aptospad::aptospad_coin::AptosPadCoin;
     use std::string;
+    use aptos_framework::timestamp;
+    use aptos_framework::timestamp::CurrentTimeMicroseconds;
 
     const ERR_NOT_ENABLED: u64 = 404;
     const ERR_PERMISSIONS: u64 = 403;
+
+    const STATE_WL: u8 = 1;
+    const STATE_BUY: u8 = 2;
+    const STATE_DISTRIBUTE: u8 = 3;
+    const STATE_DONE: u8 = 4;
 
     /// store perm
     struct CapsStore has key {
@@ -22,8 +29,11 @@ module aptospad::config {
         emgergency: bool,
         softCap: u64,
         hardCap: u64,
-        refund: u64,
+        refund: bool,
         aptToApttRate: u64,
+        start: u64,
+        end: u64,
+        state: u8
     }
 
     /// mission:
@@ -57,8 +67,11 @@ module aptospad::config {
             emgergency: false,
             softCap: 500000,
             hardCap: 1000000,
-            refund: 100000,
+            refund: false,
             aptToApttRate: 1000,
+            start: timestamp::now_microseconds(),
+            end: timestamp::now_microseconds(),
+            state: STATE_WL
         };
 
         move_to(&resourceSigner, config);
@@ -71,7 +84,7 @@ module aptospad::config {
         config.emgergency = emergency;
     }
 
-    public fun setApttSwapConfig(aptospadAdmin: &signer,  softCap: u64, hardCap: u64, refund: u64, aptToApttRate: u64) acquires CapsStore, ApttSwapConfig {
+    public fun setApttSwapConfig(aptospadAdmin: &signer,  softCap: u64, hardCap: u64, refund: bool, aptToApttRate: u64) acquires CapsStore, ApttSwapConfig {
         assert!(signer::address_of(aptospadAdmin) == @aptospad_admin, ERR_PERMISSIONS);
         let signerCap = &borrow_global<CapsStore>(@aptospad_admin).signer_cap;
         let config = borrow_global_mut<ApttSwapConfig>(account::get_signer_capability_address(signerCap));
@@ -87,10 +100,16 @@ module aptospad::config {
         config.emgergency
     }
 
-    public fun getSwapConfig(): (u64, u64, u64, u64) acquires CapsStore, ApttSwapConfig {
+    public fun getSwapConfig(): (u64, u64, bool, u64, u64) acquires CapsStore, ApttSwapConfig {
         let signerCap = &borrow_global<CapsStore>(@aptospad_admin).signer_cap;
         let config = borrow_global<ApttSwapConfig>(account::get_signer_capability_address(signerCap));
-        (config.hardCap, config.softCap, config.refund, config.aptToApttRate)
+        (config.hardCap, config.softCap, config.refund, config.aptToApttRate, config.end)
+    }
+
+    public fun getSwapState(): u8 acquires CapsStore, ApttSwapConfig {
+        let signerCap = &borrow_global<CapsStore>(@aptospad_admin).signer_cap;
+        let config = borrow_global<ApttSwapConfig>(account::get_signer_capability_address(signerCap));
+        config.state
     }
 
     public fun getResourceAddress(): address acquires CapsStore {

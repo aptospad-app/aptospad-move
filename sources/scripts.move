@@ -15,13 +15,13 @@ module aptospad::scripts {
     }
 
     /// update swap config
-    public entry fun setApttSwapConfig(aptospadAdmin: &signer,  softCap: u64, hardCap: u64, refund: u64, aptToApttRate: u64){
+    public entry fun setApttSwapConfig(aptospadAdmin: &signer,  softCap: u64, hardCap: u64, refund: bool, aptToApttRate: u64){
         config::setApttSwapConfig(aptospadAdmin, softCap, hardCap, refund, aptToApttRate);
     }
 
     /// buy APTT
     public entry fun buyAptosPad<CoinType>(account: &signer, amount: u64){
-        swap::swap(account, amount);
+        swap::buyAptt(account, amount);
     }
 
     /// add whitelist
