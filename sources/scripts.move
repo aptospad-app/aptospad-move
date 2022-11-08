@@ -1,6 +1,5 @@
 /// The current module contains pre-deplopyed scripts for AptosPad.
 module aptospad::scripts {
-    use std::signer;
     use aptospad::config;
     use aptospad::aptospad_ido;
 

@@ -138,6 +138,7 @@ module aptospad::aptospad_ido {
     /// - if hardcap satisfied:
     ///     + fill cap first
     ///     + then fill remainning
+    ///@todo prevent overflow
     fun distribute() acquires LaunchPadRegistry {
         let hardCapApt = config::getSwapConfigHardCap();
         let toPadRate = config::getSwapConfigAptToApttRate();
@@ -149,7 +150,7 @@ module aptospad::aptospad_ido {
             let iterator = &mut iterable_table::head_key(investors);
             while(option::is_some(iterator)){
                 let (investor, _prev, next) = iterable_table::borrow_iter_mut(investors, option::extract(iterator));
-                investor.distributed =  toPadRate * investor.bid; ///@todo prevent overflow
+                investor.distributed =  toPadRate * investor.bid;
 
                 config::mintAtppTo(investor.investor, investor.distributed);
                 iterator = &mut next;
@@ -178,7 +179,6 @@ module aptospad::aptospad_ido {
                 };
             };
 
-            ///round 2: pick over-cap
             if(totalAllocatedApt < hardCapApt){
                 let investors = &mut borrow_global_mut<LaunchPadRegistry>(config::getResourceAddress()).investors;
                 let iterator = &mut iterable_table::head_key(investors);
