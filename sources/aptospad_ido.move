@@ -1,4 +1,4 @@
-module aptospad::aptospad_swap {
+module aptospad::aptospad_ido {
     use std::signer;
     use aptos_framework::coin;
     use aptos_framework::aptos_coin::{AptosCoin};

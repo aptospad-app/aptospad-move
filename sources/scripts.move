@@ -2,7 +2,7 @@
 module aptospad::scripts {
     use std::signer;
     use aptospad::config;
-    use aptospad::aptospad_swap;
+    use aptospad::aptospad_ido;
 
     ///initialize with admin role
     public entry fun initializeAptosPad(aptospadAdmin: &signer){
@@ -21,31 +21,31 @@ module aptospad::scripts {
 
     /// reset seasion
     public entry fun resetSeason(account: &signer){
-        aptospad_swap::resetSeason(account);
+        aptospad_ido::resetSeason(account);
     }
 
     /// whitelist season
     public fun whiteListSeason(account: &signer){
-        aptospad_swap::whiteListSeason(account);
+        aptospad_ido::whiteListSeason(account);
     }
 
     /// launchpad season
     public fun launchPadSeason(account: &signer){
-        aptospad_swap::launchPadSeason(account);
+        aptospad_ido::launchPadSeason(account);
     }
 
     /// to distribute seasion
     public fun distributeSeason(account: &signer){
-        aptospad_swap::distributeSeason(account);
+        aptospad_ido::distributeSeason(account);
     }
 
     /// bid APTT
     public entry fun bidAptosPad(account: &signer, amount: u64){
-        aptospad_swap::bidAptosPad(account, amount);
+        aptospad_ido::bidAptosPad(account, amount);
     }
 
     /// add whitelist
     public entry fun addWhiteList(aptospadAdmin: &signer, account: address, cap: u64){
-        aptospad_swap::addWhiteList(aptospadAdmin, account, cap);
+        aptospad_ido::addWhiteList(aptospadAdmin, account, cap);
     }
 }
