@@ -5,10 +5,14 @@ module aptospad::config {
     use aptos_framework::aptos_coin::{AptosCoin};
     use aptospad::aptospad_coin::AptosPadCoin;
     use std::string;
-    use aptos_framework::timestamp;
-    use aptos_framework::timestamp::CurrentTimeMicroseconds;
 
-    const ERR_NOT_ENABLED: u64 = 404;
+    const ERR_HARDCAP_REACHED: u64 = 410;
+    const ERR_SEASON_STATE: u64 = 409;
+    const ERR_SEASON_ACTIVE: u64 = 408;
+    const ERR_SEASON_NOT_RESET: u64 = 407;
+    const ERR_SEASON_ENDED: u64 = 406;
+    const ERR_EMERGENCY: u64 = 405;
+
     const ERR_PERMISSIONS: u64 = 403;
 
     const STATE_INIT: u8 = 1;
@@ -32,8 +36,6 @@ module aptospad::config {
         hardCap: u64,
         refund: bool,
         aptToApttRate: u64,
-        start: u64,
-        end: u64,
         state: u8
     }
 
@@ -70,9 +72,7 @@ module aptospad::config {
             hardCap: 1000000,
             refund: false,
             aptToApttRate: 1000,
-            start: timestamp::now_microseconds(),
-            end: timestamp::now_microseconds(),
-            state: STATE_WL
+            state: STATE_INIT
         };
 
         move_to(&resourceSigner, config);
@@ -87,6 +87,8 @@ module aptospad::config {
 
     public fun setApttSwapConfig(aptospadAdmin: &signer,  softCap: u64, hardCap: u64, refund: bool, aptToApttRate: u64) acquires CapsStore, ApttSwapConfig {
         assert!(signer::address_of(aptospadAdmin) == @aptospad_admin, ERR_PERMISSIONS);
+        assert!(getSwapState() == STATE_INIT, ERR_SEASON_STATE);
+
         let signerCap = &borrow_global<CapsStore>(@aptospad_admin).signer_cap;
         let config = borrow_global_mut<ApttSwapConfig>(account::get_signer_capability_address(signerCap));
         config.softCap = softCap;
@@ -101,11 +103,32 @@ module aptospad::config {
         config.emgergency
     }
 
-    public fun getSwapConfig(): (u64, u64, bool, u64, u64) acquires CapsStore, ApttSwapConfig {
+    public fun getSwapConfig(): (u64, u64, bool, u64) acquires CapsStore, ApttSwapConfig {
         let signerCap = &borrow_global<CapsStore>(@aptospad_admin).signer_cap;
         let config = borrow_global<ApttSwapConfig>(account::get_signer_capability_address(signerCap));
-        (config.hardCap, config.softCap, config.refund, config.aptToApttRate, config.end)
+        (config.hardCap, config.softCap, config.refund, config.aptToApttRate)
     }
+
+    public fun getSwapConfigHardCap(): u64 acquires CapsStore, ApttSwapConfig {
+        let (hardcap, _, _, _) = getSwapConfig();
+        hardcap
+    }
+
+    public fun getSwapConfigSoftCap(): u64 acquires CapsStore, ApttSwapConfig {
+        let (_, softcap, _, _) = getSwapConfig();
+        softcap
+    }
+
+    public fun getSwapConfigAptToApttRate(): u64 acquires CapsStore, ApttSwapConfig {
+        let ( _, _, _, rate) = getSwapConfig();
+        rate
+    }
+
+    public fun getSwapConfigEnableRefund(): bool acquires CapsStore, ApttSwapConfig {
+        let (_, _, enableRefund, _) = getSwapConfig();
+        enableRefund
+    }
+
 
     public fun getSwapState(): u8 acquires CapsStore, ApttSwapConfig {
         let signerCap = &borrow_global<CapsStore>(@aptospad_admin).signer_cap;
@@ -114,7 +137,6 @@ module aptospad::config {
     }
 
     public fun setSwapState(state: u8) acquires CapsStore, ApttSwapConfig {
-        //@todo validate state ?
         let signerCap = &borrow_global<CapsStore>(@aptospad_admin).signer_cap;
         let config = borrow_global_mut<ApttSwapConfig>(account::get_signer_capability_address(signerCap));
         config.state = state;
@@ -134,10 +156,9 @@ module aptospad::config {
        borrow_global<CapsStore>(@aptospad_admin).mint_cap
     }
 
-    public fun mintAtppTo(to: &signer, amount: u64)acquires CapsStore {
+    public fun mintAtppTo(investor: address, amount: u64) acquires CapsStore {
         let capsStore = borrow_global<CapsStore>(@aptospad_admin);
         let coin = coin::mint(amount, &capsStore.mint_cap);
-        coin::register<AptosPadCoin>(to);
-        coin::deposit(signer::address_of(to), coin);
+        coin::deposit(investor, coin);
     }
 }
