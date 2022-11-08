@@ -31,7 +31,7 @@ module aptospad::aptospad_ido {
     ///distributed: in token
     struct TokenDistribute has drop, store, copy {
         cap: u64,
-        wanna: u64,
+        bid: u64,
         distributed: u64,
         investor: address
     }
@@ -98,10 +98,10 @@ module aptospad::aptospad_ido {
         let wl = iterable_table::borrow_mut_with_default( &mut distribute.investors, signer::address_of(user), TokenDistribute {
             cap: DEFAULT_CAP,
             distributed: 0u64,
-            wanna: 0u64,
+            bid: 0u64,
             investor: signer::address_of(user)
         });
-        wl.wanna = aptosAmount;
+        wl.bid = aptosAmount;
         distribute.totalBid = distribute.totalBid + aptosAmount;
     }
 
@@ -113,7 +113,7 @@ module aptospad::aptospad_ido {
         let wl = iterable_table::borrow_mut_with_default(details, account, TokenDistribute {
             cap: 0u64,
             distributed: 0u64,
-            wanna: 0u64,
+            bid: 0u64,
             investor: account
         });
         wl.cap = cap;
@@ -149,7 +149,7 @@ module aptospad::aptospad_ido {
             let iterator = &mut iterable_table::head_key(investors);
             while(option::is_some(iterator)){
                 let (investor, _prev, next) = iterable_table::borrow_iter_mut(investors, option::extract(iterator));
-                investor.distributed =  toPadRate * investor.wanna; ///@todo prevent overflow
+                investor.distributed =  toPadRate * investor.bid; ///@todo prevent overflow
 
                 config::mintAtppTo(investor.investor, investor.distributed);
                 iterator = &mut next;
@@ -163,7 +163,7 @@ module aptospad::aptospad_ido {
                 while (option::is_some(iterator)) {
                     let (investor, _prev, next) = iterable_table::borrow_iter_mut(investors, option::extract(iterator));
                     let capApt = investor.cap;
-                    let bidApt = investor.wanna;
+                    let bidApt = investor.bid;
                     let allocatedApt = math64::min(capApt, bidApt);
                     totalAllocatedApt = totalAllocatedApt + allocatedApt;
                     investor.distributed = allocatedApt * toPadRate;
@@ -186,7 +186,7 @@ module aptospad::aptospad_ido {
                 while(option::is_some(iterator)){
                     let (investor, _prev, next) = iterable_table::borrow_iter_mut(investors, option::extract(iterator));
                     let capApt = investor.cap;
-                    let bidApt = investor.wanna;
+                    let bidApt = investor.bid;
                     let moreAllocatedApt = math64::max(bidApt - capApt, 0);
                     if(moreAllocatedApt > 0){
                         let morePad = moreAllocatedApt * toPadRate;
@@ -216,7 +216,7 @@ module aptospad::aptospad_ido {
         let iterator = &mut iterable_table::head_key(investors);
         while(option::is_some(iterator)){
             let (investor, _prev, next) = iterable_table::borrow_iter(investors, option::extract(iterator));
-            coin::transfer<AptosCoin>(&config::getResourceSigner(), investor.investor, investor.wanna);
+            coin::transfer<AptosCoin>(&config::getResourceSigner(), investor.investor, investor.bid);
             iterator = &mut next;
         }
     }
