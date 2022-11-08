@@ -31,6 +31,6 @@ module aptospad::scripts {
 
     /// distribute ATPP
     public entry fun distributeAtpp(aptospadAdmin: &signer){
-        swap::distributeAtpp(aptospadAdmin);
+        swap::releaseAtpp(aptospadAdmin);
     }
 }

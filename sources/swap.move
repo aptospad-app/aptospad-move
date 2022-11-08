@@ -7,15 +7,20 @@ module aptospad::swap {
     use aptospad::iterable_table::IterableTable;
     use aptospad::iterable_table;
 
+    const ERR_SEASON_ACTIVE: u64 = 408;
+    const ERR_SEASON_NOT_RESET: u64 = 407;
+    const ERR_SEASON_ENDED: u64 = 406;
     const ERR_EMERGENCY: u64 = 405;
     const ERR_PERMISSIONS: u64 = 403;
     const ERR_NOT_RUNNING: u64 = 404;
+
     const DEFAULT_CAP: u64 = 1000;
 
-    const STATE_WL: u8 = 1;
-    const STATE_BUY: u8 = 2;
-    const STATE_DISTRIBUTE: u8 = 3;
-    const STATE_DONE: u8 = 4;
+    const STATE_INIT: u8 = 1;
+    const STATE_WL: u8 = 2;
+    const STATE_BUY: u8 = 3;
+    const STATE_RELEASE: u8 = 4;
+    const STATE_ENDED: u8 = 5;
 
     struct DistributeState has drop, store, copy {
         cap: u64, /// in token
@@ -33,9 +38,25 @@ module aptospad::swap {
         move_to(&config::getResourceSigner(), CoinDistribution {
             details: iterable_table::new<address, DistributeState>(),
             totalBuy: 0u64
-        })
+        });
 
+        config::setSwapState(STATE_INIT);
     }
+
+    /// start buy season
+    public fun startSeason(account: &signer){
+        assert!(signer::address_of(account) == @aptospad_admin, ERR_PERMISSIONS);
+        assert!(config::getSwapState() == STATE_INIT, ERR_SEASON_NOT_RESET);
+        config::setSwapState(STATE_WL);
+    }
+
+    /// start season: make sure prev season if any, already released!
+    public fun resetSeason(account: &signer){
+        assert!(signer::address_of(account) == @aptospad_admin, ERR_PERMISSIONS);
+        assert!(config::getSwapState() == STATE_ENDED, ERR_SEASON_ENDED);
+        config::setSwapState(STATE_INIT);
+    }
+
     public fun buyAptt(user: &signer, aptosAmount: u64)  acquires CoinDistribution {
         assert!(!config::isEmergency(), ERR_EMERGENCY);
         assert!(config::getSwapState() == STATE_BUY, ERR_NOT_RUNNING);
@@ -70,7 +91,7 @@ module aptospad::swap {
         wl.cap = cap;
     }
 
-    public fun distributeAtpp(aptospadAdmin: &signer)acquires CoinDistribution {
+    public fun releaseAtpp(aptospadAdmin: &signer) acquires CoinDistribution {
         assert!(signer::address_of(aptospadAdmin) == @aptospad_admin, ERR_PERMISSIONS);
         assert!(!config::isEmergency(), ERR_EMERGENCY);
 
@@ -79,13 +100,8 @@ module aptospad::swap {
         let totalBuy = distribute.totalBuy;
 
         /// compare total vs soft/hard cap!!!
-        if(refund){
-            if(totalBuy < softCap){
-                refund();
-            }
-            else
-                distributeAtppInt()
-        }
+        if(refund && (totalBuy < softCap))
+            refund()
         else
             distributeAtppInt()
     }
@@ -95,7 +111,8 @@ module aptospad::swap {
 
     }
 
-    /// Refund
+    /// Refund settlled asset
+    /// be carefull of fee
     fun refund(){
 
     }

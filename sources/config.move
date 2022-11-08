@@ -11,10 +11,11 @@ module aptospad::config {
     const ERR_NOT_ENABLED: u64 = 404;
     const ERR_PERMISSIONS: u64 = 403;
 
-    const STATE_WL: u8 = 1;
-    const STATE_BUY: u8 = 2;
-    const STATE_DISTRIBUTE: u8 = 3;
-    const STATE_DONE: u8 = 4;
+    const STATE_INIT: u8 = 1;
+    const STATE_WL: u8 = 2;
+    const STATE_BUY: u8 = 3;
+    const STATE_RELEASE: u8 = 4;
+    const STATE_ENDED: u8 = 5;
 
     /// store perm
     struct CapsStore has key {
@@ -110,6 +111,13 @@ module aptospad::config {
         let signerCap = &borrow_global<CapsStore>(@aptospad_admin).signer_cap;
         let config = borrow_global<ApttSwapConfig>(account::get_signer_capability_address(signerCap));
         config.state
+    }
+
+    public fun setSwapState(state: u8) acquires CapsStore, ApttSwapConfig {
+        //@todo validate state ?
+        let signerCap = &borrow_global<CapsStore>(@aptospad_admin).signer_cap;
+        let config = borrow_global_mut<ApttSwapConfig>(account::get_signer_capability_address(signerCap));
+        config.state = state;
     }
 
     public fun getResourceAddress(): address acquires CapsStore {
