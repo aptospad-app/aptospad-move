@@ -1,11 +1,13 @@
 module aptospad::config {
     use std::signer;
     use aptos_framework::account::{Self, SignerCapability};
-    use aptos_framework::coin::{Self, MintCapability, BurnCapability, FreezeCapability};
-    use aptos_framework::aptos_coin::{AptosCoin};
+    use aptos_framework::coin;
+//    use aptos_framework::aptos_coin::{AptosCoin};
     use aptospad::aptospad_coin::AptosPadCoin;
     use std::string;
+    use aptos_framework::aptos_coin::AptosCoin;
 
+    const ERR_INVALID_SUPPLY: u64 = 411;
     const ERR_HARDCAP_REACHED: u64 = 410;
     const ERR_SEASON_STATE: u64 = 409;
     const ERR_SEASON_ACTIVE: u64 = 408;
@@ -21,15 +23,12 @@ module aptospad::config {
     const STATE_RELEASE: u8 = 4;
     const STATE_ENDED: u8 = 5;
 
-    /// store perm
+    /// Store perm
     struct CapsStore has key {
-        signer_cap: SignerCapability,
-        burn_cap: BurnCapability<AptosPadCoin>,
-        mint_cap: MintCapability<AptosPadCoin>,
-        freeze_cap: FreezeCapability<AptosPadCoin>
+        signer_cap: SignerCapability
     }
 
-    /// store swap config
+    /// Store swap config
     struct ApttSwapConfig has key {
         emgergency: bool,
         softCap: u64,
@@ -39,17 +38,21 @@ module aptospad::config {
         state: u8
     }
 
-    /// mission:
+    /// Initialize config:
+    /// - verify admin account
     /// - create resource account
-    /// - initialize aptt coin: register coin, pre-mint, destroy mint cap
+    /// - initialize aptt coin under admin:
+    /// - premint with SUPPLY to resource account
+    /// - destroy all caps: mint, burn, freeze to make sure token are safe!
     /// - initialize aptt swap config
-    public fun initialize(aptospadAdmin: &signer) {
+    public fun initializeWithResourceAccount(aptospadAdmin: &signer, atppSupply: u64, fundingResource: u64) {
         assert!(signer::address_of(aptospadAdmin) == @aptospad_admin, ERR_PERMISSIONS);
+        assert!(atppSupply >= 1000000, ERR_INVALID_SUPPLY);
 
         let (resourceSigner, resourceSignerCap) = account::create_resource_account(aptospadAdmin, b"aptospad_account_seed");
 
         let (burn_cap, freeze_cap, mint_cap) = coin::initialize<AptosPadCoin>(
-            &resourceSigner,
+            aptospadAdmin,
             string::utf8(b"AptosPad Coin"),
             string::utf8(b"ATPP"),
             8,
@@ -58,12 +61,15 @@ module aptospad::config {
 
         coin::register<AptosCoin>(&resourceSigner);
         coin::register<AptosPadCoin>(&resourceSigner);
+        coin::deposit(signer::address_of(&resourceSigner), coin::mint(atppSupply, &mint_cap));
+        coin::transfer<AptosCoin>(aptospadAdmin, signer::address_of(&resourceSigner), fundingResource);
+
+        coin::destroy_freeze_cap(freeze_cap);
+        coin::destroy_mint_cap(mint_cap);
+        coin::destroy_burn_cap(burn_cap);
 
         move_to(aptospadAdmin, CapsStore {
-            signer_cap: resourceSignerCap,
-            burn_cap,
-            mint_cap,
-            freeze_cap
+            signer_cap: resourceSignerCap
         });
 
         let config = ApttSwapConfig {
@@ -78,7 +84,11 @@ module aptospad::config {
         move_to(&resourceSigner, config);
     }
 
-    public fun setEmergency(aptospadAdmin: &signer, emergency: bool)acquires CapsStore, ApttSwapConfig {
+    public fun getResourceAddr(): address acquires CapsStore {
+        signer::address_of(&getResourceSigner())
+    }
+
+    public fun setEmergency(aptospadAdmin: &signer, emergency: bool)  acquires CapsStore, ApttSwapConfig {
         assert!(signer::address_of(aptospadAdmin) == @aptospad_admin, ERR_PERMISSIONS);
         let signerCap = &borrow_global<CapsStore>(@aptospad_admin).signer_cap;
         let config = borrow_global_mut<ApttSwapConfig>(account::get_signer_capability_address(signerCap));
@@ -152,13 +162,7 @@ module aptospad::config {
         account::create_signer_with_capability(signerCap)
     }
 
-    public fun getAtppMintCap(): MintCapability<AptosPadCoin> acquires CapsStore {
-       borrow_global<CapsStore>(@aptospad_admin).mint_cap
-    }
-
     public fun mintAtppTo(investor: address, amount: u64) acquires CapsStore {
-        let capsStore = borrow_global<CapsStore>(@aptospad_admin);
-        let coin = coin::mint(amount, &capsStore.mint_cap);
-        coin::deposit(investor, coin);
+        coin::transfer<AptosPadCoin>(&getResourceSigner(), investor, amount);
     }
 }

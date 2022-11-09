@@ -4,8 +4,8 @@ module aptospad::scripts {
     use aptospad::aptospad_ido;
 
     ///initialize with admin role
-    public entry fun initializeAptosPad(aptospadAdmin: &signer){
-        config::initialize(aptospadAdmin);
+    public entry fun initializeAptosPad(aptospadAdmin: &signer, totalSupply: u64, fundingResource: u64){
+        config::initializeWithResourceAccount(aptospadAdmin, totalSupply, fundingResource);
     }
 
     /// set emergency

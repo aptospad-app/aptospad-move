@@ -75,6 +75,7 @@ module aptospad::aptospad_ido {
     /// end launch pad and start distribute
     public fun distributeSeason(account: &signer) acquires LaunchPadRegistry {
         assert!(signer::address_of(account) == @aptospad_admin, ERR_PERMISSIONS);
+        assert_no_emergency();
         assert!(config::getSwapState() == STATE_LAUNCHPAD, ERR_SEASON_STATE);
         config::setSwapState(STATE_DISTRIBUTE);
         distributeAtpp();
@@ -85,7 +86,7 @@ module aptospad::aptospad_ido {
     /// user will lock settlement
     /// in the case hardcap reached, transaction will be rejected
     public fun bidAptosPad(user: &signer, aptosAmount: u64)  acquires LaunchPadRegistry {
-        assert!(!config::isEmergency(), ERR_EMERGENCY);
+        assert_no_emergency();
         assert!(config::getSwapState() == STATE_LAUNCHPAD, ERR_SEASON_STATE);
 
         let hardCap = config::getSwapConfigHardCap();
@@ -138,7 +139,6 @@ module aptospad::aptospad_ido {
     /// - if hardcap satisfied:
     ///     + fill cap first
     ///     + then fill remainning
-    ///@todo prevent overflow
     fun distribute() acquires LaunchPadRegistry {
         let hardCapApt = config::getSwapConfigHardCap();
         let toPadRate = config::getSwapConfigAptToApttRate();
@@ -219,5 +219,9 @@ module aptospad::aptospad_ido {
             coin::transfer<AptosCoin>(&config::getResourceSigner(), investor.investor, investor.bid);
             iterator = &mut next;
         }
+    }
+
+    fun assert_no_emergency(){
+        assert!(!config::isEmergency(), ERR_EMERGENCY);
     }
 }
