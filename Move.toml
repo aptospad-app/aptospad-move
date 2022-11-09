@@ -24,6 +24,9 @@ test_aptospad_admin = "0x63e39817ec41fad2e8d0713cc906a5f792e4cd2cf704f8b5fab6b29
 test_dao_admin = "0x63e39817ec41fad2e8d0713cc906a5f792e4cd2cf704f8b5fab6b2961281fa11"
 test_fee_admin = "0x63e39817ec41fad2e8d0713cc906a5f792e4cd2cf704f8b5fab6b2961281fa11"
 test_launchpad_admin = "0x63e39817ec41fad2e8d0713cc906a5f792e4cd2cf704f8b5fab6b2961281fa11"
+test_wl1 = "0x100000"
+test_wl2 = "0x100001"
+test_wl3 = "0x100002"
 
 # Resource accounts
 test_aptospad_account = "0x05a97986a9d031c4567e15b797be516910cfcb4156312482efc6a19c0a30c948"

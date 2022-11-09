@@ -6,12 +6,12 @@ module aptospad::test_config {
     use aptospad::aptospad_coin::AptosPadCoin;
     use aptos_framework::aptos_coin::AptosCoin;
 
-    #[test(padAdmin = @aptospad_admin, aptosFramework = @aptos_framework)]
-    fun testConfig(padAdmin: &signer, aptosFramework: &signer){
+    #[test(padAdmin = @aptospad_admin, aptosFramework = @aptos_framework, wl1 = @test_wl1, wl2 = @test_wl2)]
+    fun testConfig(padAdmin: &signer, aptosFramework: &signer, wl1: &signer, wl2: &signer){
         let atppSupply = 100000000u64;
         let padFundingAmt = (100000000 * 1000);
         let fundingAmt = (100000000 * 100);
-        helpers::initializeAptos(aptosFramework, padAdmin, padFundingAmt);
+        helpers::initializeAptos(aptosFramework, padAdmin, padFundingAmt, wl1, 0, wl2, 0);
 
         config::initializeWithResourceAccount(padAdmin, atppSupply, fundingAmt);
         assert!(config::getSwapState() == 1, 100000);

@@ -1,7 +1,7 @@
 /// The current module contains pre-deplopyed scripts for AptosPad.
 module aptospad::scripts {
     use aptospad::config;
-    use aptospad::aptospad_ido;
+    use aptospad::aptospad_swap;
 
     ///initialize with admin role
     public entry fun initializeAptosPad(aptospadAdmin: &signer, totalSupply: u64, fundingResource: u64){
@@ -20,31 +20,31 @@ module aptospad::scripts {
 
     /// reset seasion
     public entry fun resetSeason(account: &signer){
-        aptospad_ido::resetSeason(account);
+        aptospad_swap::resetSeason(account);
     }
 
     /// whitelist season
     public fun whiteListSeason(account: &signer){
-        aptospad_ido::whiteListSeason(account);
+        aptospad_swap::whiteListSeason(account);
     }
 
     /// launchpad season
     public fun launchPadSeason(account: &signer){
-        aptospad_ido::launchPadSeason(account);
+        aptospad_swap::launchPadSeason(account);
     }
 
     /// to distribute seasion
     public fun distributeSeason(account: &signer){
-        aptospad_ido::distributeSeason(account);
+        aptospad_swap::distributeSeason(account);
     }
 
     /// bid APTT
     public entry fun bidAptosPad(account: &signer, amount: u64){
-        aptospad_ido::bidAptosPad(account, amount);
+        aptospad_swap::bidAptosPad(account, amount);
     }
 
     /// add whitelist
     public entry fun addWhiteList(aptospadAdmin: &signer, account: address, cap: u64){
-        aptospad_ido::addWhiteList(aptospadAdmin, account, cap);
+        aptospad_swap::addWhiteList(aptospadAdmin, account, cap);
     }
 }

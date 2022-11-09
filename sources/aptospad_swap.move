@@ -1,4 +1,4 @@
-module aptospad::aptospad_ido {
+module aptospad::aptospad_swap {
     use std::signer;
     use aptos_framework::coin;
     use aptos_framework::aptos_coin::{AptosCoin};
@@ -49,6 +49,10 @@ module aptospad::aptospad_ido {
         });
 
         config::setSwapState(STATE_INIT);
+    }
+
+    public fun getSwapTotalBid(): u64 acquires LaunchPadRegistry {
+        borrow_global<LaunchPadRegistry>(config::getResourceAddress()).totalBid
     }
 
     /// start season: make sure prev season if any, already released!
@@ -120,6 +124,17 @@ module aptospad::aptospad_ido {
         wl.cap = cap;
     }
 
+    public fun getWhiteList(account: address): (u64, u64, u64) acquires LaunchPadRegistry {
+        let details = &mut borrow_global_mut<LaunchPadRegistry>(config::getResourceAddress()).investors;
+        let wl = iterable_table::borrow_mut_with_default(details, account, TokenDistribute {
+            cap: 0u64,
+            distributed: 0u64,
+            bid: 0u64,
+            investor: account
+        });
+        (wl.cap, wl.bid, wl.distributed)
+    }
+
     /// check refund & softcap
     /// release token or refund!
     fun distributeAtpp() acquires LaunchPadRegistry {
@@ -132,6 +147,14 @@ module aptospad::aptospad_ido {
             refund()
         else
             distribute()
+    }
+
+    public fun maybeRefund(): bool acquires LaunchPadRegistry {
+        let softCap = config::getSwapConfigSoftCap();
+        let registry = borrow_global_mut<LaunchPadRegistry>(config::getResourceAddress());
+        let totalBuy = registry.totalBid;
+        let enableRefund = config::getSwapConfigEnableRefund();
+        enableRefund && (totalBuy < softCap)
     }
 
     /// Distribute Aptt to Pad with rounds:
