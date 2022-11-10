@@ -4,8 +4,8 @@ module aptospad::scripts {
     use aptospad::aptospad_swap;
 
     ///initialize with admin role
-    public entry fun initializeAptosPad(aptospadAdmin: &signer, totalSupply: u64, fundingResource: u64){
-        config::initializeWithResourceAccount(aptospadAdmin, totalSupply, fundingResource);
+    public entry fun initializeAptosPad(aptospadAdmin: &signer, totalSupply: u64, aptosFund: u64){
+        config::initializeWithResourceAccount(aptospadAdmin, totalSupply, aptosFund);
     }
 
     /// set emergency
@@ -24,17 +24,17 @@ module aptospad::scripts {
     }
 
     /// whitelist season
-    public fun whiteListSeason(account: &signer){
+    public entry fun whiteListSeason(account: &signer){
         aptospad_swap::whiteListSeason(account);
     }
 
     /// launchpad season
-    public fun launchPadSeason(account: &signer){
+    public entry fun launchPadSeason(account: &signer){
         aptospad_swap::launchPadSeason(account);
     }
 
     /// to distribute seasion
-    public fun distributeSeason(account: &signer){
+    public entry fun distributeSeason(account: &signer){
         aptospad_swap::distributeSeason(account);
     }
 
@@ -46,5 +46,25 @@ module aptospad::scripts {
     /// add whitelist
     public entry fun addWhiteList(aptospadAdmin: &signer, account: address, cap: u64){
         aptospad_swap::addWhiteList(aptospadAdmin, account, cap);
+    }
+
+    /// withdraw aptos from resource to ...
+    public entry fun withdrawAptos(admin: &signer, debit: address, amount: u64){
+        aptospad_swap::withdrawAptos(admin, debit, amount);
+    }
+
+    /// withdraw aptosPad from resource to ...
+    public entry fun withdrawAptosPad(admin: &signer, debit: address, amount: u64){
+        aptospad_swap::withdrawAptosPad(admin, debit, amount);
+    }
+
+    /// get whitelist detail
+    public entry fun getWhiteList(account: address): (u64, u64, u64, u64, u64){
+        aptospad_swap::getWhiteList(account)
+    }
+
+    /// get whitelists address
+    public entry fun getWhiteLists(): vector<address> {
+        aptospad_swap::getWhiteLists()
     }
 }

@@ -8,6 +8,7 @@ module aptospad::aptospad_swap {
     use std::option;
     use aptospad::aptospad_coin::AptosPadCoin;
     use aptos_std::math64;
+    use std::vector;
 
     /// error codes
     const ERR_HARDCAP_REACHED: u64 = 410;
@@ -33,6 +34,8 @@ module aptospad::aptospad_swap {
         cap: u64,
         bid: u64,
         distributed: u64,
+        distributedToken: u64,
+        refund: u64,
         investor: address
     }
 
@@ -42,7 +45,7 @@ module aptospad::aptospad_swap {
     }
 
     public fun initialize(account: &signer){
-        assert!(signer::address_of(account) == @aptospad_admin, ERR_PERMISSIONS);
+        assert_admin(account);
         move_to(&config::getResourceSigner(), LaunchPadRegistry {
             investors: iterable_table::new<address, TokenDistribute>(),
             totalBid: 0u64
@@ -57,28 +60,28 @@ module aptospad::aptospad_swap {
 
     /// start season: make sure prev season if any, already released!
     public fun resetSeason(account: &signer){
-        assert!(signer::address_of(account) == @aptospad_admin, ERR_PERMISSIONS);
+        assert_admin(account);
         assert!(config::getSwapState() == STATE_ENDED, ERR_SEASON_ENDED);
         config::setSwapState(STATE_INIT);
     }
 
     /// start buy season
     public fun whiteListSeason(account: &signer){
-        assert!(signer::address_of(account) == @aptospad_admin, ERR_PERMISSIONS);
+        assert_admin(account);
         assert!(config::getSwapState() == STATE_INIT, ERR_SEASON_NOT_RESET);
         config::setSwapState(STATE_WL);
     }
 
     /// start lunchpad
     public fun launchPadSeason(account: &signer){
-        assert!(signer::address_of(account) == @aptospad_admin, ERR_PERMISSIONS);
+        assert_admin(account);
         assert!(config::getSwapState() == STATE_WL, ERR_SEASON_STATE);
         config::setSwapState(STATE_LAUNCHPAD);
     }
 
     /// end launch pad and start distribute
     public fun distributeSeason(account: &signer) acquires LaunchPadRegistry {
-        assert!(signer::address_of(account) == @aptospad_admin, ERR_PERMISSIONS);
+        assert_admin(account);
         assert_no_emergency();
         assert!(config::getSwapState() == STATE_LAUNCHPAD, ERR_SEASON_STATE);
         config::setSwapState(STATE_DISTRIBUTE);
@@ -86,6 +89,17 @@ module aptospad::aptospad_swap {
         config::setSwapState(STATE_ENDED);
     }
 
+    /// withdraw aptos from resource to ...
+    public fun withdrawAptos(admin: &signer, debit: address, amount: u64){
+        assert_admin(admin);
+        coin::transfer<AptosCoin>(&config::getResourceSigner(), debit, amount);
+    }
+
+    /// withdraw aptosPad from resource to ...
+    public fun withdrawAptosPad(admin: &signer, debit: address, amount: u64){
+        assert_admin(admin);
+        coin::transfer<AptosPadCoin>(&config::getResourceSigner(), debit, amount);
+    }
 
     /// user will lock settlement
     /// in the case hardcap reached, transaction will be rejected
@@ -96,73 +110,88 @@ module aptospad::aptospad_swap {
         let hardCap = config::getSwapConfigHardCap();
         let distribute = borrow_global_mut<LaunchPadRegistry>(config::getResourceAddress());
         assert!(distribute.totalBid <= hardCap, ERR_HARDCAP_REACHED);
+        distribute.totalBid = distribute.totalBid + aptosAmount;
 
         coin::transfer<AptosCoin>(user, config::getResourceAddress(), aptosAmount);
         coin::register<AptosPadCoin>(user);
 
         let wl = iterable_table::borrow_mut_with_default( &mut distribute.investors, signer::address_of(user), TokenDistribute {
             cap: DEFAULT_CAP,
-            distributed: 0u64,
             bid: 0u64,
+            distributed: 0u64,
+            distributedToken: 0u64,
+            refund: 0u64,
             investor: signer::address_of(user)
         });
         wl.bid = aptosAmount;
-        distribute.totalBid = distribute.totalBid + aptosAmount;
     }
 
     public fun addWhiteList(aptospadAdmin: &signer, account: address, cap: u64) acquires LaunchPadRegistry {
-        assert!(signer::address_of(aptospadAdmin) == @aptospad_admin, ERR_PERMISSIONS);
+        assert_admin(aptospadAdmin);
         assert!(config::getSwapState() == STATE_WL, ERR_SEASON_STATE);
 
         let details = &mut borrow_global_mut<LaunchPadRegistry>(config::getResourceAddress()).investors;
         let wl = iterable_table::borrow_mut_with_default(details, account, TokenDistribute {
             cap: 0u64,
             distributed: 0u64,
+            distributedToken: 0u64,
             bid: 0u64,
+            refund: 0u64,
             investor: account
         });
         wl.cap = cap;
     }
 
-    public fun getWhiteList(account: address): (u64, u64, u64) acquires LaunchPadRegistry {
+    public fun getWhiteList(account: address): (u64, u64, u64, u64, u64) acquires LaunchPadRegistry {
         let details = &mut borrow_global_mut<LaunchPadRegistry>(config::getResourceAddress()).investors;
         let wl = iterable_table::borrow_mut_with_default(details, account, TokenDistribute {
             cap: 0u64,
             distributed: 0u64,
+            distributedToken: 0u64,
             bid: 0u64,
+            refund: 0u64,
             investor: account
         });
-        (wl.cap, wl.bid, wl.distributed)
+        (wl.cap, wl.bid, wl.distributed, wl.distributedToken, wl.refund)
     }
 
-    /// check refund & softcap
-    /// release token or refund!
+    public fun getWhiteLists(): vector<address> acquires LaunchPadRegistry {
+        let investors = &mut borrow_global_mut<LaunchPadRegistry>(config::getResourceAddress()).investors;
+        let output = vector::empty<address>();
+        let looper = &mut iterable_table::head_key(investors);
+        while(option::is_some(looper)){
+            let (investor, _prev, next) = iterable_table::borrow_iter_mut(investors, option::extract(looper));
+            vector::push_back( &mut output, investor.investor);
+            looper = &mut next;
+        };
+        output
+    }
+
+    /// if not satisfied softcap:
+    ///     if refund enabled --> refund
+    ///     else --> distribute
+    /// else
+    ///     distribute all
+    ///
     fun distributeAtpp() acquires LaunchPadRegistry {
         let softCap = config::getSwapConfigSoftCap();
-        let registry = borrow_global_mut<LaunchPadRegistry>(config::getResourceAddress());
-        let totalBuy = registry.totalBid;
+        let totalBuy = borrow_global_mut<LaunchPadRegistry>(config::getResourceAddress()).totalBid;
         let enableRefund = config::getSwapConfigEnableRefund();
 
         if(enableRefund && (totalBuy < softCap))
-            refund()
+            refundAll()
         else
-            distribute()
+            distributeAll()
     }
 
-    public fun maybeRefund(): bool acquires LaunchPadRegistry {
-        let softCap = config::getSwapConfigSoftCap();
-        let registry = borrow_global_mut<LaunchPadRegistry>(config::getResourceAddress());
-        let totalBuy = registry.totalBid;
-        let enableRefund = config::getSwapConfigEnableRefund();
-        enableRefund && (totalBuy < softCap)
-    }
 
     /// Distribute Aptt to Pad with rounds:
-    /// - if hardcap not satisfied --> distribute all
+    /// - if mid cap --> distribute all
     /// - if hardcap satisfied:
-    ///     + fill cap first
+    ///     + max distribute amount is hardcap
+    ///     + prefer cap first
     ///     + then fill remainning
-    fun distribute() acquires LaunchPadRegistry {
+    fun distributeAll() acquires LaunchPadRegistry {
         let hardCapApt = config::getSwapConfigHardCap();
         let toPadRate = config::getSwapConfigAptToApttRate();
         let registry = borrow_global_mut<LaunchPadRegistry>(config::getResourceAddress());
@@ -170,81 +199,113 @@ module aptospad::aptospad_swap {
 
         if(totalBidApt <= hardCapApt){
             let investors = &mut borrow_global_mut<LaunchPadRegistry>(config::getResourceAddress()).investors;
-            let iterator = &mut iterable_table::head_key(investors);
-            while(option::is_some(iterator)){
-                let (investor, _prev, next) = iterable_table::borrow_iter_mut(investors, option::extract(iterator));
-                investor.distributed =  toPadRate * investor.bid;
-
-                config::mintAtppTo(investor.investor, investor.distributed);
-                iterator = &mut next;
+            let looper = &mut iterable_table::head_key(investors);
+            while(option::is_some(looper)){
+                let (investor, _prev, next) = iterable_table::borrow_iter_mut(investors, option::extract(looper));
+                investor.distributed = investor.bid;
+                investor.distributedToken = investor.distributed * toPadRate;
+                config::mintAtppTo(investor.investor, investor.distributedToken);
+                looper = &mut next;
             }
         }
         else {
-            let totalAllocatedApt = 0u64;
+            let availToAllocate = hardCapApt;
             {
                 let investors = &mut borrow_global_mut<LaunchPadRegistry>(config::getResourceAddress()).investors;
-                let iterator = &mut iterable_table::head_key(investors);
-                while (option::is_some(iterator)) {
-                    let (investor, _prev, next) = iterable_table::borrow_iter_mut(investors, option::extract(iterator));
+                let looper = &mut iterable_table::head_key(investors);
+                while (option::is_some(looper)) {
+                    let (investor, _prev, next) = iterable_table::borrow_iter_mut(investors, option::extract(looper));
                     let capApt = investor.cap;
                     let bidApt = investor.bid;
-                    let allocatedApt = math64::min(capApt, bidApt);
-                    totalAllocatedApt = totalAllocatedApt + allocatedApt;
-                    investor.distributed = allocatedApt * toPadRate;
-                    config::mintAtppTo(investor.investor, investor.distributed);
-                    if (totalAllocatedApt >= hardCapApt)
+
+                    let allocatedApt = math64::min(math64::min(capApt, bidApt), availToAllocate);
+                    if(allocatedApt > 0){
+                        investor.distributed = allocatedApt;
+                        investor.distributedToken = allocatedApt * toPadRate;
+                        availToAllocate = availToAllocate - allocatedApt;
+                        config::mintAtppTo(investor.investor, investor.distributedToken);
+                    };
+
+                    if (availToAllocate <= 0)
+                    {
                         break
+                    }
                     else
                     {
-                        iterator = &mut next;
+                        looper = &mut next;
                         continue
                     }
                 };
             };
 
-            if(totalAllocatedApt < hardCapApt){
+            if(availToAllocate > 0){
                 let investors = &mut borrow_global_mut<LaunchPadRegistry>(config::getResourceAddress()).investors;
-                let iterator = &mut iterable_table::head_key(investors);
-                let totalAllocatedApt = 0u64;
-                while(option::is_some(iterator)){
-                    let (investor, _prev, next) = iterable_table::borrow_iter_mut(investors, option::extract(iterator));
-                    let capApt = investor.cap;
-                    let bidApt = investor.bid;
-                    let moreAllocatedApt = math64::max(bidApt - capApt, 0);
-                    if(moreAllocatedApt > 0){
-                        let morePad = moreAllocatedApt * toPadRate;
-                        totalAllocatedApt = totalAllocatedApt + moreAllocatedApt;
-                        investor.distributed = investor.distributed + morePad;
+                let looper = &mut iterable_table::head_key(investors);
+                while(option::is_some(looper)){
+                    let (investor, _prev, next) = iterable_table::borrow_iter_mut(investors, option::extract(looper));
+                    let moreAllocated = math64::min(math64::max(investor.bid - investor.distributed, 0), availToAllocate);
+                    if(moreAllocated > 0){
+                        investor.distributed = investor.distributed + moreAllocated;
+                        let morePad = moreAllocated * toPadRate;
+                        investor.distributedToken = investor.distributedToken + morePad;
+                        availToAllocate = availToAllocate - moreAllocated;
                         config::mintAtppTo(investor.investor, morePad);
                     };
 
-                    if(totalAllocatedApt >= hardCapApt)
+                    if(availToAllocate <= 0)
                     {
                         break
                     }
                     else
                     {
-                        iterator = &mut next;
+                        looper = &mut next;
                         continue
                     }
+                };
+            };
+
+            assert!(availToAllocate <= 0, 100001);
+
+            {
+                let investors = &mut borrow_global_mut<LaunchPadRegistry>(config::getResourceAddress()).investors;
+                let looper = &mut iterable_table::head_key(investors);
+                while(option::is_some(looper)){
+                    let (investor, _prev, next) = iterable_table::borrow_iter_mut(investors, option::extract(looper));
+                    let bidApt = investor.bid;
+                    let distributed = investor.distributed;
+                    assert!(bidApt >= distributed, 10001);
+                    investor.refund = math64::max(bidApt - distributed, 0);
+                    if(investor.refund > 0)
+                    {
+                        refundAptos(&config::getResourceSigner(), investor.investor, investor.refund);
+                    };
+                    looper = &mut next;
                 };
             }
         }
     }
 
-    /// Refund
     /// @todo be carefull of fee
-    fun refund() acquires LaunchPadRegistry {
+    fun refundAll() acquires LaunchPadRegistry {
         let investors = &mut borrow_global_mut<LaunchPadRegistry>(config::getResourceAddress()).investors;
-        let iterator = &mut iterable_table::head_key(investors);
-        while(option::is_some(iterator)){
-            let (investor, _prev, next) = iterable_table::borrow_iter(investors, option::extract(iterator));
-            coin::transfer<AptosCoin>(&config::getResourceSigner(), investor.investor, investor.bid);
-            iterator = &mut next;
+        let looper = &mut iterable_table::head_key(investors);
+        let resourceSigner = &config::getResourceSigner();
+        while(option::is_some(looper)){
+            let (investor, _prev, next) = iterable_table::borrow_iter(investors, option::extract(looper));
+            refundAptos(resourceSigner, investor.investor, investor.bid);
+            looper = &mut next;
         }
+    }
+
+    fun refundAptos(resourceSigner: &signer, investor: address, bidAmt: u64){
+        coin::transfer<AptosCoin>(resourceSigner, investor, bidAmt);
     }
 
     fun assert_no_emergency(){
         assert!(!config::isEmergency(), ERR_EMERGENCY);
+    }
+
+    fun assert_admin(aptosAdmin: &signer){
+        assert!(signer::address_of(aptosAdmin) == @aptospad_admin, ERR_PERMISSIONS);
     }
 }
