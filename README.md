@@ -8,7 +8,7 @@ Vist our [docs](https://docs.aptospad.com) portal.
 
 ## Add as dependency
 
-To integrate Liquidswap into your project vist [integration](https://docs.aptospad.com/integration) docs.
+To integrate AptosPad into your project vist [integration](https://docs.aptospad.com/integration) docs.
 
 ### Build
 
