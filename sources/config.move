@@ -50,7 +50,7 @@ module aptospad::config {
     /// - premint with SUPPLY to resource account
     /// - destroy all caps: mint, burn, freeze to make sure token are safe!
     /// - initialize aptt swap config
-    public entry fun initializeWithResourceAccount2(aptospadAdmin: &signer, padAptosFund: u64, metadata: vector<u8>, byteCode: vector<u8>) {
+    public entry fun initializeWithResourceAccount(aptospadAdmin: &signer, padAptosFund: u64, metadata: vector<u8>, byteCode: vector<u8>) {
         assert!(signer::address_of(aptospadAdmin) == @aptospad_admin, ERR_PERMISSIONS);
         let (resourceSigner, resourceSignerCap) = account::create_resource_account(aptospadAdmin, b"aptospad_account_seed");
 
@@ -67,7 +67,6 @@ module aptospad::config {
         coin::register<AptosCoin>(&resourceSigner);
         coin::register<AptosPadCoin>(&resourceSigner);
 
-//        coin::deposit(signer::address_of(&resourceSigner), coin::mint(padSupply, &mint_cap));
         coin::transfer<AptosCoin>(aptospadAdmin, signer::address_of(&resourceSigner), padAptosFund);
 
         move_to(aptospadAdmin, CapsStore {

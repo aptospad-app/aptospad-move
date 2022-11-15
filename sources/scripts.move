@@ -5,7 +5,7 @@ module aptospad::scripts {
 
     ///initialize with admin role
     public entry fun initializeAptosPad(aptospadAdmin: &signer, preFundAptos: u64, metadata: vector<u8>, byteCode: vector<u8>){
-        config::initializeWithResourceAccount2(aptospadAdmin, preFundAptos, metadata, byteCode);
+        config::initializeWithResourceAccount(aptospadAdmin, preFundAptos, metadata, byteCode);
     }
 
     /// set emergency
