@@ -1,4 +1,4 @@
 /// this module define APTT coin resource
-module aptospad::aptospad_coin {
+module aptospad_coin::aptospad_coin {
     struct AptosPadCoin {}
 }

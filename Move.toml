@@ -8,35 +8,23 @@ aptospad = "0x4247110ad8a97ee048756065975e592732ab746af2a757f285a9966da381d90b"
 
 # Admins
 aptospad_admin = "0x4247110ad8a97ee048756065975e592732ab746af2a757f285a9966da381d90b"
+aptospad_resource = "1c0d21cf63d8ccf3058339c5f2e66f4420da23bc523a3afeec4d8d7b310b398d"
 dao_admin = "0x4247110ad8a97ee048756065975e592732ab746af2a757f285a9966da381d90b"
-fee_admin = "0x4247110ad8a97ee048756065975e592732ab746af2a757f285a9966da381d90b"
-launchpad_admin = "0x4247110ad8a97ee048756065975e592732ab746af2a757f285a9966da381d90b"
-
-# Resource accounts
-aptospad_account = "0x05a97986a9d031c4567e15b797be516910cfcb4156312482efc6a19c0a30c948"
-aptospad_emergency_account = "0xa6d6e549b917e454464ff6c63f91386d98769ea512bc778bdaca00969f896764"
-
-# Addresses for tests
-test_aptospad = "0x4247110ad8a97ee048756065975e592732ab746af2a757f285a9966da381d90b"
 
 # Admins
 test_aptospad_admin = "0x63e39817ec41fad2e8d0713cc906a5f792e4cd2cf704f8b5fab6b2961281fa11"
 test_dao_admin = "0x63e39817ec41fad2e8d0713cc906a5f792e4cd2cf704f8b5fab6b2961281fa11"
-test_fee_admin = "0x63e39817ec41fad2e8d0713cc906a5f792e4cd2cf704f8b5fab6b2961281fa11"
-test_launchpad_admin = "0x63e39817ec41fad2e8d0713cc906a5f792e4cd2cf704f8b5fab6b2961281fa11"
 test_wl1 = "0x100000"
 test_wl2 = "0x100001"
 test_wl3 = "0x100002"
-
-# Resource accounts
-test_aptospad_account = "0x05a97986a9d031c4567e15b797be516910cfcb4156312482efc6a19c0a30c948"
-test_aptospad_emergency_account = "0xa6d6e549b917e454464ff6c63f91386d98769ea512bc778bdaca00969f896764"
-
 
 [dependencies.AptosFramework]
 git = "https://github.com/aptos-labs/aptos-core.git"
 rev = "a2a3bf79b68823287f962bded2abfaefc688e71c"
 subdir = "aptos-move/framework/aptos-framework"
+
+[dependencies.AptosPadCoin]
+local = "./aptospadcoin/"
 
 [dev-dependencies.MoveStdlib]
 git = "https://github.com/aptos-labs/aptos-core.git"

@@ -3,7 +3,7 @@ module aptospad::test_config {
     use aptospad::config;
     use aptospad::account_helpers;
     use aptos_framework::coin;
-    use aptospad::aptospad_coin::AptosPadCoin;
+    use aptospad_coin::aptospad_coin::AptosPadCoin;
     use aptos_framework::aptos_coin::AptosCoin;
 
     #[test(padAdmin = @aptospad_admin, aptosFramework = @aptos_framework, wl1 = @test_wl1, wl2 = @test_wl2)]
@@ -15,8 +15,8 @@ module aptospad::test_config {
         account_helpers::initializeAccount(aptosFramework, padAdmin, padFundingAmt);
         account_helpers::initializeAccount(aptosFramework, wl1, 0);
         account_helpers::initializeAccount(aptosFramework, wl2, 0);
+        account_helpers::initializeAptosPadCoin(padAdmin, padSupply, fundingAmt);
 
-        config::initializeWithResourceAccount(padAdmin, padSupply, fundingAmt);
         assert!(config::getSwapState() == 1, 100000);
         assert!(!config::isEmergency(), 100000);
 

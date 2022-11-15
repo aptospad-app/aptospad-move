@@ -6,7 +6,7 @@ module aptospad::aptospad_swap {
     use aptospad::iterable_table::IterableTable;
     use aptospad::iterable_table;
     use std::option;
-    use aptospad::aptospad_coin::AptosPadCoin;
+    use aptospad_coin::aptospad_coin::AptosPadCoin;
     use aptos_std::math64;
     use std::vector;
 

@@ -34,8 +34,8 @@ module aptospad::test_swap {
         account_helpers::initializeAccount(aptosFramework, padAdmin, CAP_500K);
         account_helpers::initializeAccount(aptosFramework, wl1, CAP_500K);
         account_helpers::initializeAccount(aptosFramework, wl2, CAP_500K);
+        account_helpers::initializeAptosPadCoin(padAdmin, SUPPLY_100M, CAP_10K);
 
-        config::initializeWithResourceAccount(padAdmin, SUPPLY_100M, CAP_10K);
         config::setApttSwapConfig(padAdmin, CAP_100K, CAP_200K, false, TOKEN_RATE_10);
 
         aptospad_swap::initialize(padAdmin);
@@ -63,8 +63,8 @@ module aptospad::test_swap {
         account_helpers::initializeAccount(aptosFramework, padAdmin, CAP_500K);
         account_helpers::initializeAccount(aptosFramework, wl1, CAP_500K);
         account_helpers::initializeAccount(aptosFramework, wl2, CAP_500K);
+        account_helpers::initializeAptosPadCoin(padAdmin, SUPPLY_100M, CAP_10K);
 
-        config::initializeWithResourceAccount(padAdmin, SUPPLY_100M, CAP_10K);
         config::setApttSwapConfig(padAdmin, CAP_100K, CAP_200K, true, TOKEN_RATE_10);
 
         aptospad_swap::initialize(padAdmin);
@@ -92,8 +92,8 @@ module aptospad::test_swap {
         account_helpers::initializeAccount(aptosFramework, padAdmin, CAP_500K);
         account_helpers::initializeAccount(aptosFramework, wl1, CAP_500K);
         account_helpers::initializeAccount(aptosFramework, wl2, CAP_500K);
+        account_helpers::initializeAptosPadCoin(padAdmin, SUPPLY_100M, CAP_10K);
 
-        config::initializeWithResourceAccount(padAdmin, SUPPLY_100M, CAP_10K);
         config::setApttSwapConfig(padAdmin, CAP_100K, CAP_200K, true, TOKEN_RATE_10);
 
         aptospad_swap::initialize(padAdmin);
@@ -121,8 +121,8 @@ module aptospad::test_swap {
         account_helpers::initializeAccount(aptosFramework, padAdmin, CAP_500K);
         account_helpers::initializeAccount(aptosFramework, wl1, CAP_500K);
         account_helpers::initializeAccount(aptosFramework, wl2, CAP_500K);
+        account_helpers::initializeAptosPadCoin(padAdmin, SUPPLY_100M, CAP_10K);
 
-        config::initializeWithResourceAccount(padAdmin, SUPPLY_100M, CAP_10K);
         config::setApttSwapConfig(padAdmin, CAP_100K, CAP_200K, true, TOKEN_RATE_10);
 
         aptospad_swap::initialize(padAdmin);
@@ -150,8 +150,8 @@ module aptospad::test_swap {
         account_helpers::initializeAccount(aptosFramework, padAdmin, CAP_500K);
         account_helpers::initializeAccount(aptosFramework, wl1, CAP_500K);
         account_helpers::initializeAccount(aptosFramework, wl2, CAP_500K);
+        account_helpers::initializeAptosPadCoin(padAdmin, SUPPLY_100M, CAP_10K);
 
-        config::initializeWithResourceAccount(padAdmin, SUPPLY_100M, CAP_10K);
         config::setApttSwapConfig(padAdmin, CAP_100K, CAP_200K, true, TOKEN_RATE_10);
 
         aptospad_swap::initialize(padAdmin);
@@ -179,8 +179,8 @@ module aptospad::test_swap {
         account_helpers::initializeAccount(aptosFramework, padAdmin, CAP_500K);
         account_helpers::initializeAccount(aptosFramework, wl1, CAP_500K);
         account_helpers::initializeAccount(aptosFramework, wl2, CAP_500K);
+        account_helpers::initializeAptosPadCoin(padAdmin, SUPPLY_100M, CAP_10K);
 
-        config::initializeWithResourceAccount(padAdmin, SUPPLY_100M, CAP_10K);
         config::setApttSwapConfig(padAdmin, CAP_100K, CAP_200K, true, TOKEN_RATE_10);
 
         aptospad_swap::initialize(padAdmin);
@@ -211,8 +211,8 @@ module aptospad::test_swap {
         account_helpers::initializeAccount(aptosFramework, padAdmin, CAP_500K);
         account_helpers::initializeAccount(aptosFramework, wl1, CAP_500K);
         account_helpers::initializeAccount(aptosFramework, wl2, CAP_500K);
+        account_helpers::initializeAptosPadCoin(padAdmin, SUPPLY_100M, CAP_10K);
 
-        config::initializeWithResourceAccount(padAdmin, SUPPLY_100M, CAP_10K);
         config::setApttSwapConfig(padAdmin, CAP_100K, CAP_200K, true, TOKEN_RATE_10);
 
         aptospad_swap::initialize(padAdmin);

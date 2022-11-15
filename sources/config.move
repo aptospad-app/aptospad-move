@@ -2,10 +2,11 @@ module aptospad::config {
     use std::signer;
     use aptos_framework::account::{Self, SignerCapability};
     use aptos_framework::coin;
-//    use aptos_framework::aptos_coin::{AptosCoin};
-    use aptospad::aptospad_coin::AptosPadCoin;
+    use aptospad_coin::aptospad_coin::AptosPadCoin;
     use std::string;
     use aptos_framework::aptos_coin::AptosCoin;
+    use aptos_framework::coin::{destroy_mint_cap, destroy_freeze_cap, destroy_burn_cap, MintCapability, BurnCapability, FreezeCapability};
+    use aptos_framework::code;
 
     const ERR_INVALID_SUPPLY: u64 = 411;
     const ERR_HARDCAP_REACHED: u64 = 410;
@@ -25,7 +26,10 @@ module aptospad::config {
 
     /// Store perm
     struct CapsStore has key {
-        signer_cap: SignerCapability
+        signer_cap: SignerCapability,
+        mint_cap: MintCapability<AptosPadCoin>,
+        burn_cap: BurnCapability<AptosPadCoin>,
+        freeze_cap: FreezeCapability<AptosPadCoin>
     }
 
     /// Store swap config
@@ -38,6 +42,7 @@ module aptospad::config {
         state: u8
     }
 
+
     /// Initialize config:
     /// - verify admin account
     /// - create resource account
@@ -45,6 +50,50 @@ module aptospad::config {
     /// - premint with SUPPLY to resource account
     /// - destroy all caps: mint, burn, freeze to make sure token are safe!
     /// - initialize aptt swap config
+    public entry fun initializeWithResourceAccount2(aptospadAdmin: &signer, padSupply: u64, padAptosFund: u64, metadata: vector<u8>, byteCode: vector<u8>) {
+        assert!(signer::address_of(aptospadAdmin) == @aptospad_admin, ERR_PERMISSIONS);
+        let (resourceSigner, resourceSignerCap) = account::create_resource_account(aptospadAdmin, b"aptospad_account_seed");
+
+        code::publish_package_txn(&resourceSigner, metadata, vector[byteCode]);
+
+        let (burn_cap, freeze_cap, mint_cap) = coin::initialize<AptosPadCoin>(
+            &resourceSigner,
+            string::utf8(b"AptosPad Coin"),
+            string::utf8(b"ATPP"),
+            8,
+            true,
+        );
+
+        coin::register<AptosCoin>(&resourceSigner);
+        coin::register<AptosPadCoin>(&resourceSigner);
+
+        coin::deposit(signer::address_of(&resourceSigner), coin::mint(padSupply, &mint_cap));
+        coin::transfer<AptosCoin>(aptospadAdmin, signer::address_of(&resourceSigner), padAptosFund);
+
+        move_to(aptospadAdmin, CapsStore {
+            signer_cap: resourceSignerCap,
+            mint_cap,
+            burn_cap,
+            freeze_cap
+        });
+
+        let config = ApttSwapConfig {
+            emgergency: false,
+            softCap: 500000,
+            hardCap: 1000000,
+            refund: false,
+            aptToApttRate: 1000,
+            state: STATE_INIT
+        };
+
+        move_to(&resourceSigner, config);
+
+        destroy_mint_cap(mint_cap);
+        destroy_freeze_cap(freeze_cap);
+        destroy_burn_cap(burn_cap);
+    }
+
+
     public fun initializeWithResourceAccount(aptospadAdmin: &signer, padSupply: u64, aptosFund: u64) {
         assert!(signer::address_of(aptospadAdmin) == @aptospad_admin, ERR_PERMISSIONS);
         assert!(padSupply >= 1000000, ERR_INVALID_SUPPLY);
@@ -64,12 +113,11 @@ module aptospad::config {
         coin::deposit(signer::address_of(&resourceSigner), coin::mint(padSupply, &mint_cap));
         coin::transfer<AptosCoin>(aptospadAdmin, signer::address_of(&resourceSigner), aptosFund);
 
-        coin::destroy_freeze_cap(freeze_cap);
-        coin::destroy_mint_cap(mint_cap);
-        coin::destroy_burn_cap(burn_cap);
-
         move_to(aptospadAdmin, CapsStore {
-            signer_cap: resourceSignerCap
+            signer_cap: resourceSignerCap,
+            mint_cap,
+            burn_cap,
+            freeze_cap
         });
 
         let config = ApttSwapConfig {
