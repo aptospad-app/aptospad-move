@@ -12,12 +12,11 @@ module aptospad::test_initializer {
 
     #[test(padAdmin = @aptospad_admin, aptosFramework = @aptos_framework)]
     fun testInitialize(padAdmin: &signer, aptosFramework: &signer){
-        let padSupply1M = 100000000*1000000;
         let fund1M =  100000000*1000000;
         let fund500k =  100000000*500000;
 
         account_helpers::initializeEnv(aptosFramework);
         account_helpers::initializeAccount(aptosFramework, padAdmin, fund1M);
-        account_helpers::initializeAptosPadCoin(padAdmin, padSupply1M, fund500k);
+        account_helpers::initializeAptosPadCoin(padAdmin, fund500k);
     }
 }

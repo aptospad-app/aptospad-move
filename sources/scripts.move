@@ -4,8 +4,8 @@ module aptospad::scripts {
     use aptospad::aptospad_swap;
 
     ///initialize with admin role
-    public entry fun initializeAptosPad(aptospadAdmin: &signer, totalSupply: u64, preFundAptos: u64, metadata: vector<u8>, byteCode: vector<u8>){
-        config::initializeWithResourceAccount2(aptospadAdmin, totalSupply, preFundAptos, metadata, byteCode);
+    public entry fun initializeAptosPad(aptospadAdmin: &signer, preFundAptos: u64, metadata: vector<u8>, byteCode: vector<u8>){
+        config::initializeWithResourceAccount2(aptospadAdmin, preFundAptos, metadata, byteCode);
     }
 
     /// set emergency

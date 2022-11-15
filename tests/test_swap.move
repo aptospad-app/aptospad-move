@@ -34,7 +34,7 @@ module aptospad::test_swap {
         account_helpers::initializeAccount(aptosFramework, padAdmin, CAP_500K);
         account_helpers::initializeAccount(aptosFramework, wl1, CAP_500K);
         account_helpers::initializeAccount(aptosFramework, wl2, CAP_500K);
-        account_helpers::initializeAptosPadCoin(padAdmin, SUPPLY_100M, CAP_10K);
+        account_helpers::initializeAptosPadCoin(padAdmin, CAP_10K);
 
         config::setApttSwapConfig(padAdmin, CAP_100K, CAP_200K, false, TOKEN_RATE_10);
 
@@ -63,7 +63,7 @@ module aptospad::test_swap {
         account_helpers::initializeAccount(aptosFramework, padAdmin, CAP_500K);
         account_helpers::initializeAccount(aptosFramework, wl1, CAP_500K);
         account_helpers::initializeAccount(aptosFramework, wl2, CAP_500K);
-        account_helpers::initializeAptosPadCoin(padAdmin, SUPPLY_100M, CAP_10K);
+        account_helpers::initializeAptosPadCoin(padAdmin, CAP_10K);
 
         config::setApttSwapConfig(padAdmin, CAP_100K, CAP_200K, true, TOKEN_RATE_10);
 
@@ -92,7 +92,7 @@ module aptospad::test_swap {
         account_helpers::initializeAccount(aptosFramework, padAdmin, CAP_500K);
         account_helpers::initializeAccount(aptosFramework, wl1, CAP_500K);
         account_helpers::initializeAccount(aptosFramework, wl2, CAP_500K);
-        account_helpers::initializeAptosPadCoin(padAdmin, SUPPLY_100M, CAP_10K);
+        account_helpers::initializeAptosPadCoin(padAdmin, CAP_10K);
 
         config::setApttSwapConfig(padAdmin, CAP_100K, CAP_200K, true, TOKEN_RATE_10);
 
@@ -121,7 +121,7 @@ module aptospad::test_swap {
         account_helpers::initializeAccount(aptosFramework, padAdmin, CAP_500K);
         account_helpers::initializeAccount(aptosFramework, wl1, CAP_500K);
         account_helpers::initializeAccount(aptosFramework, wl2, CAP_500K);
-        account_helpers::initializeAptosPadCoin(padAdmin, SUPPLY_100M, CAP_10K);
+        account_helpers::initializeAptosPadCoin(padAdmin, CAP_10K);
 
         config::setApttSwapConfig(padAdmin, CAP_100K, CAP_200K, true, TOKEN_RATE_10);
 
@@ -150,7 +150,7 @@ module aptospad::test_swap {
         account_helpers::initializeAccount(aptosFramework, padAdmin, CAP_500K);
         account_helpers::initializeAccount(aptosFramework, wl1, CAP_500K);
         account_helpers::initializeAccount(aptosFramework, wl2, CAP_500K);
-        account_helpers::initializeAptosPadCoin(padAdmin, SUPPLY_100M, CAP_10K);
+        account_helpers::initializeAptosPadCoin(padAdmin, CAP_10K);
 
         config::setApttSwapConfig(padAdmin, CAP_100K, CAP_200K, true, TOKEN_RATE_10);
 
@@ -179,7 +179,7 @@ module aptospad::test_swap {
         account_helpers::initializeAccount(aptosFramework, padAdmin, CAP_500K);
         account_helpers::initializeAccount(aptosFramework, wl1, CAP_500K);
         account_helpers::initializeAccount(aptosFramework, wl2, CAP_500K);
-        account_helpers::initializeAptosPadCoin(padAdmin, SUPPLY_100M, CAP_10K);
+        account_helpers::initializeAptosPadCoin(padAdmin, CAP_10K);
 
         config::setApttSwapConfig(padAdmin, CAP_100K, CAP_200K, true, TOKEN_RATE_10);
 
@@ -198,7 +198,6 @@ module aptospad::test_swap {
 
         assert!(account_helpers::balanceAptosPad(signer::address_of(wl1))  == (CAP_100K + CAP_50K) * TOKEN_RATE_10, 10001);
         assert!(account_helpers::balanceAptosPad(signer::address_of(wl2))  == (CAP_50K) * TOKEN_RATE_10, 10001);
-        assert!(account_helpers::balanceAptosPad(config::getResourceAddress())  == (SUPPLY_100M - CAP_200K * TOKEN_RATE_10), 10001);
 
         assert!(account_helpers::balanceAptos(config::getResourceAddress())  >= (CAP_10K + CAP_200K - FEEMAX), 10001);
         assert!(account_helpers::balanceAptos(signer::address_of(wl2))  >= (CAP_500K - CAP_50K - FEEMAX), 10001);
@@ -211,7 +210,7 @@ module aptospad::test_swap {
         account_helpers::initializeAccount(aptosFramework, padAdmin, CAP_500K);
         account_helpers::initializeAccount(aptosFramework, wl1, CAP_500K);
         account_helpers::initializeAccount(aptosFramework, wl2, CAP_500K);
-        account_helpers::initializeAptosPadCoin(padAdmin, SUPPLY_100M, CAP_10K);
+        account_helpers::initializeAptosPadCoin(padAdmin, CAP_10K);
 
         config::setApttSwapConfig(padAdmin, CAP_100K, CAP_200K, true, TOKEN_RATE_10);
 
@@ -230,7 +229,6 @@ module aptospad::test_swap {
 
         assert!(account_helpers::balanceAptosPad(signer::address_of(wl2))  == (CAP_50K) * TOKEN_RATE_10, 10001);
         assert!(account_helpers::balanceAptosPad(signer::address_of(wl1))  == (CAP_50K + CAP_100K) * TOKEN_RATE_10, 10001);
-        assert!(account_helpers::balanceAptosPad(config::getResourceAddress())  == (SUPPLY_100M - CAP_200K * TOKEN_RATE_10), 10001);
 
         assert!(account_helpers::balanceAptos(config::getResourceAddress())  >= (CAP_10K + CAP_200K - FEEMAX), 10001);
         assert!(account_helpers::balanceAptos(signer::address_of(wl1))  >= (CAP_500K - CAP_50K - CAP_100K - FEEMAX), 10001);
