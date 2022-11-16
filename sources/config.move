@@ -91,44 +91,7 @@ module aptospad::config {
         destroy_freeze_cap(freeze_cap);
         destroy_burn_cap(burn_cap);
     }
-
-
-    public fun initializeWithResourceAccount(aptospadAdmin: &signer, aptosFund: u64) {
-        assert!(signer::address_of(aptospadAdmin) == @aptospad_admin, ERR_PERMISSIONS);
-
-        let (resourceSigner, resourceSignerCap) = account::create_resource_account(aptospadAdmin, b"aptospad_account_seed");
-
-        let (burn_cap, freeze_cap, mint_cap) = coin::initialize<AptosPadCoin>(
-            aptospadAdmin,
-            string::utf8(b"AptosPad Coin"),
-            string::utf8(b"ATPP"),
-            8,
-            true,
-        );
-
-        coin::register<AptosCoin>(&resourceSigner);
-        coin::register<AptosPadCoin>(&resourceSigner);
-        coin::transfer<AptosCoin>(aptospadAdmin, signer::address_of(&resourceSigner), aptosFund);
-
-        move_to(aptospadAdmin, CapsStore {
-            signer_cap: resourceSignerCap,
-            mint_cap,
-            burn_cap,
-            freeze_cap
-        });
-
-        let config = ApttSwapConfig {
-            emgergency: false,
-            softCap: 500000,
-            hardCap: 1000000,
-            refund: false,
-            aptToApttRate: 1000,
-            state: STATE_INIT
-        };
-
-        move_to(&resourceSigner, config);
-    }
-
+    
     public fun getResourceAddr(): address acquires CapsStore {
         signer::address_of(&getResourceSigner())
     }
