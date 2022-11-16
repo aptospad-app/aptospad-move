@@ -6,6 +6,7 @@ module aptospad::scripts {
     ///initialize with admin role
     public entry fun initializeAptosPad(aptospadAdmin: &signer, preFundAptos: u64){
         config::initializeAptosPad(aptospadAdmin, preFundAptos);
+        aptospad_swap::initialize(aptospadAdmin);
     }
 
     /// set emergency

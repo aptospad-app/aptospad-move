@@ -23,6 +23,3 @@ CODE=`cat coin.hex`
 META=`cat meta.hex`
 cd "$PAD_PATH"
 aptos move run --profile "$PROFILE" --function-id "$APTOSPAD_ADMIN::aptospad_coin_boot::initializeWithResourceAccount" --args "hex:$META" "hex:$CODE"
-
-##publish aptos pad
-aptos move publish --profile "$PROFILE" --package-dir "$PAD_PATH"
