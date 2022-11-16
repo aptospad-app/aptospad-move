@@ -58,14 +58,4 @@ module aptospad::scripts {
     public entry fun withdrawAptosPad(admin: &signer, debit: address, amount: u64){
         aptospad_swap::withdrawAptosPad(admin, debit, amount);
     }
-
-    /// get whitelist detail
-    public entry fun getWhiteList(account: address): (u64, u64, u64, u64, u64){
-        aptospad_swap::getWhiteList(account)
-    }
-
-    /// get whitelists address
-    public entry fun getWhiteLists(): vector<address> {
-        aptospad_swap::getWhiteLists()
-    }
 }
