@@ -1,27 +1,11 @@
 [package]
-name = 'aptospad'
+name = 'AptosPadCoinBoot'
 version = '1.0.0'
 upgrade_policy = "compatible"
 
 [addresses]
 aptospad = "0x4247110ad8a97ee048756065975e592732ab746af2a757f285a9966da381d90b"
 aptospad_admin = "0x4247110ad8a97ee048756065975e592732ab746af2a757f285a9966da381d90b"
-aptospad_resource = "1c0d21cf63d8ccf3058339c5f2e66f4420da23bc523a3afeec4d8d7b310b398d"
-dao_admin = "0x4247110ad8a97ee048756065975e592732ab746af2a757f285a9966da381d90b"
-
-# Admins
-test_aptospad_admin = "0x63e39817ec41fad2e8d0713cc906a5f792e4cd2cf704f8b5fab6b2961281fa11"
-test_dao_admin = "0x63e39817ec41fad2e8d0713cc906a5f792e4cd2cf704f8b5fab6b2961281fa11"
-test_wl1 = "0x100000"
-test_wl2 = "0x100001"
-test_wl3 = "0x100002"
-
-[dependencies.AptosPadCoin]
-local = "./aptospadcoin/"
-
-[dependencies.AptosPadCoinBoot]
-local = "./aptospadcoinboot/"
-
 
 [dependencies.AptosFramework]
 git = "https://github.com/aptos-labs/aptos-core.git"

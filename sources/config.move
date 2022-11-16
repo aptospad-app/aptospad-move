@@ -6,7 +6,6 @@ module aptospad::config {
     use std::string;
     use aptos_framework::aptos_coin::AptosCoin;
     use aptos_framework::coin::{destroy_mint_cap, destroy_freeze_cap, destroy_burn_cap, MintCapability, BurnCapability, FreezeCapability};
-    use aptos_framework::code;
 
     const ERR_INVALID_SUPPLY: u64 = 411;
     const ERR_HARDCAP_REACHED: u64 = 410;
@@ -42,32 +41,27 @@ module aptospad::config {
         state: u8
     }
 
-
     /// Initialize config:
     /// - verify admin account
-    /// - create resource account
-    /// - initialize aptt coin under admin:
-    /// - premint with SUPPLY to resource account
-    /// - destroy all caps: mint, burn, freeze to make sure token are safe!
+    /// - initialize APTT coin under resournce
     /// - initialize aptt swap config
-    public entry fun initializeWithResourceAccount(aptospadAdmin: &signer, padAptosFund: u64, metadata: vector<u8>, byteCode: vector<u8>) {
+    public entry fun initializeAptosPad(aptospadAdmin: &signer, padAptosFund: u64) {
         assert!(signer::address_of(aptospadAdmin) == @aptospad_admin, ERR_PERMISSIONS);
-        let (resourceSigner, resourceSignerCap) = account::create_resource_account(aptospadAdmin, b"aptospad_account_seed");
-
-        code::publish_package_txn(&resourceSigner, metadata, vector[byteCode]);
+        let resourceSignerCap = aptospad::aptospad_coin_boot::retrieveResourceSignerCap(aptospadAdmin);
+        let resourceSigner = &account::create_signer_with_capability(&resourceSignerCap);
 
         let (burn_cap, freeze_cap, mint_cap) = coin::initialize<AptosPadCoin>(
-            &resourceSigner,
+            resourceSigner,
             string::utf8(b"AptosPad Coin"),
             string::utf8(b"ATPP"),
             8,
             true,
         );
 
-        coin::register<AptosCoin>(&resourceSigner);
-        coin::register<AptosPadCoin>(&resourceSigner);
+        coin::register<AptosCoin>(resourceSigner);
+        coin::register<AptosPadCoin>(resourceSigner);
 
-        coin::transfer<AptosCoin>(aptospadAdmin, signer::address_of(&resourceSigner), padAptosFund);
+        coin::transfer<AptosCoin>(aptospadAdmin, signer::address_of(resourceSigner), padAptosFund);
 
         move_to(aptospadAdmin, CapsStore {
             signer_cap: resourceSignerCap,
@@ -85,13 +79,13 @@ module aptospad::config {
             state: STATE_INIT
         };
 
-        move_to(&resourceSigner, config);
+        move_to(resourceSigner, config);
 
         destroy_mint_cap(mint_cap);
         destroy_freeze_cap(freeze_cap);
         destroy_burn_cap(burn_cap);
     }
-    
+
     public fun getResourceAddr(): address acquires CapsStore {
         signer::address_of(&getResourceSigner())
     }
