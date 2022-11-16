@@ -3,10 +3,12 @@ module aptospad::test_initializer {
     use aptos_framework::account;
     use std::signer;
     use aptospad::account_helpers;
+    use aptos_std::debug;
 
     #[test(padAdmin = @aptospad_admin, resourceAcc = @aptospad_resource)]
     fun testCreateResourceAccount(padAdmin: &signer, resourceAcc: address) {
         let (resourceSigner, _resourceSignerCap) = account::create_resource_account(padAdmin, b"aptospad_account_seed");
+        debug::print(&signer::address_of(&resourceSigner));
         assert!(signer::address_of(&resourceSigner) == resourceAcc, 1002);
     }
 

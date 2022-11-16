@@ -1,13 +1,13 @@
 [package]
-name = 'aptospad'
+name = 'AptosPad'
 version = '1.0.0'
 upgrade_policy = "compatible"
 
 [addresses]
-aptospad = "0x4247110ad8a97ee048756065975e592732ab746af2a757f285a9966da381d90b"
-aptospad_admin = "0x4247110ad8a97ee048756065975e592732ab746af2a757f285a9966da381d90b"
-aptospad_resource = "1c0d21cf63d8ccf3058339c5f2e66f4420da23bc523a3afeec4d8d7b310b398d"
-dao_admin = "0x4247110ad8a97ee048756065975e592732ab746af2a757f285a9966da381d90b"
+aptospad = "65736b72a1227a547c734ad3b25df4e5091a3cf8af10a376ef40d063bf8b5117"
+aptospad_admin = "65736b72a1227a547c734ad3b25df4e5091a3cf8af10a376ef40d063bf8b5117"
+aptospad_resource = "8c9c574fea7155f08e7ab632fd982a7fb8718cd2db0e6c1de6dd875504349b59"
+dao_admin = "65736b72a1227a547c734ad3b25df4e5091a3cf8af10a376ef40d063bf8b5117"
 
 # Admins
 test_aptospad_admin = "0x63e39817ec41fad2e8d0713cc906a5f792e4cd2cf704f8b5fab6b2961281fa11"

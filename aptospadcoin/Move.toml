@@ -4,7 +4,7 @@ version = '1.0.0'
 upgrade_policy = "compatible"
 
 [addresses]
-aptospad_coin = "0x1c0d21cf63d8ccf3058339c5f2e66f4420da23bc523a3afeec4d8d7b310b398d"
+aptospad_coin = "8c9c574fea7155f08e7ab632fd982a7fb8718cd2db0e6c1de6dd875504349b59"
 
 [dev-dependencies.MoveStdlib]
 git = "https://github.com/aptos-labs/aptos-core.git"
