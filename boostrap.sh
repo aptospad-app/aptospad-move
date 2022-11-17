@@ -1,8 +1,8 @@
 #!/bin/bash
 ##make sure admin & profile address match
 ##make sure aptos profile in current path
-APTOSPAD_ADMIN='0x65736b72a1227a547c734ad3b25df4e5091a3cf8af10a376ef40d063bf8b5117'
-PROFILE="testnet5"
+APTOSPAD_ADMIN='e3cd31797b9b36ce3cb9617871fb0fa1187d1381aff01b49d72c87f56e27238e'
+PROFILE="testnet4"
 
 PAD_PATH=`pwd`
 COIN_PATH="$PAD_PATH/aptospadcoin"

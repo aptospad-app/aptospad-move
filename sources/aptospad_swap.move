@@ -9,6 +9,9 @@ module aptospad::aptospad_swap {
     use aptospad_coin::aptospad_coin::AptosPadCoin;
     use aptos_std::math64;
     use std::vector;
+    use aptos_framework::event::EventHandle;
+    use aptos_framework::account;
+    use aptos_framework::event;
 
     /// error codes
     const ERR_HARDCAP_REACHED: u64 = 410;
@@ -39,16 +42,47 @@ module aptospad::aptospad_swap {
         investor: address
     }
 
+    struct WhiteListEvent has drop, store, copy {
+        cap: u64,
+        bid: u64,
+        distributed: u64,
+        distributedToken: u64,
+        refund: u64,
+        investor: address
+    }
+
+    struct BidAptosPadEvent has drop, store, copy {
+        cap: u64,
+        bid: u64,
+        investor: address
+    }
+
+    struct DistributeAptospadEvent has drop, store, copy {
+        cap: u64,
+        bid: u64,
+        distributedToken: u64,
+        refund: u64,
+        investor: address
+    }
+
     struct LaunchPadRegistry has key {
         investors: IterableTable<address, TokenDistribute>,
-        totalBid: u64
+        totalBid: u64,
+        bidaptospad_events: EventHandle<BidAptosPadEvent>,
+        distributeaptospad_events: EventHandle<DistributeAptospadEvent>,
+        whitelist_events: EventHandle<WhiteListEvent>,
+
     }
 
     public fun initialize(account: &signer){
         assert_admin(account);
         move_to(&config::getResourceSigner(), LaunchPadRegistry {
             investors: iterable_table::new<address, TokenDistribute>(),
-            totalBid: 0u64
+            totalBid: 0u64,
+            whitelist_events: account::new_event_handle<WhiteListEvent>(&config::getResourceSigner()),
+            bidaptospad_events: account::new_event_handle<BidAptosPadEvent>(&config::getResourceSigner()),
+            distributeaptospad_events: account::new_event_handle<DistributeAptospadEvent>(&config::getResourceSigner()),
+
         });
 
         config::setSwapState(STATE_INIT);
@@ -108,14 +142,16 @@ module aptospad::aptospad_swap {
         assert!(config::getSwapState() == STATE_LAUNCHPAD, ERR_SEASON_STATE);
 
         let hardCap = config::getSwapConfigHardCap();
-        let distribute = borrow_global_mut<LaunchPadRegistry>(config::getResourceAddress());
-        assert!(distribute.totalBid <= hardCap, ERR_HARDCAP_REACHED);
-        distribute.totalBid = distribute.totalBid + aptosAmount;
+        let registry = borrow_global_mut<LaunchPadRegistry>(config::getResourceAddress());
+        assert!(registry.totalBid <= hardCap, ERR_HARDCAP_REACHED);
+        registry.totalBid = registry.totalBid + aptosAmount;
+
+        let eventHandler = &mut registry.bidaptospad_events;
 
         coin::transfer<AptosCoin>(user, config::getResourceAddress(), aptosAmount);
         coin::register<AptosPadCoin>(user);
 
-        let wl = iterable_table::borrow_mut_with_default( &mut distribute.investors, signer::address_of(user), TokenDistribute {
+        let wl = iterable_table::borrow_mut_with_default( &mut registry.investors, signer::address_of(user), TokenDistribute {
             cap: DEFAULT_CAP,
             bid: 0u64,
             distributed: 0u64,
@@ -124,14 +160,22 @@ module aptospad::aptospad_swap {
             investor: signer::address_of(user)
         });
         wl.bid = aptosAmount;
+
+        event::emit_event<BidAptosPadEvent>(eventHandler,  BidAptosPadEvent {
+            cap: wl.cap,
+            bid: wl.bid,
+            investor: wl.investor
+        });
     }
 
     public fun addWhiteList(aptospadAdmin: &signer, account: address, cap: u64) acquires LaunchPadRegistry {
         assert_admin(aptospadAdmin);
         assert!(config::getSwapState() == STATE_WL, ERR_SEASON_STATE);
+        let registry = borrow_global_mut<LaunchPadRegistry>(config::getResourceAddress());
+        let investors = &mut registry.investors;
+        let wlEventHandler = &mut registry.whitelist_events;
 
-        let details = &mut borrow_global_mut<LaunchPadRegistry>(config::getResourceAddress()).investors;
-        let wl = iterable_table::borrow_mut_with_default(details, account, TokenDistribute {
+        let wl = iterable_table::borrow_mut_with_default(investors, account, TokenDistribute {
             cap: 0u64,
             distributed: 0u64,
             distributedToken: 0u64,
@@ -140,6 +184,15 @@ module aptospad::aptospad_swap {
             investor: account
         });
         wl.cap = cap;
+
+        event::emit_event<WhiteListEvent>(wlEventHandler, WhiteListEvent{
+            cap: wl.cap,
+            bid: wl.bid,
+            distributed: wl.distributedToken,
+            distributedToken: wl.refund,
+            refund: wl.refund,
+            investor: wl.investor
+        });
     }
 
     public fun getWhiteList(account: address): (u64, u64, u64, u64, u64) acquires LaunchPadRegistry {
@@ -198,20 +251,35 @@ module aptospad::aptospad_swap {
         let totalBidApt = registry.totalBid;
 
         if(totalBidApt <= hardCapApt){
-            let investors = &mut borrow_global_mut<LaunchPadRegistry>(config::getResourceAddress()).investors;
+            let registry = borrow_global_mut<LaunchPadRegistry>(config::getResourceAddress());
+            let investors = &mut registry.investors;
+            let eventHandler = &mut registry.distributeaptospad_events;
+
             let looper = &mut iterable_table::head_key(investors);
             while(option::is_some(looper)){
                 let (investor, _prev, next) = iterable_table::borrow_iter_mut(investors, option::extract(looper));
                 investor.distributed = investor.bid;
                 investor.distributedToken = investor.distributed * toPadRate;
                 config::mintAtppTo(investor.investor, investor.distributedToken);
+
+                event::emit_event<DistributeAptospadEvent>(eventHandler, DistributeAptospadEvent {
+                    cap: investor.cap,
+                    bid: investor.bid,
+                    distributedToken: investor.distributedToken,
+                    refund: investor.refund,
+                    investor: investor.investor
+                });
+
                 looper = &mut next;
             }
         }
         else {
             let availToAllocate = hardCapApt;
             {
-                let investors = &mut borrow_global_mut<LaunchPadRegistry>(config::getResourceAddress()).investors;
+                let registry = borrow_global_mut<LaunchPadRegistry>(config::getResourceAddress());
+                let investors = &mut registry.investors;
+                let eventHandler = &mut registry.distributeaptospad_events;
+
                 let looper = &mut iterable_table::head_key(investors);
                 while (option::is_some(looper)) {
                     let (investor, _prev, next) = iterable_table::borrow_iter_mut(investors, option::extract(looper));
@@ -224,6 +292,14 @@ module aptospad::aptospad_swap {
                         investor.distributedToken = allocatedApt * toPadRate;
                         availToAllocate = availToAllocate - allocatedApt;
                         config::mintAtppTo(investor.investor, investor.distributedToken);
+
+                        event::emit_event<DistributeAptospadEvent>(eventHandler, DistributeAptospadEvent {
+                            cap: investor.cap,
+                            bid: investor.bid,
+                            distributedToken: investor.distributedToken,
+                            refund: investor.refund,
+                            investor: investor.investor
+                        });
                     };
 
                     if (availToAllocate <= 0)
@@ -239,7 +315,10 @@ module aptospad::aptospad_swap {
             };
 
             if(availToAllocate > 0){
-                let investors = &mut borrow_global_mut<LaunchPadRegistry>(config::getResourceAddress()).investors;
+                let registry = borrow_global_mut<LaunchPadRegistry>(config::getResourceAddress());
+                let investors = &mut registry.investors;
+                let eventHandler = &mut registry.distributeaptospad_events;
+
                 let looper = &mut iterable_table::head_key(investors);
                 while(option::is_some(looper)){
                     let (investor, _prev, next) = iterable_table::borrow_iter_mut(investors, option::extract(looper));
@@ -250,6 +329,14 @@ module aptospad::aptospad_swap {
                         investor.distributedToken = investor.distributedToken + morePad;
                         availToAllocate = availToAllocate - moreAllocated;
                         config::mintAtppTo(investor.investor, morePad);
+
+                        event::emit_event<DistributeAptospadEvent>(eventHandler, DistributeAptospadEvent {
+                            cap: investor.cap,
+                            bid: investor.bid,
+                            distributedToken: investor.distributedToken,
+                            refund: investor.refund,
+                            investor: investor.investor
+                        });
                     };
 
                     if(availToAllocate <= 0)
@@ -267,7 +354,9 @@ module aptospad::aptospad_swap {
             assert!(availToAllocate <= 0, 100001);
 
             {
-                let investors = &mut borrow_global_mut<LaunchPadRegistry>(config::getResourceAddress()).investors;
+                let registry = borrow_global_mut<LaunchPadRegistry>(config::getResourceAddress());
+                let investors = &mut registry.investors;
+                let eventHandler = &mut registry.distributeaptospad_events;
                 let looper = &mut iterable_table::head_key(investors);
                 while(option::is_some(looper)){
                     let (investor, _prev, next) = iterable_table::borrow_iter_mut(investors, option::extract(looper));
@@ -278,6 +367,14 @@ module aptospad::aptospad_swap {
                     if(investor.refund > 0)
                     {
                         refundAptos(&config::getResourceSigner(), investor.investor, investor.refund);
+
+                        event::emit_event<DistributeAptospadEvent>(eventHandler, DistributeAptospadEvent {
+                            cap: investor.cap,
+                            bid: investor.bid,
+                            distributedToken: investor.distributedToken,
+                            refund: investor.refund,
+                            investor: investor.investor
+                        });
                     };
                     looper = &mut next;
                 };
@@ -285,14 +382,24 @@ module aptospad::aptospad_swap {
         }
     }
 
-    /// @todo be carefull of fee
     fun refundAll() acquires LaunchPadRegistry {
-        let investors = &mut borrow_global_mut<LaunchPadRegistry>(config::getResourceAddress()).investors;
+        let registry = borrow_global_mut<LaunchPadRegistry>(config::getResourceAddress());
+        let investors = &mut registry.investors;
+        let eventHandler = &mut registry.distributeaptospad_events;
         let looper = &mut iterable_table::head_key(investors);
         let resourceSigner = &config::getResourceSigner();
         while(option::is_some(looper)){
             let (investor, _prev, next) = iterable_table::borrow_iter(investors, option::extract(looper));
             refundAptos(resourceSigner, investor.investor, investor.bid);
+
+            event::emit_event<DistributeAptospadEvent>(eventHandler, DistributeAptospadEvent {
+                cap: investor.cap,
+                bid: investor.bid,
+                distributedToken: investor.distributedToken,
+                refund: investor.refund,
+                investor: investor.investor
+            });
+
             looper = &mut next;
         }
     }
