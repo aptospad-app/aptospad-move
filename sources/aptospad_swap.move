@@ -14,6 +14,7 @@ module aptospad::aptospad_swap {
     use aptos_framework::event;
 
     /// error codes
+    const ERR_NOT_IN_WHITELIST: u64 = 411;
     const ERR_HARDCAP_REACHED: u64 = 410;
     const ERR_SEASON_STATE: u64 = 409;
     const ERR_SEASON_ACTIVE: u64 = 408;
@@ -22,7 +23,7 @@ module aptospad::aptospad_swap {
     const ERR_EMERGENCY: u64 = 405;
     const ERR_PERMISSIONS: u64 = 403;
 
-    const DEFAULT_CAP: u64 = 1000;
+    const DEFAULT_CAP_1K: u64 = 100000000*1000;
 
     const STATE_INIT: u8 = 1;
     const STATE_WL: u8 = 2;
@@ -143,16 +144,20 @@ module aptospad::aptospad_swap {
 
         let hardCap = config::getSwapConfigHardCap();
         let registry = borrow_global_mut<LaunchPadRegistry>(config::getResourceAddress());
+
+        let bypassWhitelistEnabled = config::isBypassWhiteList();
+        let isWhitelisted = iterable_table::contains( &mut registry.investors, signer::address_of(user));
+
+        assert!(bypassWhitelistEnabled || isWhitelisted, ERR_NOT_IN_WHITELIST);
         assert!(registry.totalBid <= hardCap, ERR_HARDCAP_REACHED);
         registry.totalBid = registry.totalBid + aptosAmount;
 
         let eventHandler = &mut registry.bidaptospad_events;
-
         coin::transfer<AptosCoin>(user, config::getResourceAddress(), aptosAmount);
         coin::register<AptosPadCoin>(user);
 
         let wl = iterable_table::borrow_mut_with_default( &mut registry.investors, signer::address_of(user), TokenDistribute {
-            cap: DEFAULT_CAP,
+            cap: DEFAULT_CAP_1K,
             bid: 0u64,
             distributed: 0u64,
             distributedToken: 0u64,

@@ -22,7 +22,7 @@ module aptospad::test_config {
         let hardCap = 10^8 * 10000 * 2;
         let softCap = 10^8 * 10000;
         let rate = 1000;
-        config::setApttSwapConfig(padAdmin, softCap,hardCap, true, rate);
+        config::setApttSwapConfig(padAdmin, softCap,hardCap, true, rate, false);
         assert!(config::getSwapConfigHardCap() == hardCap, 100000);
         assert!(config::getSwapConfigSoftCap() == softCap, 100000);
         assert!(config::getSwapConfigAptToApttRate() == rate, 100000);

@@ -14,9 +14,14 @@ module aptospad::scripts {
         config::setEmergency(aptospadAdmin, emergency);
     }
 
+    /// set bypass whitelist
+    public entry fun setBypassWhiteList(aptospadAdmin: &signer, bypass: bool){
+        config::setBypassWhitelist(aptospadAdmin, bypass);
+    }
+
     /// update swap config
-    public entry fun setApttSwapConfig(aptospadAdmin: &signer, softCap: u64, hardCap: u64, enableRefund: bool, aptToApttRate: u64){
-        config::setApttSwapConfig(aptospadAdmin, softCap, hardCap, enableRefund, aptToApttRate);
+    public entry fun setApttSwapConfig(aptospadAdmin: &signer, softCap: u64, hardCap: u64, enableRefund: bool, aptToApttRate: u64, bypassWhitelist: bool){
+        config::setApttSwapConfig(aptospadAdmin, softCap, hardCap, enableRefund, aptToApttRate, bypassWhitelist);
     }
 
     /// reset seasion

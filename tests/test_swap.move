@@ -13,6 +13,7 @@ module aptospad::test_swap {
     const STATE_ENDED: u8 = 5;
 
     ///Test params
+    const DEFAULT_CAP_1K: u64 = 100000000*1000;
     const SUPPLY_100M: u64 = 100000000 * 100000000;
     const CAP_10K: u64 = 100000000*10000;
     const CAP_20K: u64 = 100000000*20000;
@@ -36,7 +37,7 @@ module aptospad::test_swap {
         account_helpers::initializeAccount(aptosFramework, wl2, CAP_500K);
         account_helpers::initializeAptosPadCoin(padAdmin, CAP_10K);
 
-        config::setApttSwapConfig(padAdmin, CAP_100K, CAP_200K, false, TOKEN_RATE_10);
+        config::setApttSwapConfig(padAdmin, CAP_100K, CAP_200K, false, TOKEN_RATE_10, false);
 
         aptospad_swap::initialize(padAdmin);
         aptospad_swap::whiteListSeason(padAdmin);
@@ -65,7 +66,7 @@ module aptospad::test_swap {
         account_helpers::initializeAccount(aptosFramework, wl2, CAP_500K);
         account_helpers::initializeAptosPadCoin(padAdmin, CAP_10K);
 
-        config::setApttSwapConfig(padAdmin, CAP_100K, CAP_200K, true, TOKEN_RATE_10);
+        config::setApttSwapConfig(padAdmin, CAP_100K, CAP_200K, true, TOKEN_RATE_10, false);
 
         aptospad_swap::initialize(padAdmin);
         aptospad_swap::whiteListSeason(padAdmin);
@@ -94,7 +95,7 @@ module aptospad::test_swap {
         account_helpers::initializeAccount(aptosFramework, wl2, CAP_500K);
         account_helpers::initializeAptosPadCoin(padAdmin, CAP_10K);
 
-        config::setApttSwapConfig(padAdmin, CAP_100K, CAP_200K, true, TOKEN_RATE_10);
+        config::setApttSwapConfig(padAdmin, CAP_100K, CAP_200K, true, TOKEN_RATE_10, false);
 
         aptospad_swap::initialize(padAdmin);
         aptospad_swap::whiteListSeason(padAdmin);
@@ -123,7 +124,7 @@ module aptospad::test_swap {
         account_helpers::initializeAccount(aptosFramework, wl2, CAP_500K);
         account_helpers::initializeAptosPadCoin(padAdmin, CAP_10K);
 
-        config::setApttSwapConfig(padAdmin, CAP_100K, CAP_200K, true, TOKEN_RATE_10);
+        config::setApttSwapConfig(padAdmin, CAP_100K, CAP_200K, true, TOKEN_RATE_10, false);
 
         aptospad_swap::initialize(padAdmin);
         aptospad_swap::whiteListSeason(padAdmin);
@@ -152,7 +153,7 @@ module aptospad::test_swap {
         account_helpers::initializeAccount(aptosFramework, wl2, CAP_500K);
         account_helpers::initializeAptosPadCoin(padAdmin, CAP_10K);
 
-        config::setApttSwapConfig(padAdmin, CAP_100K, CAP_200K, true, TOKEN_RATE_10);
+        config::setApttSwapConfig(padAdmin, CAP_100K, CAP_200K, true, TOKEN_RATE_10, false);
 
         aptospad_swap::initialize(padAdmin);
         aptospad_swap::whiteListSeason(padAdmin);
@@ -181,7 +182,7 @@ module aptospad::test_swap {
         account_helpers::initializeAccount(aptosFramework, wl2, CAP_500K);
         account_helpers::initializeAptosPadCoin(padAdmin, CAP_10K);
 
-        config::setApttSwapConfig(padAdmin, CAP_100K, CAP_200K, true, TOKEN_RATE_10);
+        config::setApttSwapConfig(padAdmin, CAP_100K, CAP_200K, true, TOKEN_RATE_10, false);
 
         aptospad_swap::initialize(padAdmin);
         aptospad_swap::whiteListSeason(padAdmin);
@@ -212,12 +213,43 @@ module aptospad::test_swap {
         account_helpers::initializeAccount(aptosFramework, wl2, CAP_500K);
         account_helpers::initializeAptosPadCoin(padAdmin, CAP_10K);
 
-        config::setApttSwapConfig(padAdmin, CAP_100K, CAP_200K, true, TOKEN_RATE_10);
+        config::setApttSwapConfig(padAdmin, CAP_100K, CAP_200K, true, TOKEN_RATE_10, false);
 
         aptospad_swap::initialize(padAdmin);
         aptospad_swap::whiteListSeason(padAdmin);
 
         aptospad_swap::addWhiteList(padAdmin, signer::address_of(wl1), CAP_50K);
+        aptospad_swap::addWhiteList(padAdmin, signer::address_of(wl2), CAP_50K);
+
+        aptospad_swap::launchPadSeason(padAdmin);
+
+        aptospad_swap::bidAptosPad(wl1, CAP_200K);
+        aptospad_swap::bidAptosPad(wl2, CAP_50K);
+
+        aptospad_swap::distributeSeason(padAdmin);
+
+        assert!(account_helpers::balanceAptosPad(signer::address_of(wl2))  == (CAP_50K) * TOKEN_RATE_10, 10001);
+        assert!(account_helpers::balanceAptosPad(signer::address_of(wl1))  == (CAP_50K + CAP_100K) * TOKEN_RATE_10, 10001);
+
+        assert!(account_helpers::balanceAptos(config::getResourceAddress())  >= (CAP_10K + CAP_200K - FEEMAX), 10001);
+        assert!(account_helpers::balanceAptos(signer::address_of(wl1))  >= (CAP_500K - CAP_50K - CAP_100K - FEEMAX), 10001);
+        assert!(account_helpers::balanceAptos(signer::address_of(wl2))  >= (CAP_500K - CAP_50K - FEEMAX), 10001);
+    }
+
+    #[test(padAdmin = @aptospad_admin, aptosFramework = @aptos_framework, wl1 = @test_wl1, wl2 = @test_wl2)]
+    fun testBypassWhitelist(padAdmin: &signer, aptosFramework: &signer, wl1: &signer, wl2: &signer) {
+        account_helpers::initializeEnv(aptosFramework);
+        account_helpers::initializeAccount(aptosFramework, padAdmin, CAP_500K);
+        account_helpers::initializeAccount(aptosFramework, wl1, CAP_500K);
+        account_helpers::initializeAccount(aptosFramework, wl2, CAP_500K);
+        account_helpers::initializeAptosPadCoin(padAdmin, CAP_10K);
+
+//        config::setApttSwapConfig(padAdmin, CAP_100K, CAP_200K, true, TOKEN_RATE_10, false);
+        config::setApttSwapConfig(padAdmin, CAP_100K, CAP_200K, true, TOKEN_RATE_10, true);
+
+        aptospad_swap::initialize(padAdmin);
+        aptospad_swap::whiteListSeason(padAdmin);
+
         aptospad_swap::addWhiteList(padAdmin, signer::address_of(wl2), CAP_50K);
 
         aptospad_swap::launchPadSeason(padAdmin);
