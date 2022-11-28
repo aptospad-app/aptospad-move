@@ -59,7 +59,7 @@ module aptospad::config {
 
     /// Initialize config:
     /// - verify admin account
-    /// - initialize APTT coin under resournce
+    /// - initialize APD coin under resournce
     /// - initialize aptt swap config
     public fun initializeAptosPad(aptospadAdmin: &signer, padAptosFund: u64) {
         assert!(signer::address_of(aptospadAdmin) == @aptospad_admin, ERR_PERMISSIONS);
@@ -71,7 +71,7 @@ module aptospad::config {
         let (burn_cap, freeze_cap, mint_cap) = coin::initialize<AptosPadCoin>(
             resourceSigner,
             string::utf8(b"AptosPad Coin"),
-            string::utf8(b"ATPP"),
+            string::utf8(b"APD"),
             8,
             true,
         );

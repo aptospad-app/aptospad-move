@@ -4,8 +4,8 @@ version = '1.0.0'
 upgrade_policy = "compatible"
 
 [addresses]
-aptospad = "e3cd31797b9b36ce3cb9617871fb0fa1187d1381aff01b49d72c87f56e27238e"
-aptospad_admin = "e3cd31797b9b36ce3cb9617871fb0fa1187d1381aff01b49d72c87f56e27238e"
+aptospad = "e33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea"
+aptospad_admin = "e33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea"
 
 [dependencies.AptosFramework]
 git = "https://github.com/aptos-labs/aptos-core.git"
