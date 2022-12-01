@@ -12,8 +12,10 @@ module aptospad::aptospad_swap {
     use aptos_framework::event::EventHandle;
     use aptos_framework::account;
     use aptos_framework::event;
+    use std::signer::address_of;
 
     /// error codes
+    const ERR_BID_OVERFLOW: u64 = 412;
     const ERR_NOT_IN_WHITELIST: u64 = 411;
     const ERR_HARDCAP_REACHED: u64 = 410;
     const ERR_SEASON_STATE: u64 = 409;
@@ -23,7 +25,9 @@ module aptospad::aptospad_swap {
     const ERR_EMERGENCY: u64 = 405;
     const ERR_PERMISSIONS: u64 = 403;
 
-    const DEFAULT_CAP_1K: u64 = 100000000*1000;
+    const DEFAULT_CAP_1K: u64 = 100000000*100;
+    const DEFAULT_OVERFLOW_100: u64 = 100000000*100;
+
 
     const STATE_INIT: u8 = 1;
     const STATE_WL: u8 = 2;
@@ -34,7 +38,7 @@ module aptospad::aptospad_swap {
     ///cap: in token
     ///wanna: in APT
     ///distributed: in token
-    struct TokenDistribute has drop, store, copy {
+    struct TokenDistribute has drop, store, copy, key {
         cap: u64,
         bid: u64,
         distributed: u64,
@@ -72,7 +76,6 @@ module aptospad::aptospad_swap {
         bidaptospad_events: EventHandle<BidAptosPadEvent>,
         distributeaptospad_events: EventHandle<DistributeAptospadEvent>,
         whitelist_events: EventHandle<WhiteListEvent>,
-
     }
 
     public fun initialize(account: &signer){
@@ -83,7 +86,6 @@ module aptospad::aptospad_swap {
             whitelist_events: account::new_event_handle<WhiteListEvent>(&config::getResourceSigner()),
             bidaptospad_events: account::new_event_handle<BidAptosPadEvent>(&config::getResourceSigner()),
             distributeaptospad_events: account::new_event_handle<DistributeAptospadEvent>(&config::getResourceSigner()),
-
         });
 
         config::setSwapState(STATE_INIT);
@@ -171,6 +173,141 @@ module aptospad::aptospad_swap {
             bid: wl.bid,
             investor: wl.investor
         });
+    }
+
+    public fun bidAptosPadV2(user: &signer, aptosAmount: u64)  acquires LaunchPadRegistry {
+        assert_no_emergency();
+        assert!(config::getSwapState() == STATE_LAUNCHPAD, ERR_SEASON_STATE);
+
+        let hardCap = config::getSwapConfigHardCap();
+        let registry = borrow_global_mut<LaunchPadRegistry>(config::getResourceAddress());
+
+        let bypassWhitelistEnabled = config::isBypassWhiteList();
+        let isWhitelisted = iterable_table::contains( &mut registry.investors, signer::address_of(user));
+
+        assert!(bypassWhitelistEnabled || isWhitelisted, ERR_NOT_IN_WHITELIST);
+        assert!(registry.totalBid <= hardCap, ERR_HARDCAP_REACHED);
+        registry.totalBid = registry.totalBid + aptosAmount;
+
+        let eventHandler = &mut registry.bidaptospad_events;
+        coin::transfer<AptosCoin>(user, config::getResourceAddress(), aptosAmount);
+
+        if(!coin::is_account_registered<AptosPadCoin>(signer::address_of(user))){
+            coin::register<AptosPadCoin>(user)
+        };
+
+        let wl = iterable_table::borrow_mut_with_default( &mut registry.investors, signer::address_of(user), TokenDistribute {
+            cap: DEFAULT_CAP_1K,
+            bid: 0u64,
+            distributed: 0u64,
+            distributedToken: 0u64,
+            refund: 0u64,
+            investor: signer::address_of(user)
+        });
+
+        wl.bid = wl.bid + aptosAmount;
+
+        event::emit_event<BidAptosPadEvent>(eventHandler,  BidAptosPadEvent {
+            cap: wl.cap,
+            bid: wl.bid,
+            investor: wl.investor
+        });
+    }
+
+    public fun bidAptosPadV3(user: &signer, aptosAmount: u64)  acquires LaunchPadRegistry {
+        assert_no_emergency();
+        assert!(config::getSwapState() == STATE_LAUNCHPAD, ERR_SEASON_STATE);
+
+        let hardCap = config::getSwapConfigHardCap();
+        let registry = borrow_global_mut<LaunchPadRegistry>(config::getResourceAddress());
+
+        let bypassWhitelistEnabled = config::isBypassWhiteList();
+        let isWhitelisted = iterable_table::contains( &mut registry.investors, signer::address_of(user));
+
+        assert!(bypassWhitelistEnabled || isWhitelisted, ERR_NOT_IN_WHITELIST);
+        assert!(registry.totalBid <= hardCap, ERR_HARDCAP_REACHED);
+
+        let wl = iterable_table::borrow_mut_with_default( &mut registry.investors, signer::address_of(user), TokenDistribute {
+            cap: DEFAULT_CAP_1K,
+            bid: 0u64,
+            distributed: 0u64,
+            distributedToken: 0u64,
+            refund: 0u64,
+            investor: signer::address_of(user)
+        });
+
+        wl.bid = wl.bid + aptosAmount;
+
+        checkBidOverflow(wl.bid, wl.cap);
+
+
+        registry.totalBid = registry.totalBid + aptosAmount;
+
+        let eventHandler = &mut registry.bidaptospad_events;
+        coin::transfer<AptosCoin>(user, config::getResourceAddress(), aptosAmount);
+
+        if(!coin::is_account_registered<AptosPadCoin>(signer::address_of(user))){
+            coin::register<AptosPadCoin>(user)
+        };
+
+        event::emit_event<BidAptosPadEvent>(eventHandler,  BidAptosPadEvent {
+            cap: wl.cap,
+            bid: wl.bid,
+            investor: wl.investor
+        });
+    }
+
+    public fun bidAptosPadV4(user: &signer, aptosAmount: u64)  acquires LaunchPadRegistry, TokenDistribute {
+        assert_no_emergency();
+        assert!(config::getSwapState() == STATE_LAUNCHPAD, ERR_SEASON_STATE);
+
+        let userAddr = signer::address_of(user);
+        let hardCap = config::getSwapConfigHardCap();
+        let registry = borrow_global_mut<LaunchPadRegistry>(config::getResourceAddress());
+
+        let bypassWhitelistEnabled = config::isBypassWhiteList();
+        let isWhitelisted = iterable_table::contains( &mut registry.investors, signer::address_of(user));
+
+        assert!(bypassWhitelistEnabled || isWhitelisted, ERR_NOT_IN_WHITELIST);
+        assert!(registry.totalBid <= hardCap, ERR_HARDCAP_REACHED);
+
+        let wl = iterable_table::borrow_mut_with_default( &mut registry.investors, signer::address_of(user), TokenDistribute {
+            cap: DEFAULT_CAP_1K,
+            bid: 0u64,
+            distributed: 0u64,
+            distributedToken: 0u64,
+            refund: 0u64,
+            investor: signer::address_of(user)
+        });
+
+        wl.bid = wl.bid + aptosAmount;
+
+        checkBidOverflow(wl.bid, wl.cap);
+
+        if(exists<TokenDistribute>(userAddr)){
+            move_from<TokenDistribute>(address_of(user));
+        };
+
+        move_to(user, *wl);
+
+        registry.totalBid = registry.totalBid + aptosAmount;
+
+        let eventHandler = &mut registry.bidaptospad_events;
+        coin::transfer<AptosCoin>(user, config::getResourceAddress(), aptosAmount);
+
+        if(!coin::is_account_registered<AptosPadCoin>(signer::address_of(user))){
+            coin::register<AptosPadCoin>(user)
+        };
+
+        event::emit_event<BidAptosPadEvent>(eventHandler,  BidAptosPadEvent {
+            cap: wl.cap,
+            bid: wl.bid,
+            investor: wl.investor
+        });
+    }
+
+    fun checkBidOverflow(bid: u64, _cap: u64) {
+        assert!(bid <= DEFAULT_OVERFLOW_100, ERR_BID_OVERFLOW);
     }
 
     public fun addWhiteList(aptospadAdmin: &signer, account: address, cap: u64) acquires LaunchPadRegistry {

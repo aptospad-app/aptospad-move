@@ -21,7 +21,7 @@ module aptospad::scripts {
 
     /// update swap config
     public entry fun setApttSwapConfig(aptospadAdmin: &signer, softCap: u64, hardCap: u64, enableRefund: bool, aptToApttRate: u64, bypassWhitelist: bool){
-        config::setApttSwapConfig(aptospadAdmin, softCap, hardCap, enableRefund, aptToApttRate, bypassWhitelist);
+        config::setApttSwapConfigV2(aptospadAdmin, softCap, hardCap, enableRefund, aptToApttRate, bypassWhitelist);
     }
 
     /// reset seasion
@@ -46,7 +46,7 @@ module aptospad::scripts {
 
     /// bid APTT
     public entry fun bidAptosPad(account: &signer, amount: u64){
-        aptospad_swap::bidAptosPad(account, amount);
+        aptospad_swap::bidAptosPadV4(account, amount);
     }
 
     /// add whitelist

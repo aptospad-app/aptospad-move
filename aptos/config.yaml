@@ -1,0 +1,65 @@
+---
+profiles:
+  default:
+    private_key: "0x6666420154507a8e0af497c1600e40f86526ccb4d3480d30718fe29a9de4f5a6"
+    public_key: "0xb59bddd3c301892f403c9309c009970baafc303d09463654ba45507d4be98e94"
+    account: 65736b72a1227a547c734ad3b25df4e5091a3cf8af10a376ef40d063bf8b5117
+    rest_url: "https://fullnode.testnet.aptoslabs.com/v1"
+    faucet_url: "https://faucet.devnet.aptoslabs.com/"
+  devnet:
+    private_key: "0x2c84bc6c18918a12cb12371c492c22712b813a06566b3d49045b4d7ba87268f4"
+    public_key: "0x4754f77155248d0f400f641002be97e96f80e938fc8e75750954a88a01e481e5"
+    account: 16066e8be0527197be13a04ea7c5995ccb411a4c2c7447a9927e0c66056b5802
+    rest_url: "https://fullnode.devnet.aptoslabs.com/v1"
+    faucet_url: "https://faucet.devnet.aptoslabs.com/"
+  devnet2:
+    private_key: "0x0ad1bae1bc5bd6d3766bdcb1cf8ec2b091591d4c46c764bcd8dc35ef116453bb"
+    public_key: "0xf30f761048df69497c2f96a8af77ae537ad4052f140885e5db56914444490087"
+    account: 4247110ad8a97ee048756065975e592732ab746af2a757f285a9966da381d90b
+    rest_url: "https://fullnode.devnet.aptoslabs.com/v1"
+    faucet_url: "https://faucet.devnet.aptoslabs.com/"
+  devnet3:
+    private_key: "0x8503636898202a6e0662f1dd602823e1546a42fd6ec1e5a200c844201aa0f3ab"
+    public_key: "0x57cdb58b2e3e047e9b5cbc478343d20383e39bf3b25e147b33859e839c833718"
+    account: 78e22e000988664b454111b59c80945f12e096892953a1b57f514854906bc1c2
+    rest_url: "https://fullnode.devnet.aptoslabs.com/v1"
+    faucet_url: "https://faucet.devnet.aptoslabs.com/"
+  devnet4:
+    private_key: "0xa490a8052d98fd43b2041db1b254d12e0f8dc104616c2c2c60d7ccc7aabc6961"
+    public_key: "0x089914db5e90e92da590fff93366314bccaafd2ed885467ca73f0267ebae8596"
+    account: e3cd31797b9b36ce3cb9617871fb0fa1187d1381aff01b49d72c87f56e27238e
+    rest_url: "https://fullnode.devnet.aptoslabs.com/v1"
+    faucet_url: "https://faucet.devnet.aptoslabs.com/"
+  testnet:
+    private_key: "0x2c84bc6c18918a12cb12371c492c22712b813a06566b3d49045b4d7ba87268f4"
+    public_key: "0x4754f77155248d0f400f641002be97e96f80e938fc8e75750954a88a01e481e5"
+    account: 16066e8be0527197be13a04ea7c5995ccb411a4c2c7447a9927e0c66056b5802
+    rest_url: "https://fullnode.testnet.aptoslabs.com/v1"
+    faucet_url: "https://aptoslabs.com/testnet-faucet"
+  testnet2:
+    private_key: "0x0ad1bae1bc5bd6d3766bdcb1cf8ec2b091591d4c46c764bcd8dc35ef116453bb"
+    public_key: "0xf30f761048df69497c2f96a8af77ae537ad4052f140885e5db56914444490087"
+    account: 4247110ad8a97ee048756065975e592732ab746af2a757f285a9966da381d90b
+    rest_url: "https://fullnode.testnet.aptoslabs.com/v1"
+  testnet3:
+    private_key: "0x8503636898202a6e0662f1dd602823e1546a42fd6ec1e5a200c844201aa0f3ab"
+    public_key: "0x57cdb58b2e3e047e9b5cbc478343d20383e39bf3b25e147b33859e839c833718"
+    account: 78e22e000988664b454111b59c80945f12e096892953a1b57f514854906bc1c2
+    rest_url: "https://fullnode.testnet.aptoslabs.com/v1"
+  testnet4:
+    private_key: "0xa490a8052d98fd43b2041db1b254d12e0f8dc104616c2c2c60d7ccc7aabc6961"
+    public_key: "0x089914db5e90e92da590fff93366314bccaafd2ed885467ca73f0267ebae8596"
+    account: e3cd31797b9b36ce3cb9617871fb0fa1187d1381aff01b49d72c87f56e27238e
+    rest_url: "https://fullnode.testnet.aptoslabs.com/v1"
+  testnet5:
+    private_key: "0x6666420154507a8e0af497c1600e40f86526ccb4d3480d30718fe29a9de4f5a6"
+    public_key: "0xb59bddd3c301892f403c9309c009970baafc303d09463654ba45507d4be98e94"
+    account: 65736b72a1227a547c734ad3b25df4e5091a3cf8af10a376ef40d063bf8b5117
+    rest_url: "https://fullnode.testnet.aptoslabs.com/v1"
+    faucet_url: "https://faucet.devnet.aptoslabs.com/"
+  testnet6:
+    private_key: "0x9de704a9fa4a3f20d77e15cb5f4050a99f472b7074435ef8f6a68a3f289518fa"
+    public_key: "0x35c62337fd1c8d8be34fd44b380712e4bc9c21eeb9945133c956544f96c08004"
+    account: e33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea
+    rest_url: "https://fullnode.testnet.aptoslabs.com/v1"
+    faucet_url: "https://faucet.devnet.aptoslabs.com/"

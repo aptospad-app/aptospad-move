@@ -138,6 +138,20 @@ module aptospad::config {
         config.bypassWhiteList = bypassWhitelist;
     }
 
+    public fun setApttSwapConfigV2(aptospadAdmin: &signer,  softCap: u64, hardCap: u64, refund: bool, aptToApttRate: u64, bypassWhitelist: bool) acquires CapsStore, ApttSwapConfig {
+        assert!(signer::address_of(aptospadAdmin) == @aptospad_admin, ERR_PERMISSIONS);
+        assert!((softCap > 0) && (hardCap > 0) && (hardCap > softCap), ERR_INVALID_CAP);
+        assert!((aptToApttRate > 0), ERR_INVALID_RATE);
+
+        let signerCap = &borrow_global<CapsStore>(@aptospad_admin).signer_cap;
+        let config = borrow_global_mut<ApttSwapConfig>(account::get_signer_capability_address(signerCap));
+        config.softCap = softCap;
+        config.hardCap = hardCap;
+        config.refund = refund;
+        config.aptToApttRate = aptToApttRate;
+        config.bypassWhiteList = bypassWhitelist;
+    }
+
     public fun isEmergency(): bool acquires CapsStore, ApttSwapConfig {
         let signerCap = &borrow_global<CapsStore>(@aptospad_admin).signer_cap;
         let config = borrow_global<ApttSwapConfig>(account::get_signer_capability_address(signerCap));
