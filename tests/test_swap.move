@@ -47,10 +47,10 @@ module aptospad::test_swap {
 
         aptospad_swap::launchPadSeason(padAdmin);
 
-        aptospad_swap::bidAptosPad(wl1, CAP_40K);
-        aptospad_swap::bidAptosPad(wl2, CAP_40K);
+        aptospad_swap::bidAptosPadV5(wl1, CAP_40K);
+        aptospad_swap::bidAptosPadV5(wl2, CAP_40K);
 
-        aptospad_swap::distributeSeason(padAdmin);
+        aptospad_swap::distributeSeasonV2(padAdmin);
 
         assert!(account_helpers::balanceAptosPad(signer::address_of(wl1))  == CAP_40K * TOKEN_RATE_10, 10001);
         assert!(account_helpers::balanceAptosPad(signer::address_of(wl2)) == CAP_40K * TOKEN_RATE_10, 10001);
@@ -76,10 +76,10 @@ module aptospad::test_swap {
 
         aptospad_swap::launchPadSeason(padAdmin);
 
-        aptospad_swap::bidAptosPad(wl1, CAP_40K);
-        aptospad_swap::bidAptosPad(wl2, CAP_40K);
+        aptospad_swap::bidAptosPadV5(wl1, CAP_40K);
+        aptospad_swap::bidAptosPadV5(wl2, CAP_40K);
 
-        aptospad_swap::distributeSeason(padAdmin);
+        aptospad_swap::distributeSeasonV2(padAdmin);
 
         assert!(account_helpers::balanceAptosPad(signer::address_of(wl1))  == 0, 10001);
         assert!(account_helpers::balanceAptosPad(signer::address_of(wl2)) == 0, 10001);
@@ -105,10 +105,10 @@ module aptospad::test_swap {
 
         aptospad_swap::launchPadSeason(padAdmin);
 
-        aptospad_swap::bidAptosPad(wl1, CAP_50K);
-        aptospad_swap::bidAptosPad(wl2, CAP_50K);
+        aptospad_swap::bidAptosPadV5(wl1, CAP_50K);
+        aptospad_swap::bidAptosPadV5(wl2, CAP_50K);
 
-        aptospad_swap::distributeSeason(padAdmin);
+        aptospad_swap::distributeSeasonV2(padAdmin);
 
         assert!(account_helpers::balanceAptosPad(signer::address_of(wl1))  == CAP_50K * TOKEN_RATE_10, 10001);
         assert!(account_helpers::balanceAptosPad(signer::address_of(wl2)) ==  CAP_50K * TOKEN_RATE_10, 10001);
@@ -134,10 +134,10 @@ module aptospad::test_swap {
 
         aptospad_swap::launchPadSeason(padAdmin);
 
-        aptospad_swap::bidAptosPad(wl1, CAP_80K);
-        aptospad_swap::bidAptosPad(wl2, CAP_80K);
+        aptospad_swap::bidAptosPadV5(wl1, CAP_80K);
+        aptospad_swap::bidAptosPadV5(wl2, CAP_80K);
 
-        aptospad_swap::distributeSeason(padAdmin);
+        aptospad_swap::distributeSeasonV2(padAdmin);
 
         assert!(account_helpers::balanceAptosPad(signer::address_of(wl1))  == CAP_80K * TOKEN_RATE_10, 10001);
         assert!(account_helpers::balanceAptosPad(signer::address_of(wl2)) ==  CAP_80K * TOKEN_RATE_10, 10001);
@@ -163,10 +163,10 @@ module aptospad::test_swap {
 
         aptospad_swap::launchPadSeason(padAdmin);
 
-        aptospad_swap::bidAptosPad(wl1, CAP_100K);
-        aptospad_swap::bidAptosPad(wl2, CAP_100K);
+        aptospad_swap::bidAptosPadV5(wl1, CAP_100K);
+        aptospad_swap::bidAptosPadV5(wl2, CAP_100K);
 
-        aptospad_swap::distributeSeason(padAdmin);
+        aptospad_swap::distributeSeasonV2(padAdmin);
 
         assert!(account_helpers::balanceAptosPad(signer::address_of(wl1))  == CAP_100K * TOKEN_RATE_10, 10001);
         assert!(account_helpers::balanceAptosPad(signer::address_of(wl2)) ==  CAP_100K * TOKEN_RATE_10, 10001);
@@ -192,10 +192,10 @@ module aptospad::test_swap {
 
         aptospad_swap::launchPadSeason(padAdmin);
 
-        aptospad_swap::bidAptosPad(wl1, CAP_200K);
-        aptospad_swap::bidAptosPad(wl2, CAP_200K);
+        aptospad_swap::bidAptosPadV5(wl1, CAP_200K);
+        aptospad_swap::bidAptosPadV5(wl2, CAP_200K);
 
-        aptospad_swap::distributeSeason(padAdmin);
+        aptospad_swap::distributeSeasonV2(padAdmin);
 
         assert!(account_helpers::balanceAptosPad(signer::address_of(wl1))  == (CAP_100K + CAP_50K) * TOKEN_RATE_10, 10001);
         assert!(account_helpers::balanceAptosPad(signer::address_of(wl2))  == (CAP_50K) * TOKEN_RATE_10, 10001);
@@ -223,10 +223,10 @@ module aptospad::test_swap {
 
         aptospad_swap::launchPadSeason(padAdmin);
 
-        aptospad_swap::bidAptosPad(wl1, CAP_200K);
-        aptospad_swap::bidAptosPad(wl2, CAP_50K);
+        aptospad_swap::bidAptosPadV5(wl1, CAP_200K);
+        aptospad_swap::bidAptosPadV5(wl2, CAP_50K);
 
-        aptospad_swap::distributeSeason(padAdmin);
+        aptospad_swap::distributeSeasonV2(padAdmin);
 
         assert!(account_helpers::balanceAptosPad(signer::address_of(wl2))  == (CAP_50K) * TOKEN_RATE_10, 10001);
         assert!(account_helpers::balanceAptosPad(signer::address_of(wl1))  == (CAP_50K + CAP_100K) * TOKEN_RATE_10, 10001);
@@ -254,10 +254,10 @@ module aptospad::test_swap {
 
         aptospad_swap::launchPadSeason(padAdmin);
 
-        aptospad_swap::bidAptosPad(wl1, CAP_200K);
-        aptospad_swap::bidAptosPad(wl2, CAP_50K);
+        aptospad_swap::bidAptosPadV5(wl1, CAP_200K);
+        aptospad_swap::bidAptosPadV5(wl2, CAP_50K);
 
-        aptospad_swap::distributeSeason(padAdmin);
+        aptospad_swap::distributeSeasonV2(padAdmin);
 
         assert!(account_helpers::balanceAptosPad(signer::address_of(wl2))  == (CAP_50K) * TOKEN_RATE_10, 10001);
         assert!(account_helpers::balanceAptosPad(signer::address_of(wl1))  == (CAP_50K + CAP_100K) * TOKEN_RATE_10, 10001);

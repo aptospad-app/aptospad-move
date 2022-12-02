@@ -52,4 +52,4 @@ PAD_PATH=`pwd`
 
 #curl "https://fullnode.testnet.aptoslabs.com/v1/accounts/$RESOURCE_ADDR/events/0x1::coin::CoinStore<0x1::aptos_coin::AptosCoin>/withdraw_events"
 
-#curl "https://fullnode.testnet.aptoslabs.com/v1/accounts/$RESOURCE_ADDR/resource/$APTOSPAD_ADDR::aptospad_swap::TokenDistribute"
+  #curl "https://fullnode.testnet.aptoslabs.com/v1/accounts/$RESOURCE_ADDR/resource/$APTOSPAD_ADDR::aptospad_swap::TokenDistribute"

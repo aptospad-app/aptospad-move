@@ -41,12 +41,12 @@ module aptospad::scripts {
 
     /// to distribute seasion
     public entry fun distributeSeason(account: &signer){
-        aptospad_swap::distributeSeason(account);
+        aptospad_swap::distributeSeasonV2(account);
     }
 
     /// bid APTT
     public entry fun bidAptosPad(account: &signer, amount: u64){
-        aptospad_swap::bidAptosPadV4(account, amount);
+        aptospad_swap::bidAptosPadV5(account, amount);
     }
 
     /// add whitelist

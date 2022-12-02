@@ -34,6 +34,7 @@ module aptospad::aptospad_swap {
     const STATE_LAUNCHPAD: u8 = 3;
     const STATE_DISTRIBUTE: u8 = 4;
     const STATE_ENDED: u8 = 5;
+    const REFUND_CHARGE_RATE_PER_100K: u64 = 100;
 
     ///cap: in token
     ///wanna: in APT
@@ -123,6 +124,15 @@ module aptospad::aptospad_swap {
         assert!(config::getSwapState() == STATE_LAUNCHPAD, ERR_SEASON_STATE);
         config::setSwapState(STATE_DISTRIBUTE);
         distributeAtpp();
+        config::setSwapState(STATE_ENDED);
+    }
+
+    public fun distributeSeasonV2(account: &signer) acquires LaunchPadRegistry, TokenDistribute {
+        assert_admin(account);
+        assert_no_emergency();
+        assert!(config::getSwapState() == STATE_LAUNCHPAD, ERR_SEASON_STATE);
+        config::setSwapState(STATE_DISTRIBUTE);
+        distributeAtppV2();
         config::setSwapState(STATE_ENDED);
     }
 
@@ -306,6 +316,57 @@ module aptospad::aptospad_swap {
         });
     }
 
+    public fun bidAptosPadV5(user: &signer, aptosAmount: u64)  acquires LaunchPadRegistry, TokenDistribute {
+        assert_no_emergency();
+        assert!(config::getSwapState() == STATE_LAUNCHPAD, ERR_SEASON_STATE);
+
+        let userAddr = signer::address_of(user);
+        let hardCap = config::getSwapConfigHardCap();
+        let registry = borrow_global_mut<LaunchPadRegistry>(config::getResourceAddress());
+
+        let bypassWhitelistEnabled = config::isBypassWhiteList();
+        let isWhitelisted = iterable_table::contains( &mut registry.investors, signer::address_of(user));
+
+        assert!(bypassWhitelistEnabled || isWhitelisted, ERR_NOT_IN_WHITELIST);
+        assert!(registry.totalBid <= hardCap, ERR_HARDCAP_REACHED);
+
+        let wl = iterable_table::borrow_mut_with_default( &mut registry.investors, signer::address_of(user), TokenDistribute {
+            cap: DEFAULT_CAP_1K,
+            bid: 0u64,
+            distributed: 0u64,
+            distributedToken: 0u64,
+            refund: 0u64,
+            investor: signer::address_of(user)
+        });
+
+        wl.bid = wl.bid + aptosAmount;
+
+        registry.totalBid = registry.totalBid + aptosAmount;
+
+        checkBidOverflow(wl.bid, wl.cap);
+
+        if(!exists<TokenDistribute>(userAddr)){
+            move_to(user, *wl);
+        }
+        else {
+            let bill = borrow_global_mut<TokenDistribute>(address_of(user));
+            bill.bid = bill.bid + aptosAmount;
+        };
+
+        let eventHandler = &mut registry.bidaptospad_events;
+        coin::transfer<AptosCoin>(user, config::getResourceAddress(), aptosAmount);
+
+        if(!coin::is_account_registered<AptosPadCoin>(signer::address_of(user))){
+            coin::register<AptosPadCoin>(user)
+        };
+
+        event::emit_event<BidAptosPadEvent>(eventHandler,  BidAptosPadEvent {
+            cap: wl.cap,
+            bid: wl.bid,
+            investor: wl.investor
+        });
+    }
+
     fun checkBidOverflow(bid: u64, _cap: u64) {
         assert!(bid <= DEFAULT_OVERFLOW_100, ERR_BID_OVERFLOW);
     }
@@ -377,6 +438,17 @@ module aptospad::aptospad_swap {
             refundAll()
         else
             distributeAll()
+    }
+
+    fun distributeAtppV2() acquires LaunchPadRegistry, TokenDistribute {
+        let softCap = config::getSwapConfigSoftCap();
+        let totalBuy = borrow_global_mut<LaunchPadRegistry>(config::getResourceAddress()).totalBid;
+        let enableRefund = config::getSwapConfigEnableRefund();
+
+        if(enableRefund && (totalBuy < softCap))
+            refundAllV2()
+        else
+            distributeAllV2()
     }
 
 
@@ -524,6 +596,166 @@ module aptospad::aptospad_swap {
         }
     }
 
+
+    /// Distribute per account
+    /// - update pool bill
+    /// - update account's bill
+    /// - mint token
+    fun distributePerAccount(poolBill: &mut TokenDistribute, toPadRate: u64, moreAptAllocated: u64) acquires TokenDistribute {
+        poolBill.distributed = poolBill.distributed + moreAptAllocated;
+        let morePad = moreAptAllocated * toPadRate;
+        poolBill.distributedToken = poolBill.distributedToken + morePad;
+
+        if(exists<TokenDistribute>(poolBill.investor)){
+            let userBill = borrow_global_mut<TokenDistribute>(poolBill.investor);
+            userBill.distributed = poolBill.distributed;
+            userBill.distributedToken = poolBill.distributedToken;
+        };
+
+        config::mintAtppTo(poolBill.investor, morePad);
+    }
+
+    /// Distribute Aptt to Pad with rounds:
+    /// - if mid cap --> distribute all
+    /// - if hardcap satisfied:
+    ///     + max distribute amount is hardcap
+    ///     + prefer cap first
+    ///     + then fill remainning
+    fun distributeAllV2() acquires LaunchPadRegistry, TokenDistribute {
+        let hardCapApt = config::getSwapConfigHardCap();
+        let toPadRate = config::getSwapConfigAptToApttRate();
+        let registry = borrow_global_mut<LaunchPadRegistry>(config::getResourceAddress());
+        let totalBidApt = registry.totalBid;
+
+        if(totalBidApt <= hardCapApt){
+            let registry = borrow_global_mut<LaunchPadRegistry>(config::getResourceAddress());
+            let investors = &mut registry.investors;
+            let eventHandler = &mut registry.distributeaptospad_events;
+
+            let looper = &mut iterable_table::head_key(investors);
+            while(option::is_some(looper)){
+                let (poolBill, _prev, next) = iterable_table::borrow_iter_mut(investors, option::extract(looper));
+
+                let moreAptAllocated = poolBill.bid;
+                distributePerAccount(poolBill, toPadRate, moreAptAllocated);
+
+                event::emit_event<DistributeAptospadEvent>(eventHandler, DistributeAptospadEvent {
+                    cap: poolBill.cap,
+                    bid: poolBill.bid,
+                    distributedToken: poolBill.distributedToken,
+                    refund: poolBill.refund,
+                    investor: poolBill.investor
+                });
+
+                looper = &mut next;
+            }
+        }
+        else {
+            let availToAllocate = hardCapApt;
+                {
+                    let registry = borrow_global_mut<LaunchPadRegistry>(config::getResourceAddress());
+                    let investors = &mut registry.investors;
+                    let eventHandler = &mut registry.distributeaptospad_events;
+
+                    let looper = &mut iterable_table::head_key(investors);
+                    while (option::is_some(looper)) {
+                        let (poolBill, _prev, next) = iterable_table::borrow_iter_mut(investors, option::extract(looper));
+
+                        let allocatedApt = math64::min(math64::min(poolBill.cap, poolBill.bid), availToAllocate);
+
+                        if(allocatedApt > 0){
+                            availToAllocate = availToAllocate - allocatedApt;
+
+                            distributePerAccount(poolBill, toPadRate, allocatedApt);
+
+                            event::emit_event<DistributeAptospadEvent>(eventHandler, DistributeAptospadEvent {
+                                cap: poolBill.cap,
+                                bid: poolBill.bid,
+                                distributedToken: poolBill.distributedToken,
+                                refund: poolBill.refund,
+                                investor: poolBill.investor
+                            });
+                        };
+
+                        if (availToAllocate <= 0)
+                        {
+                            break
+                        }
+                        else
+                        {
+                            looper = &mut next;
+                            continue
+                        }
+                    };
+                };
+
+            if(availToAllocate > 0){
+                let registry = borrow_global_mut<LaunchPadRegistry>(config::getResourceAddress());
+                let investors = &mut registry.investors;
+                let eventHandler = &mut registry.distributeaptospad_events;
+
+                let looper = &mut iterable_table::head_key(investors);
+                while(option::is_some(looper)){
+                    let (poolBill, _prev, next) = iterable_table::borrow_iter_mut(investors, option::extract(looper));
+                    let moreAllocated = math64::min(math64::max(poolBill.bid - poolBill.distributed, 0), availToAllocate);
+                    if(moreAllocated > 0){
+                        availToAllocate = availToAllocate - moreAllocated;
+
+                        distributePerAccount(poolBill, toPadRate, moreAllocated);
+
+                        event::emit_event<DistributeAptospadEvent>(eventHandler, DistributeAptospadEvent {
+                            cap: poolBill.cap,
+                            bid: poolBill.bid,
+                            distributedToken: poolBill.distributedToken,
+                            refund: poolBill.refund,
+                            investor: poolBill.investor
+                        });
+                    };
+
+                    if(availToAllocate <= 0)
+                    {
+                        break
+                    }
+                    else
+                    {
+                        looper = &mut next;
+                        continue
+                    }
+                };
+            };
+
+            assert!(availToAllocate <= 0, 100001);
+
+            {
+                let registry = borrow_global_mut<LaunchPadRegistry>(config::getResourceAddress());
+                let investors = &mut registry.investors;
+                let eventHandler = &mut registry.distributeaptospad_events;
+                let looper = &mut iterable_table::head_key(investors);
+                while(option::is_some(looper)){
+                    let (poolBill, _prev, next) = iterable_table::borrow_iter_mut(investors, option::extract(looper));
+
+                    assert!(poolBill.bid >= poolBill.distributed, 10001);
+
+                    let refundAmt = math64::max(poolBill.bid - poolBill.distributed, 0);
+
+                    if(refundAmt > 0)
+                    {
+                        refundAptosV2(&config::getResourceSigner(), poolBill, refundAmt);
+
+                        event::emit_event<DistributeAptospadEvent>(eventHandler, DistributeAptospadEvent {
+                            cap: poolBill.cap,
+                            bid: poolBill.bid,
+                            distributedToken: poolBill.distributedToken,
+                            refund: poolBill.refund,
+                            investor: poolBill.investor
+                        });
+                    };
+                    looper = &mut next;
+                };
+            }
+        }
+    }
+
     fun refundAll() acquires LaunchPadRegistry {
         let registry = borrow_global_mut<LaunchPadRegistry>(config::getResourceAddress());
         let investors = &mut registry.investors;
@@ -546,8 +778,50 @@ module aptospad::aptospad_swap {
         }
     }
 
+    fun refundAllV2() acquires LaunchPadRegistry, TokenDistribute {
+        let registry = borrow_global_mut<LaunchPadRegistry>(config::getResourceAddress());
+        let investors = &mut registry.investors;
+        let eventHandler = &mut registry.distributeaptospad_events;
+        let looper = &mut iterable_table::head_key(investors);
+        let resourceSigner = &config::getResourceSigner();
+
+        while(option::is_some(looper)){
+            let (poolBill, _prev, next) = iterable_table::borrow_iter_mut(investors, option::extract(looper));
+
+            let moreRefundAptAmt = poolBill.bid;
+            refundAptosV2(resourceSigner, poolBill, moreRefundAptAmt);
+
+            event::emit_event<DistributeAptospadEvent>(eventHandler, DistributeAptospadEvent {
+                cap: poolBill.cap,
+                bid: poolBill.bid,
+                distributedToken: poolBill.distributedToken,
+                refund: poolBill.refund,
+                investor: poolBill.investor
+            });
+
+            looper = &mut next;
+        }
+    }
+
     fun refundAptos(resourceSigner: &signer, investor: address, bidAmt: u64){
         coin::transfer<AptosCoin>(resourceSigner, investor, bidAmt);
+    }
+
+    ///Refund more apt
+    /// - charge refund fee by percent
+    /// - transfer refund to investor
+    /// - update account's bill
+    fun refundAptosV2(resourceSigner: &signer, poolBill: &mut TokenDistribute, moreRefundAptAmt: u64) acquires TokenDistribute {
+        let realRefund = moreRefundAptAmt - (moreRefundAptAmt * REFUND_CHARGE_RATE_PER_100K)/100000;
+
+        poolBill.refund = poolBill.refund + realRefund;
+
+        coin::transfer<AptosCoin>(resourceSigner, poolBill.investor, realRefund);
+
+        if(exists<TokenDistribute>(poolBill.investor)){
+            let investorBill = borrow_global_mut<TokenDistribute>(poolBill.investor);
+            investorBill.refund = investorBill.refund + realRefund;
+        }
     }
 
     fun assert_no_emergency(){
