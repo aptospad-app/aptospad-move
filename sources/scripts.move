@@ -41,7 +41,12 @@ module aptospad::scripts {
 
     /// to distribute seasion
     public entry fun distributeSeason(account: &signer){
-        aptospad_swap::distributeSeasonV2(account);
+        aptospad_swap::distributeSeasonV3(account);
+    }
+
+    /// pay coin & refund
+    public entry fun paycoinAndRefund(account: &signer){
+        aptospad_swap::paycoinAndRefund(account);
     }
 
     /// bid APTT

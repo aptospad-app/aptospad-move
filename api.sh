@@ -12,7 +12,7 @@ PAD_PATH=`pwd`
 #aptos move run --profile "$PROFILE" --function-id "$APTOSPAD_ADDR::scripts::setEmergency" --args "bool:false"
 
 ##softCap: u64, hardCap: u64, enableRefund: bool, aptToApttRate: u64, bypassWhitelist: bool
-#aptos move run --profile "$PROFILE" --function-id "$APTOSPAD_ADDR::scripts::setApttSwapConfig" --args "u64:100000000000" "u64:100000000000000" "bool:true" "u64:100" "bool:true"
+#aptos move run --profile "$PROFILE" --function-id "$APTOSPAD_ADDR::scripts::setApttSwapConfig" --args "u64:100000000000" "u64:100000000000000" "bool:false" "u64:100" "bool:true"
 
 ##public entry fun resetSeason(account: &signer){
 #aptos move run --profile "$PROFILE" --function-id "$APTOSPAD_ADDR::scripts::resetSeason"
@@ -24,7 +24,10 @@ PAD_PATH=`pwd`
 #aptos move run --profile "$PROFILE" --function-id "$APTOSPAD_ADDR::scripts::launchPadSeason"
 
 ##public entry fun distributeSeason(account: &signer){
-#aptos move run --profile "$PROFILE" --function-id "$APTOSPAD_ADDR::scripts::launchPadSeason"
+#aptos move run --profile "$PROFILE" --function-id "$APTOSPAD_ADDR::scripts::distributeSeason"
+#aptos move run --profile "$PROFILE" --function-id "$APTOSPAD_ADDR::scripts::distributeSeason" --max-gas 2000000 --gas-unit-price 10000
+#aptos move run --profile "$PROFILE" --function-id "$APTOSPAD_ADDR::scripts::paycoinAndRefund" --max-gas 2000000 --gas-unit-price 10000
+
 
 ##public entry fun bidAptosPad(account: &signer, amount: u64)
 #aptos move run --profile "$PROFILE" --function-id "$APTOSPAD_ADDR::scripts::bidAptosPad"  --args "u64:1000000000"
@@ -52,4 +55,4 @@ PAD_PATH=`pwd`
 
 #curl "https://fullnode.testnet.aptoslabs.com/v1/accounts/$RESOURCE_ADDR/events/0x1::coin::CoinStore<0x1::aptos_coin::AptosCoin>/withdraw_events"
 
-  #curl "https://fullnode.testnet.aptoslabs.com/v1/accounts/$RESOURCE_ADDR/resource/$APTOSPAD_ADDR::aptospad_swap::TokenDistribute"
+#curl "https://fullnode.testnet.aptoslabs.com/v1/accounts/$RESOURCE_ADDR/resource/$APTOSPAD_ADDR::aptospad_swap::TokenDistribute"
