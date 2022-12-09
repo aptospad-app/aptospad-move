@@ -1,0 +1,223 @@
+import * as $ from "@manahippo/move-to-ts";
+import { AptosDataCache, AptosParserRepo, AptosLocalCache } from "@manahippo/move-to-ts";
+import { U8, U64, U128 } from "@manahippo/move-to-ts";
+import { TypeParamDeclType, FieldDeclType } from "@manahippo/move-to-ts";
+import { StructTag, TypeTag } from "@manahippo/move-to-ts";
+import { OptionTransaction } from "@manahippo/move-to-ts";
+import { HexString, AptosClient, AptosAccount, TxnBuilderTypes, Types } from "aptos";
+import * as Event from "./event";
+import * as Option from "./option";
+import * as String from "./string";
+export declare const packageName = "AptosFramework";
+export declare const moduleAddress: HexString;
+export declare const moduleName = "coin";
+export declare const ECOIN_INFO_ADDRESS_MISMATCH: U64;
+export declare const ECOIN_INFO_ALREADY_PUBLISHED: U64;
+export declare const ECOIN_INFO_NOT_PUBLISHED: U64;
+export declare const ECOIN_NAME_TOO_LONG: U64;
+export declare const ECOIN_STORE_ALREADY_PUBLISHED: U64;
+export declare const ECOIN_STORE_NOT_PUBLISHED: U64;
+export declare const ECOIN_SUPPLY_UPGRADE_NOT_SUPPORTED: U64;
+export declare const ECOIN_SYMBOL_TOO_LONG: U64;
+export declare const EDESTRUCTION_OF_NONZERO_TOKEN: U64;
+export declare const EFROZEN: U64;
+export declare const EINSUFFICIENT_BALANCE: U64;
+export declare const EZERO_COIN_AMOUNT: U64;
+export declare const MAX_COIN_NAME_LENGTH: U64;
+export declare const MAX_COIN_SYMBOL_LENGTH: U64;
+export declare const MAX_U128: U128;
+export declare class BurnCapability {
+    typeTag: TypeTag;
+    static moduleAddress: HexString;
+    static moduleName: string;
+    __app: $.AppType | null;
+    static structName: string;
+    static typeParameters: TypeParamDeclType[];
+    static fields: FieldDeclType[];
+    constructor(proto: any, typeTag: TypeTag);
+    static BurnCapabilityParser(data: any, typeTag: TypeTag, repo: AptosParserRepo): BurnCapability;
+    static makeTag($p: TypeTag[]): StructTag;
+    loadFullState(app: $.AppType): Promise<void>;
+}
+export declare class Coin {
+    typeTag: TypeTag;
+    static moduleAddress: HexString;
+    static moduleName: string;
+    __app: $.AppType | null;
+    static structName: string;
+    static typeParameters: TypeParamDeclType[];
+    static fields: FieldDeclType[];
+    value: U64;
+    constructor(proto: any, typeTag: TypeTag);
+    static CoinParser(data: any, typeTag: TypeTag, repo: AptosParserRepo): Coin;
+    static makeTag($p: TypeTag[]): StructTag;
+    loadFullState(app: $.AppType): Promise<void>;
+}
+export declare class CoinInfo {
+    typeTag: TypeTag;
+    static moduleAddress: HexString;
+    static moduleName: string;
+    __app: $.AppType | null;
+    static structName: string;
+    static typeParameters: TypeParamDeclType[];
+    static fields: FieldDeclType[];
+    name: String.String;
+    symbol: String.String;
+    decimals: U8;
+    supply: Option.Option;
+    constructor(proto: any, typeTag: TypeTag);
+    static CoinInfoParser(data: any, typeTag: TypeTag, repo: AptosParserRepo): CoinInfo;
+    static load(repo: AptosParserRepo, client: AptosClient, address: HexString, typeParams: TypeTag[]): Promise<CoinInfo>;
+    static loadByApp(app: $.AppType, address: HexString, typeParams: TypeTag[]): Promise<CoinInfo>;
+    static makeTag($p: TypeTag[]): StructTag;
+    loadFullState(app: $.AppType): Promise<void>;
+}
+export declare class CoinStore {
+    typeTag: TypeTag;
+    static moduleAddress: HexString;
+    static moduleName: string;
+    __app: $.AppType | null;
+    static structName: string;
+    static typeParameters: TypeParamDeclType[];
+    static fields: FieldDeclType[];
+    coin: Coin;
+    frozen: boolean;
+    deposit_events: Event.EventHandle;
+    withdraw_events: Event.EventHandle;
+    constructor(proto: any, typeTag: TypeTag);
+    static CoinStoreParser(data: any, typeTag: TypeTag, repo: AptosParserRepo): CoinStore;
+    static load(repo: AptosParserRepo, client: AptosClient, address: HexString, typeParams: TypeTag[]): Promise<CoinStore>;
+    static loadByApp(app: $.AppType, address: HexString, typeParams: TypeTag[]): Promise<CoinStore>;
+    static makeTag($p: TypeTag[]): StructTag;
+    loadFullState(app: $.AppType): Promise<void>;
+}
+export declare class DepositEvent {
+    typeTag: TypeTag;
+    static moduleAddress: HexString;
+    static moduleName: string;
+    __app: $.AppType | null;
+    static structName: string;
+    static typeParameters: TypeParamDeclType[];
+    static fields: FieldDeclType[];
+    amount: U64;
+    constructor(proto: any, typeTag: TypeTag);
+    static DepositEventParser(data: any, typeTag: TypeTag, repo: AptosParserRepo): DepositEvent;
+    static getTag(): StructTag;
+    loadFullState(app: $.AppType): Promise<void>;
+}
+export declare class FreezeCapability {
+    typeTag: TypeTag;
+    static moduleAddress: HexString;
+    static moduleName: string;
+    __app: $.AppType | null;
+    static structName: string;
+    static typeParameters: TypeParamDeclType[];
+    static fields: FieldDeclType[];
+    constructor(proto: any, typeTag: TypeTag);
+    static FreezeCapabilityParser(data: any, typeTag: TypeTag, repo: AptosParserRepo): FreezeCapability;
+    static makeTag($p: TypeTag[]): StructTag;
+    loadFullState(app: $.AppType): Promise<void>;
+}
+export declare class MintCapability {
+    typeTag: TypeTag;
+    static moduleAddress: HexString;
+    static moduleName: string;
+    __app: $.AppType | null;
+    static structName: string;
+    static typeParameters: TypeParamDeclType[];
+    static fields: FieldDeclType[];
+    constructor(proto: any, typeTag: TypeTag);
+    static MintCapabilityParser(data: any, typeTag: TypeTag, repo: AptosParserRepo): MintCapability;
+    static makeTag($p: TypeTag[]): StructTag;
+    loadFullState(app: $.AppType): Promise<void>;
+}
+export declare class SupplyConfig {
+    typeTag: TypeTag;
+    static moduleAddress: HexString;
+    static moduleName: string;
+    __app: $.AppType | null;
+    static structName: string;
+    static typeParameters: TypeParamDeclType[];
+    static fields: FieldDeclType[];
+    allow_upgrades: boolean;
+    constructor(proto: any, typeTag: TypeTag);
+    static SupplyConfigParser(data: any, typeTag: TypeTag, repo: AptosParserRepo): SupplyConfig;
+    static load(repo: AptosParserRepo, client: AptosClient, address: HexString, typeParams: TypeTag[]): Promise<SupplyConfig>;
+    static loadByApp(app: $.AppType, address: HexString, typeParams: TypeTag[]): Promise<SupplyConfig>;
+    static getTag(): StructTag;
+    loadFullState(app: $.AppType): Promise<void>;
+}
+export declare class WithdrawEvent {
+    typeTag: TypeTag;
+    static moduleAddress: HexString;
+    static moduleName: string;
+    __app: $.AppType | null;
+    static structName: string;
+    static typeParameters: TypeParamDeclType[];
+    static fields: FieldDeclType[];
+    amount: U64;
+    constructor(proto: any, typeTag: TypeTag);
+    static WithdrawEventParser(data: any, typeTag: TypeTag, repo: AptosParserRepo): WithdrawEvent;
+    static getTag(): StructTag;
+    loadFullState(app: $.AppType): Promise<void>;
+}
+export declare function allow_supply_upgrades_(aptos_framework: HexString, allowed: boolean, $c: AptosDataCache): void;
+export declare function balance_(owner: HexString, $c: AptosDataCache, $p: TypeTag[]): U64;
+export declare function burn_(coin: Coin, _cap: BurnCapability, $c: AptosDataCache, $p: TypeTag[]): void;
+export declare function burn_from_(account_addr: HexString, amount: U64, burn_cap: BurnCapability, $c: AptosDataCache, $p: TypeTag[]): void;
+export declare function coin_address_($c: AptosDataCache, $p: TypeTag[]): HexString;
+export declare function decimals_($c: AptosDataCache, $p: TypeTag[]): U8;
+export declare function deposit_(account_addr: HexString, coin: Coin, $c: AptosDataCache, $p: TypeTag[]): void;
+export declare function destroy_burn_cap_(burn_cap: BurnCapability, $c: AptosDataCache, $p: TypeTag[]): void;
+export declare function destroy_freeze_cap_(freeze_cap: FreezeCapability, $c: AptosDataCache, $p: TypeTag[]): void;
+export declare function destroy_mint_cap_(mint_cap: MintCapability, $c: AptosDataCache, $p: TypeTag[]): void;
+export declare function destroy_zero_(zero_coin: Coin, $c: AptosDataCache, $p: TypeTag[]): void;
+export declare function extract_(coin: Coin, amount: U64, $c: AptosDataCache, $p: TypeTag[]): Coin;
+export declare function extract_all_(coin: Coin, $c: AptosDataCache, $p: TypeTag[]): Coin;
+export declare function freeze_coin_store_(account_addr: HexString, _freeze_cap: FreezeCapability, $c: AptosDataCache, $p: TypeTag[]): void;
+export declare function initialize_(account: HexString, name: String.String, symbol: String.String, decimals: U8, monitor_supply: boolean, $c: AptosDataCache, $p: TypeTag[]): [BurnCapability, FreezeCapability, MintCapability];
+export declare function initialize_internal_(account: HexString, name: String.String, symbol: String.String, decimals: U8, monitor_supply: boolean, parallelizable: boolean, $c: AptosDataCache, $p: TypeTag[]): [BurnCapability, FreezeCapability, MintCapability];
+export declare function initialize_supply_config_(aptos_framework: HexString, $c: AptosDataCache): void;
+export declare function initialize_with_parallelizable_supply_(account: HexString, name: String.String, symbol: String.String, decimals: U8, monitor_supply: boolean, $c: AptosDataCache, $p: TypeTag[]): [BurnCapability, FreezeCapability, MintCapability];
+export declare function is_account_registered_(account_addr: HexString, $c: AptosDataCache, $p: TypeTag[]): boolean;
+export declare function is_coin_initialized_($c: AptosDataCache, $p: TypeTag[]): boolean;
+export declare function merge_(dst_coin: Coin, source_coin: Coin, $c: AptosDataCache, $p: TypeTag[]): void;
+export declare function mint_(amount: U64, _cap: MintCapability, $c: AptosDataCache, $p: TypeTag[]): Coin;
+export declare function name_($c: AptosDataCache, $p: TypeTag[]): String.String;
+export declare function register_(account: HexString, $c: AptosDataCache, $p: TypeTag[]): void;
+export declare function supply_($c: AptosDataCache, $p: TypeTag[]): Option.Option;
+export declare function symbol_($c: AptosDataCache, $p: TypeTag[]): String.String;
+export declare function transfer_(from: HexString, to: HexString, amount: U64, $c: AptosDataCache, $p: TypeTag[]): void;
+export declare function buildPayload_transfer(to: HexString, amount: U64, $p: TypeTag[], /* <CoinType>*/ isJSON?: boolean): TxnBuilderTypes.TransactionPayloadEntryFunction | Types.TransactionPayload_EntryFunctionPayload;
+export declare function unfreeze_coin_store_(account_addr: HexString, _freeze_cap: FreezeCapability, $c: AptosDataCache, $p: TypeTag[]): void;
+export declare function upgrade_supply_(account: HexString, $c: AptosDataCache, $p: TypeTag[]): void;
+export declare function buildPayload_upgrade_supply($p: TypeTag[], /* <CoinType>*/ isJSON?: boolean): TxnBuilderTypes.TransactionPayloadEntryFunction | Types.TransactionPayload_EntryFunctionPayload;
+export declare function value_(coin: Coin, $c: AptosDataCache, $p: TypeTag[]): U64;
+export declare function withdraw_(account: HexString, amount: U64, $c: AptosDataCache, $p: TypeTag[]): Coin;
+export declare function zero_($c: AptosDataCache, $p: TypeTag[]): Coin;
+export declare function loadParsers(repo: AptosParserRepo): void;
+export declare class App {
+    client: AptosClient;
+    repo: AptosParserRepo;
+    cache: AptosLocalCache;
+    constructor(client: AptosClient, repo: AptosParserRepo, cache: AptosLocalCache);
+    get moduleAddress(): HexString;
+    get moduleName(): string;
+    get BurnCapability(): typeof BurnCapability;
+    get Coin(): typeof Coin;
+    get CoinInfo(): typeof CoinInfo;
+    loadCoinInfo(owner: HexString, $p: TypeTag[], /* <CoinType> */ loadFull?: boolean, fillCache?: boolean): Promise<CoinInfo>;
+    get CoinStore(): typeof CoinStore;
+    loadCoinStore(owner: HexString, $p: TypeTag[], /* <CoinType> */ loadFull?: boolean, fillCache?: boolean): Promise<CoinStore>;
+    get DepositEvent(): typeof DepositEvent;
+    get FreezeCapability(): typeof FreezeCapability;
+    get MintCapability(): typeof MintCapability;
+    get SupplyConfig(): typeof SupplyConfig;
+    loadSupplyConfig(owner: HexString, loadFull?: boolean, fillCache?: boolean): Promise<SupplyConfig>;
+    get WithdrawEvent(): typeof WithdrawEvent;
+    payload_transfer(to: HexString, amount: U64, $p: TypeTag[], /* <CoinType>*/ isJSON?: boolean): TxnBuilderTypes.TransactionPayloadEntryFunction | Types.TransactionPayload_EntryFunctionPayload;
+    transfer(_account: AptosAccount, to: HexString, amount: U64, $p: TypeTag[], /* <CoinType>*/ option?: OptionTransaction, _isJSON?: boolean): Promise<Types.UserTransaction>;
+    payload_upgrade_supply($p: TypeTag[], /* <CoinType>*/ isJSON?: boolean): TxnBuilderTypes.TransactionPayloadEntryFunction | Types.TransactionPayload_EntryFunctionPayload;
+    upgrade_supply(_account: AptosAccount, $p: TypeTag[], /* <CoinType>*/ option?: OptionTransaction, _isJSON?: boolean): Promise<Types.UserTransaction>;
+}
+//# sourceMappingURL=coin.d.ts.map

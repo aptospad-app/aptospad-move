@@ -1,0 +1,263 @@
+import * as $ from "@manahippo/move-to-ts";
+import { AptosDataCache, AptosParserRepo, AptosLocalCache } from "@manahippo/move-to-ts";
+import { U8, U64, U128 } from "@manahippo/move-to-ts";
+import { TypeParamDeclType, FieldDeclType } from "@manahippo/move-to-ts";
+import { StructTag, TypeTag } from "@manahippo/move-to-ts";
+import { OptionTransaction } from "@manahippo/move-to-ts";
+import { HexString, AptosClient, AptosAccount, TxnBuilderTypes, Types } from "aptos";
+import * as Event from "./event";
+import * as Guid from "./guid";
+import * as Option from "./option";
+import * as Table from "./table";
+import * as Type_info from "./type_info";
+export declare const packageName = "AptosFramework";
+export declare const moduleAddress: HexString;
+export declare const moduleName = "account";
+export declare const DERIVE_RESOURCE_ACCOUNT_SCHEME: U8;
+export declare const EACCOUNT_ALREADY_EXISTS: U64;
+export declare const EACCOUNT_ALREADY_USED: U64;
+export declare const EACCOUNT_DOES_NOT_EXIST: U64;
+export declare const ECANNOT_RESERVED_ADDRESS: U64;
+export declare const ED25519_SCHEME: U8;
+export declare const EINVALID_ACCEPT_ROTATION_CAPABILITY: U64;
+export declare const EINVALID_ORIGINATING_ADDRESS: U64;
+export declare const EINVALID_PROOF_OF_KNOWLEDGE: U64;
+export declare const EINVALID_SCHEME: U64;
+export declare const EMALFORMED_AUTHENTICATION_KEY: U64;
+export declare const ENO_CAPABILITY: U64;
+export declare const ENO_SUCH_SIGNER_CAPABILITY: U64;
+export declare const ENO_VALID_FRAMEWORK_RESERVED_ADDRESS: U64;
+export declare const EOUT_OF_GAS: U64;
+export declare const ERESOURCE_ACCCOUNT_EXISTS: U64;
+export declare const ESEQUENCE_NUMBER_TOO_BIG: U64;
+export declare const EWRONG_CURRENT_PUBLIC_KEY: U64;
+export declare const MAX_U64: U128;
+export declare const MULTI_ED25519_SCHEME: U8;
+export declare const ZERO_AUTH_KEY: U8[];
+export declare class Account {
+    typeTag: TypeTag;
+    static moduleAddress: HexString;
+    static moduleName: string;
+    __app: $.AppType | null;
+    static structName: string;
+    static typeParameters: TypeParamDeclType[];
+    static fields: FieldDeclType[];
+    authentication_key: U8[];
+    sequence_number: U64;
+    guid_creation_num: U64;
+    coin_register_events: Event.EventHandle;
+    key_rotation_events: Event.EventHandle;
+    rotation_capability_offer: CapabilityOffer;
+    signer_capability_offer: CapabilityOffer;
+    constructor(proto: any, typeTag: TypeTag);
+    static AccountParser(data: any, typeTag: TypeTag, repo: AptosParserRepo): Account;
+    static load(repo: AptosParserRepo, client: AptosClient, address: HexString, typeParams: TypeTag[]): Promise<Account>;
+    static loadByApp(app: $.AppType, address: HexString, typeParams: TypeTag[]): Promise<Account>;
+    static getTag(): StructTag;
+    loadFullState(app: $.AppType): Promise<void>;
+}
+export declare class CapabilityOffer {
+    typeTag: TypeTag;
+    static moduleAddress: HexString;
+    static moduleName: string;
+    __app: $.AppType | null;
+    static structName: string;
+    static typeParameters: TypeParamDeclType[];
+    static fields: FieldDeclType[];
+    for__: Option.Option;
+    constructor(proto: any, typeTag: TypeTag);
+    static CapabilityOfferParser(data: any, typeTag: TypeTag, repo: AptosParserRepo): CapabilityOffer;
+    static makeTag($p: TypeTag[]): StructTag;
+    loadFullState(app: $.AppType): Promise<void>;
+}
+export declare class CoinRegisterEvent {
+    typeTag: TypeTag;
+    static moduleAddress: HexString;
+    static moduleName: string;
+    __app: $.AppType | null;
+    static structName: string;
+    static typeParameters: TypeParamDeclType[];
+    static fields: FieldDeclType[];
+    type_info: Type_info.TypeInfo;
+    constructor(proto: any, typeTag: TypeTag);
+    static CoinRegisterEventParser(data: any, typeTag: TypeTag, repo: AptosParserRepo): CoinRegisterEvent;
+    static getTag(): StructTag;
+    loadFullState(app: $.AppType): Promise<void>;
+}
+export declare class KeyRotationEvent {
+    typeTag: TypeTag;
+    static moduleAddress: HexString;
+    static moduleName: string;
+    __app: $.AppType | null;
+    static structName: string;
+    static typeParameters: TypeParamDeclType[];
+    static fields: FieldDeclType[];
+    old_authentication_key: U8[];
+    new_authentication_key: U8[];
+    constructor(proto: any, typeTag: TypeTag);
+    static KeyRotationEventParser(data: any, typeTag: TypeTag, repo: AptosParserRepo): KeyRotationEvent;
+    static getTag(): StructTag;
+    loadFullState(app: $.AppType): Promise<void>;
+}
+export declare class OriginatingAddress {
+    typeTag: TypeTag;
+    static moduleAddress: HexString;
+    static moduleName: string;
+    __app: $.AppType | null;
+    static structName: string;
+    static typeParameters: TypeParamDeclType[];
+    static fields: FieldDeclType[];
+    address_map: Table.Table;
+    constructor(proto: any, typeTag: TypeTag);
+    static OriginatingAddressParser(data: any, typeTag: TypeTag, repo: AptosParserRepo): OriginatingAddress;
+    static load(repo: AptosParserRepo, client: AptosClient, address: HexString, typeParams: TypeTag[]): Promise<OriginatingAddress>;
+    static loadByApp(app: $.AppType, address: HexString, typeParams: TypeTag[]): Promise<OriginatingAddress>;
+    static getTag(): StructTag;
+    loadFullState(app: $.AppType): Promise<void>;
+}
+export declare class RotationCapability {
+    typeTag: TypeTag;
+    static moduleAddress: HexString;
+    static moduleName: string;
+    __app: $.AppType | null;
+    static structName: string;
+    static typeParameters: TypeParamDeclType[];
+    static fields: FieldDeclType[];
+    account: HexString;
+    constructor(proto: any, typeTag: TypeTag);
+    static RotationCapabilityParser(data: any, typeTag: TypeTag, repo: AptosParserRepo): RotationCapability;
+    static getTag(): StructTag;
+    loadFullState(app: $.AppType): Promise<void>;
+}
+export declare class RotationCapabilityOfferProofChallenge {
+    typeTag: TypeTag;
+    static moduleAddress: HexString;
+    static moduleName: string;
+    __app: $.AppType | null;
+    static structName: string;
+    static typeParameters: TypeParamDeclType[];
+    static fields: FieldDeclType[];
+    sequence_number: U64;
+    recipient_address: HexString;
+    constructor(proto: any, typeTag: TypeTag);
+    static RotationCapabilityOfferProofChallengeParser(data: any, typeTag: TypeTag, repo: AptosParserRepo): RotationCapabilityOfferProofChallenge;
+    static getTag(): StructTag;
+    loadFullState(app: $.AppType): Promise<void>;
+}
+export declare class RotationProofChallenge {
+    typeTag: TypeTag;
+    static moduleAddress: HexString;
+    static moduleName: string;
+    __app: $.AppType | null;
+    static structName: string;
+    static typeParameters: TypeParamDeclType[];
+    static fields: FieldDeclType[];
+    sequence_number: U64;
+    originator: HexString;
+    current_auth_key: HexString;
+    new_public_key: U8[];
+    constructor(proto: any, typeTag: TypeTag);
+    static RotationProofChallengeParser(data: any, typeTag: TypeTag, repo: AptosParserRepo): RotationProofChallenge;
+    static getTag(): StructTag;
+    loadFullState(app: $.AppType): Promise<void>;
+}
+export declare class SignerCapability {
+    typeTag: TypeTag;
+    static moduleAddress: HexString;
+    static moduleName: string;
+    __app: $.AppType | null;
+    static structName: string;
+    static typeParameters: TypeParamDeclType[];
+    static fields: FieldDeclType[];
+    account: HexString;
+    constructor(proto: any, typeTag: TypeTag);
+    static SignerCapabilityParser(data: any, typeTag: TypeTag, repo: AptosParserRepo): SignerCapability;
+    static getTag(): StructTag;
+    loadFullState(app: $.AppType): Promise<void>;
+}
+export declare class SignerCapabilityOfferProofChallenge {
+    typeTag: TypeTag;
+    static moduleAddress: HexString;
+    static moduleName: string;
+    __app: $.AppType | null;
+    static structName: string;
+    static typeParameters: TypeParamDeclType[];
+    static fields: FieldDeclType[];
+    sequence_number: U64;
+    recipient_address: HexString;
+    constructor(proto: any, typeTag: TypeTag);
+    static SignerCapabilityOfferProofChallengeParser(data: any, typeTag: TypeTag, repo: AptosParserRepo): SignerCapabilityOfferProofChallenge;
+    static getTag(): StructTag;
+    loadFullState(app: $.AppType): Promise<void>;
+}
+export declare class SignerCapabilityOfferProofChallengeV2 {
+    typeTag: TypeTag;
+    static moduleAddress: HexString;
+    static moduleName: string;
+    __app: $.AppType | null;
+    static structName: string;
+    static typeParameters: TypeParamDeclType[];
+    static fields: FieldDeclType[];
+    sequence_number: U64;
+    source_address: HexString;
+    recipient_address: HexString;
+    constructor(proto: any, typeTag: TypeTag);
+    static SignerCapabilityOfferProofChallengeV2Parser(data: any, typeTag: TypeTag, repo: AptosParserRepo): SignerCapabilityOfferProofChallengeV2;
+    static getTag(): StructTag;
+    loadFullState(app: $.AppType): Promise<void>;
+}
+export declare function assert_valid_signature_and_get_auth_key_(scheme: U8, public_key_bytes: U8[], signature: U8[], challenge: RotationProofChallenge, $c: AptosDataCache): U8[];
+export declare function create_account_(new_address: HexString, $c: AptosDataCache): HexString;
+export declare function create_account_unchecked_(new_address: HexString, $c: AptosDataCache): HexString;
+export declare function create_authorized_signer_(account: HexString, offerer_address: HexString, $c: AptosDataCache): HexString;
+export declare function create_framework_reserved_account_(addr: HexString, $c: AptosDataCache): [HexString, SignerCapability];
+export declare function create_guid_(account_signer: HexString, $c: AptosDataCache): Guid.GUID;
+export declare function create_resource_account_(source: HexString, seed: U8[], $c: AptosDataCache): [HexString, SignerCapability];
+export declare function create_resource_address_(source: HexString, seed: U8[], $c: AptosDataCache): HexString;
+export declare function create_signer_(addr: HexString, $c: AptosDataCache): HexString;
+export declare function create_signer_with_capability_(capability: SignerCapability, $c: AptosDataCache): HexString;
+export declare function exists_at_(addr: HexString, $c: AptosDataCache): boolean;
+export declare function get_authentication_key_(addr: HexString, $c: AptosDataCache): U8[];
+export declare function get_guid_next_creation_num_(addr: HexString, $c: AptosDataCache): U64;
+export declare function get_sequence_number_(addr: HexString, $c: AptosDataCache): U64;
+export declare function get_signer_capability_address_(capability: SignerCapability, $c: AptosDataCache): HexString;
+export declare function increment_sequence_number_(addr: HexString, $c: AptosDataCache): void;
+export declare function initialize_(aptos_framework: HexString, $c: AptosDataCache): void;
+export declare function new_event_handle_(account: HexString, $c: AptosDataCache, $p: TypeTag[]): Event.EventHandle;
+export declare function offer_signer_capability_(account: HexString, signer_capability_sig_bytes: U8[], account_scheme: U8, account_public_key_bytes: U8[], recipient_address: HexString, $c: AptosDataCache): void;
+export declare function buildPayload_offer_signer_capability(signer_capability_sig_bytes: U8[], account_scheme: U8, account_public_key_bytes: U8[], recipient_address: HexString, isJSON?: boolean): TxnBuilderTypes.TransactionPayloadEntryFunction | Types.TransactionPayload_EntryFunctionPayload;
+export declare function register_coin_(account_addr: HexString, $c: AptosDataCache, $p: TypeTag[]): void;
+export declare function revoke_signer_capability_(account: HexString, to_be_revoked_address: HexString, $c: AptosDataCache): void;
+export declare function buildPayload_revoke_signer_capability(to_be_revoked_address: HexString, isJSON?: boolean): TxnBuilderTypes.TransactionPayloadEntryFunction | Types.TransactionPayload_EntryFunctionPayload;
+export declare function rotate_authentication_key_(account: HexString, from_scheme: U8, from_public_key_bytes: U8[], to_scheme: U8, to_public_key_bytes: U8[], cap_rotate_key: U8[], cap_update_table: U8[], $c: AptosDataCache): void;
+export declare function buildPayload_rotate_authentication_key(from_scheme: U8, from_public_key_bytes: U8[], to_scheme: U8, to_public_key_bytes: U8[], cap_rotate_key: U8[], cap_update_table: U8[], isJSON?: boolean): TxnBuilderTypes.TransactionPayloadEntryFunction | Types.TransactionPayload_EntryFunctionPayload;
+export declare function rotate_authentication_key_internal_(account: HexString, new_auth_key: U8[], $c: AptosDataCache): void;
+export declare function loadParsers(repo: AptosParserRepo): void;
+export declare class App {
+    client: AptosClient;
+    repo: AptosParserRepo;
+    cache: AptosLocalCache;
+    constructor(client: AptosClient, repo: AptosParserRepo, cache: AptosLocalCache);
+    get moduleAddress(): HexString;
+    get moduleName(): string;
+    get Account(): typeof Account;
+    loadAccount(owner: HexString, loadFull?: boolean, fillCache?: boolean): Promise<Account>;
+    get CapabilityOffer(): typeof CapabilityOffer;
+    get CoinRegisterEvent(): typeof CoinRegisterEvent;
+    get KeyRotationEvent(): typeof KeyRotationEvent;
+    get OriginatingAddress(): typeof OriginatingAddress;
+    loadOriginatingAddress(owner: HexString, loadFull?: boolean, fillCache?: boolean): Promise<OriginatingAddress>;
+    get RotationCapability(): typeof RotationCapability;
+    get RotationCapabilityOfferProofChallenge(): typeof RotationCapabilityOfferProofChallenge;
+    get RotationProofChallenge(): typeof RotationProofChallenge;
+    get SignerCapability(): typeof SignerCapability;
+    get SignerCapabilityOfferProofChallenge(): typeof SignerCapabilityOfferProofChallenge;
+    get SignerCapabilityOfferProofChallengeV2(): typeof SignerCapabilityOfferProofChallengeV2;
+    payload_offer_signer_capability(signer_capability_sig_bytes: U8[], account_scheme: U8, account_public_key_bytes: U8[], recipient_address: HexString, isJSON?: boolean): TxnBuilderTypes.TransactionPayloadEntryFunction | Types.TransactionPayload_EntryFunctionPayload;
+    offer_signer_capability(_account: AptosAccount, signer_capability_sig_bytes: U8[], account_scheme: U8, account_public_key_bytes: U8[], recipient_address: HexString, option?: OptionTransaction, _isJSON?: boolean): Promise<Types.UserTransaction>;
+    payload_revoke_signer_capability(to_be_revoked_address: HexString, isJSON?: boolean): TxnBuilderTypes.TransactionPayloadEntryFunction | Types.TransactionPayload_EntryFunctionPayload;
+    revoke_signer_capability(_account: AptosAccount, to_be_revoked_address: HexString, option?: OptionTransaction, _isJSON?: boolean): Promise<Types.UserTransaction>;
+    payload_rotate_authentication_key(from_scheme: U8, from_public_key_bytes: U8[], to_scheme: U8, to_public_key_bytes: U8[], cap_rotate_key: U8[], cap_update_table: U8[], isJSON?: boolean): TxnBuilderTypes.TransactionPayloadEntryFunction | Types.TransactionPayload_EntryFunctionPayload;
+    rotate_authentication_key(_account: AptosAccount, from_scheme: U8, from_public_key_bytes: U8[], to_scheme: U8, to_public_key_bytes: U8[], cap_rotate_key: U8[], cap_update_table: U8[], option?: OptionTransaction, _isJSON?: boolean): Promise<Types.UserTransaction>;
+}
+//# sourceMappingURL=account.d.ts.map

@@ -4,67 +4,80 @@ module aptospad::scripts {
     use aptospad::aptospad_swap;
 
     ///initialize with admin role
-    public entry fun initializeAptosPad(aptospadAdmin: &signer, preFundAptos: u64){
-        config::initializeAptosPad(aptospadAdmin, preFundAptos);
-        aptospad_swap::initialize(aptospadAdmin);
+    #[cmd]
+    public entry fun initializeAptosPad(admin: &signer, preFundAptos: u64){
+        config::initializeAptosPad(admin, preFundAptos);
+        aptospad_swap::initialize(admin);
     }
 
     /// set emergency
-    public entry fun setEmergency(aptospadAdmin: &signer, emergency: bool){
-        config::setEmergency(aptospadAdmin, emergency);
+    #[cmd]
+    public entry fun setEmergency(admin: &signer, emergency: bool){
+        config::setEmergency(admin, emergency);
     }
 
     /// set bypass whitelist
-    public entry fun setBypassWhiteList(aptospadAdmin: &signer, bypass: bool){
-        config::setBypassWhitelist(aptospadAdmin, bypass);
+    #[cmd]
+    public entry fun setBypassWhiteList(admin: &signer, bypass: bool){
+        config::setBypassWhitelist(admin, bypass);
     }
 
     /// update swap config
-    public entry fun setApttSwapConfig(aptospadAdmin: &signer, softCap: u64, hardCap: u64, enableRefund: bool, aptToApttRate: u64, bypassWhitelist: bool){
-        config::setApttSwapConfigV2(aptospadAdmin, softCap, hardCap, enableRefund, aptToApttRate, bypassWhitelist);
+    #[cmd]
+    public entry fun setApttSwapConfig(admin: &signer, softCap: u64, hardCap: u64, enableRefund: bool, aptToApttRate: u64, bypassWhitelist: bool){
+        config::setApttSwapConfigV2(admin, softCap, hardCap, enableRefund, aptToApttRate, bypassWhitelist);
     }
 
     /// reset seasion
-    public entry fun resetSeason(account: &signer){
-        aptospad_swap::resetSeason(account);
+    #[cmd]
+    public entry fun resetSeason(admin: &signer){
+        aptospad_swap::resetSeason(admin);
     }
 
     /// whitelist season
-    public entry fun whiteListSeason(account: &signer){
-        aptospad_swap::whiteListSeason(account);
+    #[cmd]
+    public entry fun whiteListSeason(admin: &signer){
+        aptospad_swap::whiteListSeason(admin);
     }
 
     /// launchpad season
-    public entry fun launchPadSeason(account: &signer){
-        aptospad_swap::launchPadSeason(account);
+    #[cmd]
+    public entry fun launchPadSeason(admin: &signer){
+        aptospad_swap::launchPadSeason(admin);
     }
 
     /// to distribute seasion
-    public entry fun distributeSeason(account: &signer){
-        aptospad_swap::distributeSeasonV3(account);
+    #[cmd]
+    public entry fun distributeSeason(admin: &signer){
+        aptospad_swap::distributeSeasonV3(admin);
     }
 
     /// pay coin & refund
-    public entry fun paycoinAndRefund(account: &signer){
-        aptospad_swap::paycoinAndRefund(account);
+    #[cmd]
+    public entry fun paycoinAndRefund(admin: &signer){
+        aptospad_swap::paycoinAndRefund(admin);
     }
 
     /// bid APTT
-    public entry fun bidAptosPad(account: &signer, amount: u64){
-        aptospad_swap::bidAptosPadV5(account, amount);
+    #[cmd]
+    public entry fun bidAptosPad(user: &signer, amount: u64){
+        aptospad_swap::bidAptosPadV5(user, amount);
     }
 
     /// add whitelist
-    public entry fun addWhiteList(aptospadAdmin: &signer, account: address, cap: u64){
-        aptospad_swap::addWhiteList(aptospadAdmin, account, cap);
+    #[cmd]
+    public entry fun addWhiteList(admin: &signer, user: address, cap: u64){
+        aptospad_swap::addWhiteList(admin, user, cap);
     }
 
     /// withdraw aptos from resource to ...
+    #[cmd]
     public entry fun withdrawAptos(admin: &signer, debit: address, amount: u64){
         aptospad_swap::withdrawAptos(admin, debit, amount);
     }
 
     /// withdraw aptosPad from resource to ...
+    #[cmd]
     public entry fun withdrawAptosPad(admin: &signer, debit: address, amount: u64){
         aptospad_swap::withdrawAptosPad(admin, debit, amount);
     }

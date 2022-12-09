@@ -1,0 +1,48 @@
+import { AptosDataCache, AptosParserRepo, AptosLocalCache } from "@manahippo/move-to-ts";
+import { OptionTransaction } from "@manahippo/move-to-ts";
+import { HexString, AptosClient, AptosAccount, TxnBuilderTypes, Types } from "aptos";
+export declare const packageName = "AptosFramework";
+export declare const moduleAddress: HexString;
+export declare const moduleName = "staking_proxy";
+export declare function set_operator_(owner: HexString, old_operator: HexString, new_operator: HexString, $c: AptosDataCache): void;
+export declare function buildPayload_set_operator(old_operator: HexString, new_operator: HexString, isJSON?: boolean): TxnBuilderTypes.TransactionPayloadEntryFunction | Types.TransactionPayload_EntryFunctionPayload;
+export declare function set_stake_pool_operator_(owner: HexString, new_operator: HexString, $c: AptosDataCache): void;
+export declare function buildPayload_set_stake_pool_operator(new_operator: HexString, isJSON?: boolean): TxnBuilderTypes.TransactionPayloadEntryFunction | Types.TransactionPayload_EntryFunctionPayload;
+export declare function set_stake_pool_voter_(owner: HexString, new_voter: HexString, $c: AptosDataCache): void;
+export declare function buildPayload_set_stake_pool_voter(new_voter: HexString, isJSON?: boolean): TxnBuilderTypes.TransactionPayloadEntryFunction | Types.TransactionPayload_EntryFunctionPayload;
+export declare function set_staking_contract_operator_(owner: HexString, old_operator: HexString, new_operator: HexString, $c: AptosDataCache): void;
+export declare function buildPayload_set_staking_contract_operator(old_operator: HexString, new_operator: HexString, isJSON?: boolean): TxnBuilderTypes.TransactionPayloadEntryFunction | Types.TransactionPayload_EntryFunctionPayload;
+export declare function set_staking_contract_voter_(owner: HexString, operator: HexString, new_voter: HexString, $c: AptosDataCache): void;
+export declare function buildPayload_set_staking_contract_voter(operator: HexString, new_voter: HexString, isJSON?: boolean): TxnBuilderTypes.TransactionPayloadEntryFunction | Types.TransactionPayload_EntryFunctionPayload;
+export declare function set_vesting_contract_operator_(owner: HexString, old_operator: HexString, new_operator: HexString, $c: AptosDataCache): void;
+export declare function buildPayload_set_vesting_contract_operator(old_operator: HexString, new_operator: HexString, isJSON?: boolean): TxnBuilderTypes.TransactionPayloadEntryFunction | Types.TransactionPayload_EntryFunctionPayload;
+export declare function set_vesting_contract_voter_(owner: HexString, operator: HexString, new_voter: HexString, $c: AptosDataCache): void;
+export declare function buildPayload_set_vesting_contract_voter(operator: HexString, new_voter: HexString, isJSON?: boolean): TxnBuilderTypes.TransactionPayloadEntryFunction | Types.TransactionPayload_EntryFunctionPayload;
+export declare function set_voter_(owner: HexString, operator: HexString, new_voter: HexString, $c: AptosDataCache): void;
+export declare function buildPayload_set_voter(operator: HexString, new_voter: HexString, isJSON?: boolean): TxnBuilderTypes.TransactionPayloadEntryFunction | Types.TransactionPayload_EntryFunctionPayload;
+export declare function loadParsers(repo: AptosParserRepo): void;
+export declare class App {
+    client: AptosClient;
+    repo: AptosParserRepo;
+    cache: AptosLocalCache;
+    constructor(client: AptosClient, repo: AptosParserRepo, cache: AptosLocalCache);
+    get moduleAddress(): HexString;
+    get moduleName(): string;
+    payload_set_operator(old_operator: HexString, new_operator: HexString, isJSON?: boolean): TxnBuilderTypes.TransactionPayloadEntryFunction | Types.TransactionPayload_EntryFunctionPayload;
+    set_operator(_account: AptosAccount, old_operator: HexString, new_operator: HexString, option?: OptionTransaction, _isJSON?: boolean): Promise<Types.UserTransaction>;
+    payload_set_stake_pool_operator(new_operator: HexString, isJSON?: boolean): TxnBuilderTypes.TransactionPayloadEntryFunction | Types.TransactionPayload_EntryFunctionPayload;
+    set_stake_pool_operator(_account: AptosAccount, new_operator: HexString, option?: OptionTransaction, _isJSON?: boolean): Promise<Types.UserTransaction>;
+    payload_set_stake_pool_voter(new_voter: HexString, isJSON?: boolean): TxnBuilderTypes.TransactionPayloadEntryFunction | Types.TransactionPayload_EntryFunctionPayload;
+    set_stake_pool_voter(_account: AptosAccount, new_voter: HexString, option?: OptionTransaction, _isJSON?: boolean): Promise<Types.UserTransaction>;
+    payload_set_staking_contract_operator(old_operator: HexString, new_operator: HexString, isJSON?: boolean): TxnBuilderTypes.TransactionPayloadEntryFunction | Types.TransactionPayload_EntryFunctionPayload;
+    set_staking_contract_operator(_account: AptosAccount, old_operator: HexString, new_operator: HexString, option?: OptionTransaction, _isJSON?: boolean): Promise<Types.UserTransaction>;
+    payload_set_staking_contract_voter(operator: HexString, new_voter: HexString, isJSON?: boolean): TxnBuilderTypes.TransactionPayloadEntryFunction | Types.TransactionPayload_EntryFunctionPayload;
+    set_staking_contract_voter(_account: AptosAccount, operator: HexString, new_voter: HexString, option?: OptionTransaction, _isJSON?: boolean): Promise<Types.UserTransaction>;
+    payload_set_vesting_contract_operator(old_operator: HexString, new_operator: HexString, isJSON?: boolean): TxnBuilderTypes.TransactionPayloadEntryFunction | Types.TransactionPayload_EntryFunctionPayload;
+    set_vesting_contract_operator(_account: AptosAccount, old_operator: HexString, new_operator: HexString, option?: OptionTransaction, _isJSON?: boolean): Promise<Types.UserTransaction>;
+    payload_set_vesting_contract_voter(operator: HexString, new_voter: HexString, isJSON?: boolean): TxnBuilderTypes.TransactionPayloadEntryFunction | Types.TransactionPayload_EntryFunctionPayload;
+    set_vesting_contract_voter(_account: AptosAccount, operator: HexString, new_voter: HexString, option?: OptionTransaction, _isJSON?: boolean): Promise<Types.UserTransaction>;
+    payload_set_voter(operator: HexString, new_voter: HexString, isJSON?: boolean): TxnBuilderTypes.TransactionPayloadEntryFunction | Types.TransactionPayload_EntryFunctionPayload;
+    set_voter(_account: AptosAccount, operator: HexString, new_voter: HexString, option?: OptionTransaction, _isJSON?: boolean): Promise<Types.UserTransaction>;
+}
+//# sourceMappingURL=staking_proxy.d.ts.map
