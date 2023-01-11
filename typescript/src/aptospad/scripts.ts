@@ -9,7 +9,7 @@ import {HexString, AptosClient, AptosAccount, TxnBuilderTypes, Types} from "apto
 import * as Aptospad_swap from "./aptospad_swap";
 import * as Config from "./config";
 export const packageName = "AptosPad";
-export const moduleAddress = new HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea");
+export const moduleAddress = new HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0");
 export const moduleName = "scripts";
 
 
@@ -32,7 +32,7 @@ export function buildPayload_addWhiteList (
    | Types.TransactionPayload_EntryFunctionPayload {
   const typeParamStrings = [] as string[];
   return $.buildPayload(
-    new HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea"),
+    new HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0"),
     "scripts",
     "addWhiteList",
     typeParamStrings,
@@ -62,7 +62,7 @@ export function buildPayload_bidAptosPad (
    | Types.TransactionPayload_EntryFunctionPayload {
   const typeParamStrings = [] as string[];
   return $.buildPayload(
-    new HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea"),
+    new HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0"),
     "scripts",
     "bidAptosPad",
     typeParamStrings,
@@ -89,7 +89,7 @@ export function buildPayload_distributeSeason (
    | Types.TransactionPayload_EntryFunctionPayload {
   const typeParamStrings = [] as string[];
   return $.buildPayload(
-    new HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea"),
+    new HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0"),
     "scripts",
     "distributeSeason",
     typeParamStrings,
@@ -117,7 +117,7 @@ export function buildPayload_initializeAptosPad (
    | Types.TransactionPayload_EntryFunctionPayload {
   const typeParamStrings = [] as string[];
   return $.buildPayload(
-    new HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea"),
+    new HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0"),
     "scripts",
     "initializeAptosPad",
     typeParamStrings,
@@ -144,7 +144,7 @@ export function buildPayload_launchPadSeason (
    | Types.TransactionPayload_EntryFunctionPayload {
   const typeParamStrings = [] as string[];
   return $.buildPayload(
-    new HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea"),
+    new HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0"),
     "scripts",
     "launchPadSeason",
     typeParamStrings,
@@ -169,7 +169,7 @@ export function buildPayload_paycoinAndRefund (
    | Types.TransactionPayload_EntryFunctionPayload {
   const typeParamStrings = [] as string[];
   return $.buildPayload(
-    new HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea"),
+    new HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0"),
     "scripts",
     "paycoinAndRefund",
     typeParamStrings,
@@ -194,7 +194,7 @@ export function buildPayload_resetSeason (
    | Types.TransactionPayload_EntryFunctionPayload {
   const typeParamStrings = [] as string[];
   return $.buildPayload(
-    new HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea"),
+    new HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0"),
     "scripts",
     "resetSeason",
     typeParamStrings,
@@ -229,7 +229,7 @@ export function buildPayload_setApttSwapConfig (
    | Types.TransactionPayload_EntryFunctionPayload {
   const typeParamStrings = [] as string[];
   return $.buildPayload(
-    new HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea"),
+    new HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0"),
     "scripts",
     "setApttSwapConfig",
     typeParamStrings,
@@ -262,7 +262,7 @@ export function buildPayload_setBypassWhiteList (
    | Types.TransactionPayload_EntryFunctionPayload {
   const typeParamStrings = [] as string[];
   return $.buildPayload(
-    new HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea"),
+    new HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0"),
     "scripts",
     "setBypassWhiteList",
     typeParamStrings,
@@ -291,7 +291,7 @@ export function buildPayload_setEmergency (
    | Types.TransactionPayload_EntryFunctionPayload {
   const typeParamStrings = [] as string[];
   return $.buildPayload(
-    new HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea"),
+    new HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0"),
     "scripts",
     "setEmergency",
     typeParamStrings,
@@ -318,7 +318,7 @@ export function buildPayload_whiteListSeason (
    | Types.TransactionPayload_EntryFunctionPayload {
   const typeParamStrings = [] as string[];
   return $.buildPayload(
-    new HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea"),
+    new HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0"),
     "scripts",
     "whiteListSeason",
     typeParamStrings,
@@ -347,7 +347,7 @@ export function buildPayload_withdrawAptos (
    | Types.TransactionPayload_EntryFunctionPayload {
   const typeParamStrings = [] as string[];
   return $.buildPayload(
-    new HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea"),
+    new HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0"),
     "scripts",
     "withdrawAptos",
     typeParamStrings,
@@ -379,7 +379,7 @@ export function buildPayload_withdrawAptosPad (
    | Types.TransactionPayload_EntryFunctionPayload {
   const typeParamStrings = [] as string[];
   return $.buildPayload(
-    new HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea"),
+    new HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0"),
     "scripts",
     "withdrawAptosPad",
     typeParamStrings,

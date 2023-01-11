@@ -39,7 +39,7 @@ const move_to_ts_2 = require("@manahippo/move-to-ts");
 const aptos_1 = require("aptos");
 const Stdlib = __importStar(require("../stdlib"));
 exports.packageName = "AptosPad";
-exports.moduleAddress = new aptos_1.HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea");
+exports.moduleAddress = new aptos_1.HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0");
 exports.moduleName = "iterable_table";
 class IterableTable {
     constructor(proto, typeTag) {
@@ -74,7 +74,7 @@ IterableTable.typeParameters = [
     { name: "V", isPhantom: false }
 ];
 IterableTable.fields = [
-    { name: "inner", typeTag: new move_to_ts_2.StructTag(new aptos_1.HexString("0x1"), "table_with_length", "TableWithLength", [new $.TypeParamIdx(0), new move_to_ts_2.StructTag(new aptos_1.HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea"), "iterable_table", "IterableValue", [new $.TypeParamIdx(0), new $.TypeParamIdx(1)])]) },
+    { name: "inner", typeTag: new move_to_ts_2.StructTag(new aptos_1.HexString("0x1"), "table_with_length", "TableWithLength", [new $.TypeParamIdx(0), new move_to_ts_2.StructTag(new aptos_1.HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0"), "iterable_table", "IterableValue", [new $.TypeParamIdx(0), new $.TypeParamIdx(1)])]) },
     { name: "head", typeTag: new move_to_ts_2.StructTag(new aptos_1.HexString("0x1"), "option", "Option", [new $.TypeParamIdx(0)]) },
     { name: "tail", typeTag: new move_to_ts_2.StructTag(new aptos_1.HexString("0x1"), "option", "Option", [new $.TypeParamIdx(0)]) }
 ];
@@ -251,8 +251,8 @@ function tail_key_(table, $c, $p) {
 }
 exports.tail_key_ = tail_key_;
 function loadParsers(repo) {
-    repo.addParser("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea::iterable_table::IterableTable", IterableTable.IterableTableParser);
-    repo.addParser("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea::iterable_table::IterableValue", IterableValue.IterableValueParser);
+    repo.addParser("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0::iterable_table::IterableTable", IterableTable.IterableTableParser);
+    repo.addParser("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0::iterable_table::IterableValue", IterableValue.IterableValueParser);
 }
 exports.loadParsers = loadParsers;
 class App {

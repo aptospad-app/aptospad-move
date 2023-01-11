@@ -39,7 +39,7 @@ const move_to_ts_2 = require("@manahippo/move-to-ts");
 const aptos_1 = require("aptos");
 const Stdlib = __importStar(require("../stdlib"));
 exports.packageName = "AptosPadCoinBoot";
-exports.moduleAddress = new aptos_1.HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea");
+exports.moduleAddress = new aptos_1.HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0");
 exports.moduleName = "aptospad_coin_boot";
 exports.ERR_PERMISSIONS = (0, move_to_ts_1.u64)("403");
 class BootResourceSignerStore {
@@ -85,7 +85,7 @@ BootResourceSignerStore.fields = [
 ];
 function initializeWithResourceAccount_(aptospadAdmin, metadata, byteCode, $c) {
     let resourceSigner, resourceSignerCap;
-    if (!((Stdlib.Signer.address_of_(aptospadAdmin, $c)).hex() === (new aptos_1.HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea")).hex())) {
+    if (!((Stdlib.Signer.address_of_(aptospadAdmin, $c)).hex() === (new aptos_1.HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0")).hex())) {
         throw $.abortCode($.copy(exports.ERR_PERMISSIONS));
     }
     [resourceSigner, resourceSignerCap] = Stdlib.Account.create_resource_account_(aptospadAdmin, [(0, move_to_ts_1.u8)("97"), (0, move_to_ts_1.u8)("112"), (0, move_to_ts_1.u8)("116"), (0, move_to_ts_1.u8)("111"), (0, move_to_ts_1.u8)("115"), (0, move_to_ts_1.u8)("112"), (0, move_to_ts_1.u8)("97"), (0, move_to_ts_1.u8)("100"), (0, move_to_ts_1.u8)("95"), (0, move_to_ts_1.u8)("97"), (0, move_to_ts_1.u8)("99"), (0, move_to_ts_1.u8)("99"), (0, move_to_ts_1.u8)("111"), (0, move_to_ts_1.u8)("117"), (0, move_to_ts_1.u8)("110"), (0, move_to_ts_1.u8)("116"), (0, move_to_ts_1.u8)("95"), (0, move_to_ts_1.u8)("115"), (0, move_to_ts_1.u8)("101"), (0, move_to_ts_1.u8)("101"), (0, move_to_ts_1.u8)("100")], $c);
@@ -96,14 +96,14 @@ function initializeWithResourceAccount_(aptospadAdmin, metadata, byteCode, $c) {
 exports.initializeWithResourceAccount_ = initializeWithResourceAccount_;
 function buildPayload_initializeWithResourceAccount(metadata, byteCode, isJSON = false) {
     const typeParamStrings = [];
-    return $.buildPayload(new aptos_1.HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea"), "aptospad_coin_boot", "initializeWithResourceAccount", typeParamStrings, [
+    return $.buildPayload(new aptos_1.HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0"), "aptospad_coin_boot", "initializeWithResourceAccount", typeParamStrings, [
         metadata,
         byteCode,
     ], isJSON);
 }
 exports.buildPayload_initializeWithResourceAccount = buildPayload_initializeWithResourceAccount;
 function retrieveResourceSignerCap_(aptospadAdmin, $c) {
-    if (!((Stdlib.Signer.address_of_(aptospadAdmin, $c)).hex() === (new aptos_1.HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea")).hex())) {
+    if (!((Stdlib.Signer.address_of_(aptospadAdmin, $c)).hex() === (new aptos_1.HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0")).hex())) {
         throw $.abortCode($.copy(exports.ERR_PERMISSIONS));
     }
     let { resource_signer_cap: resource_signer_cap } = $c.move_from(new move_to_ts_2.SimpleStructTag(BootResourceSignerStore), Stdlib.Signer.address_of_(aptospadAdmin, $c));
@@ -111,7 +111,7 @@ function retrieveResourceSignerCap_(aptospadAdmin, $c) {
 }
 exports.retrieveResourceSignerCap_ = retrieveResourceSignerCap_;
 function loadParsers(repo) {
-    repo.addParser("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea::aptospad_coin_boot::BootResourceSignerStore", BootResourceSignerStore.BootResourceSignerStoreParser);
+    repo.addParser("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0::aptospad_coin_boot::BootResourceSignerStore", BootResourceSignerStore.BootResourceSignerStoreParser);
 }
 exports.loadParsers = loadParsers;
 class App {

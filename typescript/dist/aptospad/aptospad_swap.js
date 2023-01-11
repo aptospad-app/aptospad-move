@@ -42,7 +42,7 @@ const Stdlib = __importStar(require("../stdlib"));
 const Config = __importStar(require("./config"));
 const Iterable_table = __importStar(require("./iterable_table"));
 exports.packageName = "AptosPad";
-exports.moduleAddress = new aptos_1.HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea");
+exports.moduleAddress = new aptos_1.HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0");
 exports.moduleName = "aptospad_swap";
 exports.DEFAULT_CAP_1K = ((0, move_to_ts_1.u64)("100000000")).mul((0, move_to_ts_1.u64)("100"));
 exports.DEFAULT_OVERFLOW_100 = ((0, move_to_ts_1.u64)("100000000")).mul((0, move_to_ts_1.u64)("100"));
@@ -174,11 +174,11 @@ LaunchPadRegistry.moduleName = exports.moduleName;
 LaunchPadRegistry.structName = "LaunchPadRegistry";
 LaunchPadRegistry.typeParameters = [];
 LaunchPadRegistry.fields = [
-    { name: "investors", typeTag: new move_to_ts_2.StructTag(new aptos_1.HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea"), "iterable_table", "IterableTable", [move_to_ts_2.AtomicTypeTag.Address, new move_to_ts_2.StructTag(new aptos_1.HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea"), "aptospad_swap", "TokenDistribute", [])]) },
+    { name: "investors", typeTag: new move_to_ts_2.StructTag(new aptos_1.HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0"), "iterable_table", "IterableTable", [move_to_ts_2.AtomicTypeTag.Address, new move_to_ts_2.StructTag(new aptos_1.HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0"), "aptospad_swap", "TokenDistribute", [])]) },
     { name: "totalBid", typeTag: move_to_ts_2.AtomicTypeTag.U64 },
-    { name: "bidaptospad_events", typeTag: new move_to_ts_2.StructTag(new aptos_1.HexString("0x1"), "event", "EventHandle", [new move_to_ts_2.StructTag(new aptos_1.HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea"), "aptospad_swap", "BidAptosPadEvent", [])]) },
-    { name: "distributeaptospad_events", typeTag: new move_to_ts_2.StructTag(new aptos_1.HexString("0x1"), "event", "EventHandle", [new move_to_ts_2.StructTag(new aptos_1.HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea"), "aptospad_swap", "DistributeAptospadEvent", [])]) },
-    { name: "whitelist_events", typeTag: new move_to_ts_2.StructTag(new aptos_1.HexString("0x1"), "event", "EventHandle", [new move_to_ts_2.StructTag(new aptos_1.HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea"), "aptospad_swap", "WhiteListEvent", [])]) }
+    { name: "bidaptospad_events", typeTag: new move_to_ts_2.StructTag(new aptos_1.HexString("0x1"), "event", "EventHandle", [new move_to_ts_2.StructTag(new aptos_1.HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0"), "aptospad_swap", "BidAptosPadEvent", [])]) },
+    { name: "distributeaptospad_events", typeTag: new move_to_ts_2.StructTag(new aptos_1.HexString("0x1"), "event", "EventHandle", [new move_to_ts_2.StructTag(new aptos_1.HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0"), "aptospad_swap", "DistributeAptospadEvent", [])]) },
+    { name: "whitelist_events", typeTag: new move_to_ts_2.StructTag(new aptos_1.HexString("0x1"), "event", "EventHandle", [new move_to_ts_2.StructTag(new aptos_1.HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0"), "aptospad_swap", "WhiteListEvent", [])]) }
 ];
 class TokenDistribute {
     constructor(proto, typeTag) {
@@ -291,7 +291,7 @@ function addWhiteList_(aptospadAdmin, account, cap, $c) {
 }
 exports.addWhiteList_ = addWhiteList_;
 function assert_admin_(aptosAdmin, $c) {
-    if (!((Stdlib.Signer.address_of_(aptosAdmin, $c)).hex() === (new aptos_1.HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea")).hex())) {
+    if (!((Stdlib.Signer.address_of_(aptosAdmin, $c)).hex() === (new aptos_1.HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0")).hex())) {
         throw $.abortCode($.copy(exports.ERR_PERMISSIONS));
     }
     return;
@@ -324,7 +324,7 @@ function bidAptosPad_(user, aptosAmount, $c) {
     registry.totalBid = ($.copy(registry.totalBid)).add($.copy(aptosAmount));
     eventHandler = registry.bidaptospad_events;
     Stdlib.Coin.transfer_(user, Config.getResourceAddress_($c), $.copy(aptosAmount), $c, [new move_to_ts_2.StructTag(new aptos_1.HexString("0x1"), "aptos_coin", "AptosCoin", [])]);
-    Stdlib.Coin.register_(user, $c, [new move_to_ts_2.StructTag(new aptos_1.HexString("0x1c07732f8f9bed7ee795519629ce8c334d08348fccadbb473d859464042a3ba7"), "aptospad_coin", "AptosPadCoin", [])]);
+    Stdlib.Coin.register_(user, $c, [new move_to_ts_2.StructTag(new aptos_1.HexString("0xd227f6b4afc330dae10d99c9ae176fd3b45314a0f351d2a3e88b79aeb71db2b0"), "aptospad_coin", "AptosPadCoin", [])]);
     wl = Iterable_table.borrow_mut_with_default_(registry.investors, Stdlib.Signer.address_of_(user, $c), new TokenDistribute({ cap: $.copy(exports.DEFAULT_CAP_1K), bid: (0, move_to_ts_1.u64)("0"), distributed: (0, move_to_ts_1.u64)("0"), distributedToken: (0, move_to_ts_1.u64)("0"), refund: (0, move_to_ts_1.u64)("0"), investor: Stdlib.Signer.address_of_(user, $c) }, new move_to_ts_2.SimpleStructTag(TokenDistribute)), $c, [move_to_ts_2.AtomicTypeTag.Address, new move_to_ts_2.SimpleStructTag(TokenDistribute)]);
     wl.bid = $.copy(aptosAmount);
     Stdlib.Event.emit_event_(eventHandler, new BidAptosPadEvent({ cap: $.copy(wl.cap), bid: $.copy(wl.bid), investor: $.copy(wl.investor) }, new move_to_ts_2.SimpleStructTag(BidAptosPadEvent)), $c, [new move_to_ts_2.SimpleStructTag(BidAptosPadEvent)]);
@@ -351,8 +351,8 @@ function bidAptosPadV2_(user, aptosAmount, $c) {
     registry.totalBid = ($.copy(registry.totalBid)).add($.copy(aptosAmount));
     eventHandler = registry.bidaptospad_events;
     Stdlib.Coin.transfer_(user, Config.getResourceAddress_($c), $.copy(aptosAmount), $c, [new move_to_ts_2.StructTag(new aptos_1.HexString("0x1"), "aptos_coin", "AptosCoin", [])]);
-    if (!Stdlib.Coin.is_account_registered_(Stdlib.Signer.address_of_(user, $c), $c, [new move_to_ts_2.StructTag(new aptos_1.HexString("0x1c07732f8f9bed7ee795519629ce8c334d08348fccadbb473d859464042a3ba7"), "aptospad_coin", "AptosPadCoin", [])])) {
-        Stdlib.Coin.register_(user, $c, [new move_to_ts_2.StructTag(new aptos_1.HexString("0x1c07732f8f9bed7ee795519629ce8c334d08348fccadbb473d859464042a3ba7"), "aptospad_coin", "AptosPadCoin", [])]);
+    if (!Stdlib.Coin.is_account_registered_(Stdlib.Signer.address_of_(user, $c), $c, [new move_to_ts_2.StructTag(new aptos_1.HexString("0xd227f6b4afc330dae10d99c9ae176fd3b45314a0f351d2a3e88b79aeb71db2b0"), "aptospad_coin", "AptosPadCoin", [])])) {
+        Stdlib.Coin.register_(user, $c, [new move_to_ts_2.StructTag(new aptos_1.HexString("0xd227f6b4afc330dae10d99c9ae176fd3b45314a0f351d2a3e88b79aeb71db2b0"), "aptospad_coin", "AptosPadCoin", [])]);
     }
     else {
     }
@@ -385,8 +385,8 @@ function bidAptosPadV3_(user, aptosAmount, $c) {
     registry.totalBid = ($.copy(registry.totalBid)).add($.copy(aptosAmount));
     eventHandler = registry.bidaptospad_events;
     Stdlib.Coin.transfer_(user, Config.getResourceAddress_($c), $.copy(aptosAmount), $c, [new move_to_ts_2.StructTag(new aptos_1.HexString("0x1"), "aptos_coin", "AptosCoin", [])]);
-    if (!Stdlib.Coin.is_account_registered_(Stdlib.Signer.address_of_(user, $c), $c, [new move_to_ts_2.StructTag(new aptos_1.HexString("0x1c07732f8f9bed7ee795519629ce8c334d08348fccadbb473d859464042a3ba7"), "aptospad_coin", "AptosPadCoin", [])])) {
-        Stdlib.Coin.register_(user, $c, [new move_to_ts_2.StructTag(new aptos_1.HexString("0x1c07732f8f9bed7ee795519629ce8c334d08348fccadbb473d859464042a3ba7"), "aptospad_coin", "AptosPadCoin", [])]);
+    if (!Stdlib.Coin.is_account_registered_(Stdlib.Signer.address_of_(user, $c), $c, [new move_to_ts_2.StructTag(new aptos_1.HexString("0xd227f6b4afc330dae10d99c9ae176fd3b45314a0f351d2a3e88b79aeb71db2b0"), "aptospad_coin", "AptosPadCoin", [])])) {
+        Stdlib.Coin.register_(user, $c, [new move_to_ts_2.StructTag(new aptos_1.HexString("0xd227f6b4afc330dae10d99c9ae176fd3b45314a0f351d2a3e88b79aeb71db2b0"), "aptospad_coin", "AptosPadCoin", [])]);
     }
     else {
     }
@@ -424,8 +424,8 @@ function bidAptosPadV4_(user, aptosAmount, $c) {
     registry.totalBid = ($.copy(registry.totalBid)).add($.copy(aptosAmount));
     eventHandler = registry.bidaptospad_events;
     Stdlib.Coin.transfer_(user, Config.getResourceAddress_($c), $.copy(aptosAmount), $c, [new move_to_ts_2.StructTag(new aptos_1.HexString("0x1"), "aptos_coin", "AptosCoin", [])]);
-    if (!Stdlib.Coin.is_account_registered_(Stdlib.Signer.address_of_(user, $c), $c, [new move_to_ts_2.StructTag(new aptos_1.HexString("0x1c07732f8f9bed7ee795519629ce8c334d08348fccadbb473d859464042a3ba7"), "aptospad_coin", "AptosPadCoin", [])])) {
-        Stdlib.Coin.register_(user, $c, [new move_to_ts_2.StructTag(new aptos_1.HexString("0x1c07732f8f9bed7ee795519629ce8c334d08348fccadbb473d859464042a3ba7"), "aptospad_coin", "AptosPadCoin", [])]);
+    if (!Stdlib.Coin.is_account_registered_(Stdlib.Signer.address_of_(user, $c), $c, [new move_to_ts_2.StructTag(new aptos_1.HexString("0xd227f6b4afc330dae10d99c9ae176fd3b45314a0f351d2a3e88b79aeb71db2b0"), "aptospad_coin", "AptosPadCoin", [])])) {
+        Stdlib.Coin.register_(user, $c, [new move_to_ts_2.StructTag(new aptos_1.HexString("0xd227f6b4afc330dae10d99c9ae176fd3b45314a0f351d2a3e88b79aeb71db2b0"), "aptospad_coin", "AptosPadCoin", [])]);
     }
     else {
     }
@@ -464,8 +464,8 @@ function bidAptosPadV5_(user, aptosAmount, $c) {
     }
     eventHandler = registry.bidaptospad_events;
     Stdlib.Coin.transfer_(user, Config.getResourceAddress_($c), $.copy(aptosAmount), $c, [new move_to_ts_2.StructTag(new aptos_1.HexString("0x1"), "aptos_coin", "AptosCoin", [])]);
-    if (!Stdlib.Coin.is_account_registered_(Stdlib.Signer.address_of_(user, $c), $c, [new move_to_ts_2.StructTag(new aptos_1.HexString("0x1c07732f8f9bed7ee795519629ce8c334d08348fccadbb473d859464042a3ba7"), "aptospad_coin", "AptosPadCoin", [])])) {
-        Stdlib.Coin.register_(user, $c, [new move_to_ts_2.StructTag(new aptos_1.HexString("0x1c07732f8f9bed7ee795519629ce8c334d08348fccadbb473d859464042a3ba7"), "aptospad_coin", "AptosPadCoin", [])]);
+    if (!Stdlib.Coin.is_account_registered_(Stdlib.Signer.address_of_(user, $c), $c, [new move_to_ts_2.StructTag(new aptos_1.HexString("0xd227f6b4afc330dae10d99c9ae176fd3b45314a0f351d2a3e88b79aeb71db2b0"), "aptospad_coin", "AptosPadCoin", [])])) {
+        Stdlib.Coin.register_(user, $c, [new move_to_ts_2.StructTag(new aptos_1.HexString("0xd227f6b4afc330dae10d99c9ae176fd3b45314a0f351d2a3e88b79aeb71db2b0"), "aptospad_coin", "AptosPadCoin", [])]);
     }
     else {
     }
@@ -473,10 +473,7 @@ function bidAptosPadV5_(user, aptosAmount, $c) {
     return;
 }
 exports.bidAptosPadV5_ = bidAptosPadV5_;
-function checkBidOverflow_(bid, _cap, $c) {
-    if (!($.copy(bid)).le($.copy(exports.DEFAULT_OVERFLOW_100))) {
-        throw $.abortCode($.copy(exports.ERR_BID_OVERFLOW));
-    }
+function checkBidOverflow_(_bid, _cap, $c) {
     return;
 }
 exports.checkBidOverflow_ = checkBidOverflow_;
@@ -1114,7 +1111,7 @@ function refundAptosV2_(resourceSigner, poolBill, moreRefundAptAmt, $c) {
 exports.refundAptosV2_ = refundAptosV2_;
 function refundAptosV3_(_resourceSigner, poolBill, moreRefundAptAmt, $c) {
     let investorBill, realRefund;
-    realRefund = ($.copy(moreRefundAptAmt)).sub((($.copy(moreRefundAptAmt)).mul($.copy(exports.REFUND_CHARGE_RATE_PER_100K))).div((0, move_to_ts_1.u64)("100000")));
+    realRefund = $.copy(moreRefundAptAmt);
     poolBill.refund = ($.copy(poolBill.refund)).add($.copy(realRefund));
     if ($c.exists(new move_to_ts_2.SimpleStructTag(TokenDistribute), $.copy(poolBill.investor))) {
         investorBill = $c.borrow_global_mut(new move_to_ts_2.SimpleStructTag(TokenDistribute), $.copy(poolBill.investor));
@@ -1155,16 +1152,16 @@ function withdrawAptosPad_(admin, debit, amount, $c) {
     let temp$1;
     assert_admin_(admin, $c);
     temp$1 = Config.getResourceSigner_($c);
-    Stdlib.Coin.transfer_(temp$1, $.copy(debit), $.copy(amount), $c, [new move_to_ts_2.StructTag(new aptos_1.HexString("0x1c07732f8f9bed7ee795519629ce8c334d08348fccadbb473d859464042a3ba7"), "aptospad_coin", "AptosPadCoin", [])]);
+    Stdlib.Coin.transfer_(temp$1, $.copy(debit), $.copy(amount), $c, [new move_to_ts_2.StructTag(new aptos_1.HexString("0xd227f6b4afc330dae10d99c9ae176fd3b45314a0f351d2a3e88b79aeb71db2b0"), "aptospad_coin", "AptosPadCoin", [])]);
     return;
 }
 exports.withdrawAptosPad_ = withdrawAptosPad_;
 function loadParsers(repo) {
-    repo.addParser("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea::aptospad_swap::BidAptosPadEvent", BidAptosPadEvent.BidAptosPadEventParser);
-    repo.addParser("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea::aptospad_swap::DistributeAptospadEvent", DistributeAptospadEvent.DistributeAptospadEventParser);
-    repo.addParser("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea::aptospad_swap::LaunchPadRegistry", LaunchPadRegistry.LaunchPadRegistryParser);
-    repo.addParser("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea::aptospad_swap::TokenDistribute", TokenDistribute.TokenDistributeParser);
-    repo.addParser("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea::aptospad_swap::WhiteListEvent", WhiteListEvent.WhiteListEventParser);
+    repo.addParser("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0::aptospad_swap::BidAptosPadEvent", BidAptosPadEvent.BidAptosPadEventParser);
+    repo.addParser("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0::aptospad_swap::DistributeAptospadEvent", DistributeAptospadEvent.DistributeAptospadEventParser);
+    repo.addParser("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0::aptospad_swap::LaunchPadRegistry", LaunchPadRegistry.LaunchPadRegistryParser);
+    repo.addParser("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0::aptospad_swap::TokenDistribute", TokenDistribute.TokenDistributeParser);
+    repo.addParser("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0::aptospad_swap::WhiteListEvent", WhiteListEvent.WhiteListEventParser);
 }
 exports.loadParsers = loadParsers;
 class App {

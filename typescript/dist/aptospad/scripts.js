@@ -38,7 +38,7 @@ const aptos_1 = require("aptos");
 const Aptospad_swap = __importStar(require("./aptospad_swap"));
 const Config = __importStar(require("./config"));
 exports.packageName = "AptosPad";
-exports.moduleAddress = new aptos_1.HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea");
+exports.moduleAddress = new aptos_1.HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0");
 exports.moduleName = "scripts";
 function addWhiteList_(admin, user, cap, $c) {
     Aptospad_swap.addWhiteList_(admin, $.copy(user), $.copy(cap), $c);
@@ -47,7 +47,7 @@ function addWhiteList_(admin, user, cap, $c) {
 exports.addWhiteList_ = addWhiteList_;
 function buildPayload_addWhiteList(user, cap, isJSON = false) {
     const typeParamStrings = [];
-    return $.buildPayload(new aptos_1.HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea"), "scripts", "addWhiteList", typeParamStrings, [
+    return $.buildPayload(new aptos_1.HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0"), "scripts", "addWhiteList", typeParamStrings, [
         user,
         cap,
     ], isJSON);
@@ -60,7 +60,7 @@ function bidAptosPad_(user, amount, $c) {
 exports.bidAptosPad_ = bidAptosPad_;
 function buildPayload_bidAptosPad(amount, isJSON = false) {
     const typeParamStrings = [];
-    return $.buildPayload(new aptos_1.HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea"), "scripts", "bidAptosPad", typeParamStrings, [
+    return $.buildPayload(new aptos_1.HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0"), "scripts", "bidAptosPad", typeParamStrings, [
         amount,
     ], isJSON);
 }
@@ -72,7 +72,7 @@ function distributeSeason_(admin, $c) {
 exports.distributeSeason_ = distributeSeason_;
 function buildPayload_distributeSeason(isJSON = false) {
     const typeParamStrings = [];
-    return $.buildPayload(new aptos_1.HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea"), "scripts", "distributeSeason", typeParamStrings, [], isJSON);
+    return $.buildPayload(new aptos_1.HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0"), "scripts", "distributeSeason", typeParamStrings, [], isJSON);
 }
 exports.buildPayload_distributeSeason = buildPayload_distributeSeason;
 function initializeAptosPad_(admin, preFundAptos, $c) {
@@ -83,7 +83,7 @@ function initializeAptosPad_(admin, preFundAptos, $c) {
 exports.initializeAptosPad_ = initializeAptosPad_;
 function buildPayload_initializeAptosPad(preFundAptos, isJSON = false) {
     const typeParamStrings = [];
-    return $.buildPayload(new aptos_1.HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea"), "scripts", "initializeAptosPad", typeParamStrings, [
+    return $.buildPayload(new aptos_1.HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0"), "scripts", "initializeAptosPad", typeParamStrings, [
         preFundAptos,
     ], isJSON);
 }
@@ -95,7 +95,7 @@ function launchPadSeason_(admin, $c) {
 exports.launchPadSeason_ = launchPadSeason_;
 function buildPayload_launchPadSeason(isJSON = false) {
     const typeParamStrings = [];
-    return $.buildPayload(new aptos_1.HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea"), "scripts", "launchPadSeason", typeParamStrings, [], isJSON);
+    return $.buildPayload(new aptos_1.HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0"), "scripts", "launchPadSeason", typeParamStrings, [], isJSON);
 }
 exports.buildPayload_launchPadSeason = buildPayload_launchPadSeason;
 function paycoinAndRefund_(admin, $c) {
@@ -105,7 +105,7 @@ function paycoinAndRefund_(admin, $c) {
 exports.paycoinAndRefund_ = paycoinAndRefund_;
 function buildPayload_paycoinAndRefund(isJSON = false) {
     const typeParamStrings = [];
-    return $.buildPayload(new aptos_1.HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea"), "scripts", "paycoinAndRefund", typeParamStrings, [], isJSON);
+    return $.buildPayload(new aptos_1.HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0"), "scripts", "paycoinAndRefund", typeParamStrings, [], isJSON);
 }
 exports.buildPayload_paycoinAndRefund = buildPayload_paycoinAndRefund;
 function resetSeason_(admin, $c) {
@@ -115,7 +115,7 @@ function resetSeason_(admin, $c) {
 exports.resetSeason_ = resetSeason_;
 function buildPayload_resetSeason(isJSON = false) {
     const typeParamStrings = [];
-    return $.buildPayload(new aptos_1.HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea"), "scripts", "resetSeason", typeParamStrings, [], isJSON);
+    return $.buildPayload(new aptos_1.HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0"), "scripts", "resetSeason", typeParamStrings, [], isJSON);
 }
 exports.buildPayload_resetSeason = buildPayload_resetSeason;
 function setApttSwapConfig_(admin, softCap, hardCap, enableRefund, aptToApttRate, bypassWhitelist, $c) {
@@ -125,7 +125,7 @@ function setApttSwapConfig_(admin, softCap, hardCap, enableRefund, aptToApttRate
 exports.setApttSwapConfig_ = setApttSwapConfig_;
 function buildPayload_setApttSwapConfig(softCap, hardCap, enableRefund, aptToApttRate, bypassWhitelist, isJSON = false) {
     const typeParamStrings = [];
-    return $.buildPayload(new aptos_1.HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea"), "scripts", "setApttSwapConfig", typeParamStrings, [
+    return $.buildPayload(new aptos_1.HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0"), "scripts", "setApttSwapConfig", typeParamStrings, [
         softCap,
         hardCap,
         enableRefund,
@@ -141,7 +141,7 @@ function setBypassWhiteList_(admin, bypass, $c) {
 exports.setBypassWhiteList_ = setBypassWhiteList_;
 function buildPayload_setBypassWhiteList(bypass, isJSON = false) {
     const typeParamStrings = [];
-    return $.buildPayload(new aptos_1.HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea"), "scripts", "setBypassWhiteList", typeParamStrings, [
+    return $.buildPayload(new aptos_1.HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0"), "scripts", "setBypassWhiteList", typeParamStrings, [
         bypass,
     ], isJSON);
 }
@@ -153,7 +153,7 @@ function setEmergency_(admin, emergency, $c) {
 exports.setEmergency_ = setEmergency_;
 function buildPayload_setEmergency(emergency, isJSON = false) {
     const typeParamStrings = [];
-    return $.buildPayload(new aptos_1.HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea"), "scripts", "setEmergency", typeParamStrings, [
+    return $.buildPayload(new aptos_1.HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0"), "scripts", "setEmergency", typeParamStrings, [
         emergency,
     ], isJSON);
 }
@@ -165,7 +165,7 @@ function whiteListSeason_(admin, $c) {
 exports.whiteListSeason_ = whiteListSeason_;
 function buildPayload_whiteListSeason(isJSON = false) {
     const typeParamStrings = [];
-    return $.buildPayload(new aptos_1.HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea"), "scripts", "whiteListSeason", typeParamStrings, [], isJSON);
+    return $.buildPayload(new aptos_1.HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0"), "scripts", "whiteListSeason", typeParamStrings, [], isJSON);
 }
 exports.buildPayload_whiteListSeason = buildPayload_whiteListSeason;
 function withdrawAptos_(admin, debit, amount, $c) {
@@ -175,7 +175,7 @@ function withdrawAptos_(admin, debit, amount, $c) {
 exports.withdrawAptos_ = withdrawAptos_;
 function buildPayload_withdrawAptos(debit, amount, isJSON = false) {
     const typeParamStrings = [];
-    return $.buildPayload(new aptos_1.HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea"), "scripts", "withdrawAptos", typeParamStrings, [
+    return $.buildPayload(new aptos_1.HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0"), "scripts", "withdrawAptos", typeParamStrings, [
         debit,
         amount,
     ], isJSON);
@@ -188,7 +188,7 @@ function withdrawAptosPad_(admin, debit, amount, $c) {
 exports.withdrawAptosPad_ = withdrawAptosPad_;
 function buildPayload_withdrawAptosPad(debit, amount, isJSON = false) {
     const typeParamStrings = [];
-    return $.buildPayload(new aptos_1.HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea"), "scripts", "withdrawAptosPad", typeParamStrings, [
+    return $.buildPayload(new aptos_1.HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0"), "scripts", "withdrawAptosPad", typeParamStrings, [
         debit,
         amount,
     ], isJSON);

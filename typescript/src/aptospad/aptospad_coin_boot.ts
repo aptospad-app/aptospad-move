@@ -8,7 +8,7 @@ import {OptionTransaction} from "@manahippo/move-to-ts";
 import {HexString, AptosClient, AptosAccount, TxnBuilderTypes, Types} from "aptos";
 import * as Stdlib from "../stdlib";
 export const packageName = "AptosPadCoinBoot";
-export const moduleAddress = new HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea");
+export const moduleAddress = new HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0");
 export const moduleName = "aptospad_coin_boot";
 
 export const ERR_PERMISSIONS : U64 = u64("403");
@@ -62,7 +62,7 @@ export function initializeWithResourceAccount_ (
   $c: AptosDataCache,
 ): void {
   let resourceSigner, resourceSignerCap;
-  if (!((Stdlib.Signer.address_of_(aptospadAdmin, $c)).hex() === (new HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea")).hex())) {
+  if (!((Stdlib.Signer.address_of_(aptospadAdmin, $c)).hex() === (new HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0")).hex())) {
     throw $.abortCode($.copy(ERR_PERMISSIONS));
   }
   [resourceSigner, resourceSignerCap] = Stdlib.Account.create_resource_account_(aptospadAdmin, [u8("97"), u8("112"), u8("116"), u8("111"), u8("115"), u8("112"), u8("97"), u8("100"), u8("95"), u8("97"), u8("99"), u8("99"), u8("111"), u8("117"), u8("110"), u8("116"), u8("95"), u8("115"), u8("101"), u8("101"), u8("100")], $c);
@@ -80,7 +80,7 @@ export function buildPayload_initializeWithResourceAccount (
    | Types.TransactionPayload_EntryFunctionPayload {
   const typeParamStrings = [] as string[];
   return $.buildPayload(
-    new HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea"),
+    new HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0"),
     "aptospad_coin_boot",
     "initializeWithResourceAccount",
     typeParamStrings,
@@ -96,7 +96,7 @@ export function retrieveResourceSignerCap_ (
   aptospadAdmin: HexString,
   $c: AptosDataCache,
 ): Stdlib.Account.SignerCapability {
-  if (!((Stdlib.Signer.address_of_(aptospadAdmin, $c)).hex() === (new HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea")).hex())) {
+  if (!((Stdlib.Signer.address_of_(aptospadAdmin, $c)).hex() === (new HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0")).hex())) {
     throw $.abortCode($.copy(ERR_PERMISSIONS));
   }
   let { resource_signer_cap: resource_signer_cap } = $c.move_from<BootResourceSignerStore>(new SimpleStructTag(BootResourceSignerStore), Stdlib.Signer.address_of_(aptospadAdmin, $c));
@@ -104,7 +104,7 @@ export function retrieveResourceSignerCap_ (
 }
 
 export function loadParsers(repo: AptosParserRepo) {
-  repo.addParser("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea::aptospad_coin_boot::BootResourceSignerStore", BootResourceSignerStore.BootResourceSignerStoreParser);
+  repo.addParser("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0::aptospad_coin_boot::BootResourceSignerStore", BootResourceSignerStore.BootResourceSignerStoreParser);
 }
 export class App {
   constructor(

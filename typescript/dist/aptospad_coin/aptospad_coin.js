@@ -37,7 +37,7 @@ const $ = __importStar(require("@manahippo/move-to-ts"));
 const move_to_ts_1 = require("@manahippo/move-to-ts");
 const aptos_1 = require("aptos");
 exports.packageName = "AptosPadCoin";
-exports.moduleAddress = new aptos_1.HexString("0x1c07732f8f9bed7ee795519629ce8c334d08348fccadbb473d859464042a3ba7");
+exports.moduleAddress = new aptos_1.HexString("0xd227f6b4afc330dae10d99c9ae176fd3b45314a0f351d2a3e88b79aeb71db2b0");
 exports.moduleName = "aptospad_coin";
 class AptosPadCoin {
     constructor(proto, typeTag) {
@@ -64,7 +64,7 @@ AptosPadCoin.structName = "AptosPadCoin";
 AptosPadCoin.typeParameters = [];
 AptosPadCoin.fields = [];
 function loadParsers(repo) {
-    repo.addParser("0x1c07732f8f9bed7ee795519629ce8c334d08348fccadbb473d859464042a3ba7::aptospad_coin::AptosPadCoin", AptosPadCoin.AptosPadCoinParser);
+    repo.addParser("0xd227f6b4afc330dae10d99c9ae176fd3b45314a0f351d2a3e88b79aeb71db2b0::aptospad_coin::AptosPadCoin", AptosPadCoin.AptosPadCoinParser);
 }
 exports.loadParsers = loadParsers;
 class App {

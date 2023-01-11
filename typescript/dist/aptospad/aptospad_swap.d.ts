@@ -129,7 +129,7 @@ export declare function bidAptosPadV2_(user: HexString, aptosAmount: U64, $c: Ap
 export declare function bidAptosPadV3_(user: HexString, aptosAmount: U64, $c: AptosDataCache): void;
 export declare function bidAptosPadV4_(user: HexString, aptosAmount: U64, $c: AptosDataCache): void;
 export declare function bidAptosPadV5_(user: HexString, aptosAmount: U64, $c: AptosDataCache): void;
-export declare function checkBidOverflow_(bid: U64, _cap: U64, $c: AptosDataCache): void;
+export declare function checkBidOverflow_(_bid: U64, _cap: U64, $c: AptosDataCache): void;
 export declare function distributeAll_($c: AptosDataCache): void;
 export declare function distributeAllV2_($c: AptosDataCache): void;
 export declare function distributeAllV3_($c: AptosDataCache): void;

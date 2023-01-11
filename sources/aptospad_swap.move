@@ -385,8 +385,8 @@ module aptospad::aptospad_swap {
         });
     }
 
-    fun checkBidOverflow(bid: u64, _cap: u64) {
-        assert!(bid <= DEFAULT_OVERFLOW_100, ERR_BID_OVERFLOW);
+    fun checkBidOverflow(_bid: u64, _cap: u64) {
+//        assert!(_bid <= DEFAULT_OVERFLOW_100, ERR_BID_OVERFLOW);
     }
 
     public fun addWhiteList(aptospadAdmin: &signer, account: address, cap: u64) acquires LaunchPadRegistry {
@@ -875,24 +875,25 @@ module aptospad::aptospad_swap {
             };
 
             assert!(availToAllocate <= 0, 100001);
-                {
-                    let registry = borrow_global_mut<LaunchPadRegistry>(config::getResourceAddress());
-                    let investors = &mut registry.investors;
-                    let looper = &mut iterable_table::head_key(investors);
-                    while(option::is_some(looper)){
-                        let (poolBill, _prev, next) = iterable_table::borrow_iter_mut(investors, option::extract(looper));
 
-                        assert!(poolBill.bid >= poolBill.distributed, 10001);
+            {
+                let registry = borrow_global_mut<LaunchPadRegistry>(config::getResourceAddress());
+                let investors = &mut registry.investors;
+                let looper = &mut iterable_table::head_key(investors);
+                while(option::is_some(looper)){
+                    let (poolBill, _prev, next) = iterable_table::borrow_iter_mut(investors, option::extract(looper));
 
-                        let refundAmt = math64::max(poolBill.bid - poolBill.distributed, 0);
+                    assert!(poolBill.bid >= poolBill.distributed, 10001);
 
-                        if(refundAmt > 0)
-                        {
-                            refundAptosV3(&config::getResourceSigner(), poolBill, refundAmt);
-                        };
-                        looper = &mut next;
+                    let refundAmt = math64::max(poolBill.bid - poolBill.distributed, 0);
+
+                    if(refundAmt > 0)
+                    {
+                        refundAptosV3(&config::getResourceSigner(), poolBill, refundAmt);
                     };
-                }
+                    looper = &mut next;
+                };
+            }
         }
     }
 

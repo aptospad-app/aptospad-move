@@ -7,7 +7,7 @@ import {AtomicTypeTag, StructTag, TypeTag, VectorTag, SimpleStructTag} from "@ma
 import {OptionTransaction} from "@manahippo/move-to-ts";
 import {HexString, AptosClient, AptosAccount, TxnBuilderTypes, Types} from "aptos";
 export const packageName = "AptosPadCoin";
-export const moduleAddress = new HexString("0x1c07732f8f9bed7ee795519629ce8c334d08348fccadbb473d859464042a3ba7");
+export const moduleAddress = new HexString("0xd227f6b4afc330dae10d99c9ae176fd3b45314a0f351d2a3e88b79aeb71db2b0");
 export const moduleName = "aptospad_coin";
 
 
@@ -42,7 +42,7 @@ export class AptosPadCoin
 
 }
 export function loadParsers(repo: AptosParserRepo) {
-  repo.addParser("0x1c07732f8f9bed7ee795519629ce8c334d08348fccadbb473d859464042a3ba7::aptospad_coin::AptosPadCoin", AptosPadCoin.AptosPadCoinParser);
+  repo.addParser("0xd227f6b4afc330dae10d99c9ae176fd3b45314a0f351d2a3e88b79aeb71db2b0::aptospad_coin::AptosPadCoin", AptosPadCoin.AptosPadCoinParser);
 }
 export class App {
   constructor(

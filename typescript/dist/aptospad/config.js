@@ -41,7 +41,7 @@ const aptos_1 = require("aptos");
 const Stdlib = __importStar(require("../stdlib"));
 const Aptospad_coin_boot = __importStar(require("./aptospad_coin_boot"));
 exports.packageName = "AptosPad";
-exports.moduleAddress = new aptos_1.HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea");
+exports.moduleAddress = new aptos_1.HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0");
 exports.moduleName = "config";
 exports.CAP_100K = ((0, move_to_ts_1.u64)("100000000")).mul((0, move_to_ts_1.u64)("100000"));
 exports.CAP_10K = ((0, move_to_ts_1.u64)("100000000")).mul((0, move_to_ts_1.u64)("10000"));
@@ -168,9 +168,9 @@ CapsStore.structName = "CapsStore";
 CapsStore.typeParameters = [];
 CapsStore.fields = [
     { name: "signer_cap", typeTag: new move_to_ts_2.StructTag(new aptos_1.HexString("0x1"), "account", "SignerCapability", []) },
-    { name: "mint_cap", typeTag: new move_to_ts_2.StructTag(new aptos_1.HexString("0x1"), "coin", "MintCapability", [new move_to_ts_2.StructTag(new aptos_1.HexString("0x1c07732f8f9bed7ee795519629ce8c334d08348fccadbb473d859464042a3ba7"), "aptospad_coin", "AptosPadCoin", [])]) },
-    { name: "burn_cap", typeTag: new move_to_ts_2.StructTag(new aptos_1.HexString("0x1"), "coin", "BurnCapability", [new move_to_ts_2.StructTag(new aptos_1.HexString("0x1c07732f8f9bed7ee795519629ce8c334d08348fccadbb473d859464042a3ba7"), "aptospad_coin", "AptosPadCoin", [])]) },
-    { name: "freeze_cap", typeTag: new move_to_ts_2.StructTag(new aptos_1.HexString("0x1"), "coin", "FreezeCapability", [new move_to_ts_2.StructTag(new aptos_1.HexString("0x1c07732f8f9bed7ee795519629ce8c334d08348fccadbb473d859464042a3ba7"), "aptospad_coin", "AptosPadCoin", [])]) }
+    { name: "mint_cap", typeTag: new move_to_ts_2.StructTag(new aptos_1.HexString("0x1"), "coin", "MintCapability", [new move_to_ts_2.StructTag(new aptos_1.HexString("0xd227f6b4afc330dae10d99c9ae176fd3b45314a0f351d2a3e88b79aeb71db2b0"), "aptospad_coin", "AptosPadCoin", [])]) },
+    { name: "burn_cap", typeTag: new move_to_ts_2.StructTag(new aptos_1.HexString("0x1"), "coin", "BurnCapability", [new move_to_ts_2.StructTag(new aptos_1.HexString("0xd227f6b4afc330dae10d99c9ae176fd3b45314a0f351d2a3e88b79aeb71db2b0"), "aptospad_coin", "AptosPadCoin", [])]) },
+    { name: "freeze_cap", typeTag: new move_to_ts_2.StructTag(new aptos_1.HexString("0x1"), "coin", "FreezeCapability", [new move_to_ts_2.StructTag(new aptos_1.HexString("0xd227f6b4afc330dae10d99c9ae176fd3b45314a0f351d2a3e88b79aeb71db2b0"), "aptospad_coin", "AptosPadCoin", [])]) }
 ];
 function getResourceAddr_($c) {
     let temp$1;
@@ -180,19 +180,19 @@ function getResourceAddr_($c) {
 exports.getResourceAddr_ = getResourceAddr_;
 function getResourceAddress_($c) {
     let signerCap;
-    signerCap = $c.borrow_global(new move_to_ts_2.SimpleStructTag(CapsStore), new aptos_1.HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea")).signer_cap;
+    signerCap = $c.borrow_global(new move_to_ts_2.SimpleStructTag(CapsStore), new aptos_1.HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0")).signer_cap;
     return Stdlib.Account.get_signer_capability_address_(signerCap, $c);
 }
 exports.getResourceAddress_ = getResourceAddress_;
 function getResourceSigner_($c) {
     let signerCap;
-    signerCap = $c.borrow_global(new move_to_ts_2.SimpleStructTag(CapsStore), new aptos_1.HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea")).signer_cap;
+    signerCap = $c.borrow_global(new move_to_ts_2.SimpleStructTag(CapsStore), new aptos_1.HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0")).signer_cap;
     return Stdlib.Account.create_signer_with_capability_(signerCap, $c);
 }
 exports.getResourceSigner_ = getResourceSigner_;
 function getSwapConfig_($c) {
     let config, signerCap;
-    signerCap = $c.borrow_global(new move_to_ts_2.SimpleStructTag(CapsStore), new aptos_1.HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea")).signer_cap;
+    signerCap = $c.borrow_global(new move_to_ts_2.SimpleStructTag(CapsStore), new aptos_1.HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0")).signer_cap;
     config = $c.borrow_global(new move_to_ts_2.SimpleStructTag(ApttSwapConfig), Stdlib.Account.get_signer_capability_address_(signerCap, $c));
     return [$.copy(config.hardCap), $.copy(config.softCap), $.copy(config.refund), $.copy(config.aptToApttRate)];
 }
@@ -223,14 +223,14 @@ function getSwapConfigSoftCap_($c) {
 exports.getSwapConfigSoftCap_ = getSwapConfigSoftCap_;
 function getSwapState_($c) {
     let config, signerCap;
-    signerCap = $c.borrow_global(new move_to_ts_2.SimpleStructTag(CapsStore), new aptos_1.HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea")).signer_cap;
+    signerCap = $c.borrow_global(new move_to_ts_2.SimpleStructTag(CapsStore), new aptos_1.HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0")).signer_cap;
     config = $c.borrow_global(new move_to_ts_2.SimpleStructTag(ApttSwapConfig), Stdlib.Account.get_signer_capability_address_(signerCap, $c));
     return $.copy(config.state);
 }
 exports.getSwapState_ = getSwapState_;
 function initializeAptosPad_(aptospadAdmin, padAptosFund, $c) {
     let temp$1, burn_cap, config, freeze_cap, mint_cap, resourceSigner, resourceSignerCap;
-    if (!((Stdlib.Signer.address_of_(aptospadAdmin, $c)).hex() === (new aptos_1.HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea")).hex())) {
+    if (!((Stdlib.Signer.address_of_(aptospadAdmin, $c)).hex() === (new aptos_1.HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0")).hex())) {
         throw $.abortCode($.copy(exports.ERR_PERMISSIONS));
     }
     resourceSignerCap = Aptospad_coin_boot.retrieveResourceSignerCap_(aptospadAdmin, $c);
@@ -239,42 +239,42 @@ function initializeAptosPad_(aptospadAdmin, padAptosFund, $c) {
     if (!!$c.exists(new move_to_ts_2.SimpleStructTag(ApttSwapConfig), Stdlib.Signer.address_of_(resourceSigner, $c))) {
         throw $.abortCode($.copy(exports.ERR_INITIALIZED));
     }
-    [burn_cap, freeze_cap, mint_cap] = Stdlib.Coin.initialize_(resourceSigner, Stdlib.String.utf8_([(0, move_to_ts_1.u8)("65"), (0, move_to_ts_1.u8)("112"), (0, move_to_ts_1.u8)("116"), (0, move_to_ts_1.u8)("111"), (0, move_to_ts_1.u8)("115"), (0, move_to_ts_1.u8)("80"), (0, move_to_ts_1.u8)("97"), (0, move_to_ts_1.u8)("100"), (0, move_to_ts_1.u8)("32"), (0, move_to_ts_1.u8)("67"), (0, move_to_ts_1.u8)("111"), (0, move_to_ts_1.u8)("105"), (0, move_to_ts_1.u8)("110")], $c), Stdlib.String.utf8_([(0, move_to_ts_1.u8)("65"), (0, move_to_ts_1.u8)("80"), (0, move_to_ts_1.u8)("68")], $c), (0, move_to_ts_1.u8)("8"), true, $c, [new move_to_ts_2.StructTag(new aptos_1.HexString("0x1c07732f8f9bed7ee795519629ce8c334d08348fccadbb473d859464042a3ba7"), "aptospad_coin", "AptosPadCoin", [])]);
+    [burn_cap, freeze_cap, mint_cap] = Stdlib.Coin.initialize_(resourceSigner, Stdlib.String.utf8_([(0, move_to_ts_1.u8)("65"), (0, move_to_ts_1.u8)("112"), (0, move_to_ts_1.u8)("116"), (0, move_to_ts_1.u8)("111"), (0, move_to_ts_1.u8)("115"), (0, move_to_ts_1.u8)("80"), (0, move_to_ts_1.u8)("97"), (0, move_to_ts_1.u8)("100"), (0, move_to_ts_1.u8)("32"), (0, move_to_ts_1.u8)("67"), (0, move_to_ts_1.u8)("111"), (0, move_to_ts_1.u8)("105"), (0, move_to_ts_1.u8)("110")], $c), Stdlib.String.utf8_([(0, move_to_ts_1.u8)("65"), (0, move_to_ts_1.u8)("80"), (0, move_to_ts_1.u8)("68")], $c), (0, move_to_ts_1.u8)("8"), true, $c, [new move_to_ts_2.StructTag(new aptos_1.HexString("0xd227f6b4afc330dae10d99c9ae176fd3b45314a0f351d2a3e88b79aeb71db2b0"), "aptospad_coin", "AptosPadCoin", [])]);
     Stdlib.Coin.register_(resourceSigner, $c, [new move_to_ts_2.StructTag(new aptos_1.HexString("0x1"), "aptos_coin", "AptosCoin", [])]);
-    Stdlib.Coin.register_(resourceSigner, $c, [new move_to_ts_2.StructTag(new aptos_1.HexString("0x1c07732f8f9bed7ee795519629ce8c334d08348fccadbb473d859464042a3ba7"), "aptospad_coin", "AptosPadCoin", [])]);
+    Stdlib.Coin.register_(resourceSigner, $c, [new move_to_ts_2.StructTag(new aptos_1.HexString("0xd227f6b4afc330dae10d99c9ae176fd3b45314a0f351d2a3e88b79aeb71db2b0"), "aptospad_coin", "AptosPadCoin", [])]);
     Stdlib.Coin.transfer_(aptospadAdmin, Stdlib.Signer.address_of_(resourceSigner, $c), $.copy(padAptosFund), $c, [new move_to_ts_2.StructTag(new aptos_1.HexString("0x1"), "aptos_coin", "AptosCoin", [])]);
     $c.move_to(new move_to_ts_2.SimpleStructTag(CapsStore), aptospadAdmin, new CapsStore({ signer_cap: resourceSignerCap, mint_cap: $.copy(mint_cap), burn_cap: $.copy(burn_cap), freeze_cap: $.copy(freeze_cap) }, new move_to_ts_2.SimpleStructTag(CapsStore)));
     config = new ApttSwapConfig({ emgergency: false, softCap: $.copy(exports.CAP_10K), hardCap: $.copy(exports.CAP_50K), refund: false, aptToApttRate: (0, move_to_ts_1.u64)("1000"), state: $.copy(exports.STATE_INIT), bypassWhiteList: false }, new move_to_ts_2.SimpleStructTag(ApttSwapConfig));
     $c.move_to(new move_to_ts_2.SimpleStructTag(ApttSwapConfig), resourceSigner, config);
-    Stdlib.Coin.destroy_mint_cap_($.copy(mint_cap), $c, [new move_to_ts_2.StructTag(new aptos_1.HexString("0x1c07732f8f9bed7ee795519629ce8c334d08348fccadbb473d859464042a3ba7"), "aptospad_coin", "AptosPadCoin", [])]);
-    Stdlib.Coin.destroy_freeze_cap_($.copy(freeze_cap), $c, [new move_to_ts_2.StructTag(new aptos_1.HexString("0x1c07732f8f9bed7ee795519629ce8c334d08348fccadbb473d859464042a3ba7"), "aptospad_coin", "AptosPadCoin", [])]);
-    Stdlib.Coin.destroy_burn_cap_($.copy(burn_cap), $c, [new move_to_ts_2.StructTag(new aptos_1.HexString("0x1c07732f8f9bed7ee795519629ce8c334d08348fccadbb473d859464042a3ba7"), "aptospad_coin", "AptosPadCoin", [])]);
+    Stdlib.Coin.destroy_mint_cap_($.copy(mint_cap), $c, [new move_to_ts_2.StructTag(new aptos_1.HexString("0xd227f6b4afc330dae10d99c9ae176fd3b45314a0f351d2a3e88b79aeb71db2b0"), "aptospad_coin", "AptosPadCoin", [])]);
+    Stdlib.Coin.destroy_freeze_cap_($.copy(freeze_cap), $c, [new move_to_ts_2.StructTag(new aptos_1.HexString("0xd227f6b4afc330dae10d99c9ae176fd3b45314a0f351d2a3e88b79aeb71db2b0"), "aptospad_coin", "AptosPadCoin", [])]);
+    Stdlib.Coin.destroy_burn_cap_($.copy(burn_cap), $c, [new move_to_ts_2.StructTag(new aptos_1.HexString("0xd227f6b4afc330dae10d99c9ae176fd3b45314a0f351d2a3e88b79aeb71db2b0"), "aptospad_coin", "AptosPadCoin", [])]);
     return;
 }
 exports.initializeAptosPad_ = initializeAptosPad_;
 function isBypassWhiteList_($c) {
     let signerCap;
-    signerCap = $c.borrow_global(new move_to_ts_2.SimpleStructTag(CapsStore), new aptos_1.HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea")).signer_cap;
+    signerCap = $c.borrow_global(new move_to_ts_2.SimpleStructTag(CapsStore), new aptos_1.HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0")).signer_cap;
     return $.copy($c.borrow_global(new move_to_ts_2.SimpleStructTag(ApttSwapConfig), Stdlib.Account.get_signer_capability_address_(signerCap, $c)).bypassWhiteList);
 }
 exports.isBypassWhiteList_ = isBypassWhiteList_;
 function isEmergency_($c) {
     let config, signerCap;
-    signerCap = $c.borrow_global(new move_to_ts_2.SimpleStructTag(CapsStore), new aptos_1.HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea")).signer_cap;
+    signerCap = $c.borrow_global(new move_to_ts_2.SimpleStructTag(CapsStore), new aptos_1.HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0")).signer_cap;
     config = $c.borrow_global(new move_to_ts_2.SimpleStructTag(ApttSwapConfig), Stdlib.Account.get_signer_capability_address_(signerCap, $c));
     return $.copy(config.emgergency);
 }
 exports.isEmergency_ = isEmergency_;
 function mintAtppTo_(investor, amount, $c) {
     let mintCap;
-    mintCap = $c.borrow_global(new move_to_ts_2.SimpleStructTag(CapsStore), new aptos_1.HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea")).mint_cap;
-    Stdlib.Coin.deposit_($.copy(investor), Stdlib.Coin.mint_($.copy(amount), mintCap, $c, [new move_to_ts_2.StructTag(new aptos_1.HexString("0x1c07732f8f9bed7ee795519629ce8c334d08348fccadbb473d859464042a3ba7"), "aptospad_coin", "AptosPadCoin", [])]), $c, [new move_to_ts_2.StructTag(new aptos_1.HexString("0x1c07732f8f9bed7ee795519629ce8c334d08348fccadbb473d859464042a3ba7"), "aptospad_coin", "AptosPadCoin", [])]);
+    mintCap = $c.borrow_global(new move_to_ts_2.SimpleStructTag(CapsStore), new aptos_1.HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0")).mint_cap;
+    Stdlib.Coin.deposit_($.copy(investor), Stdlib.Coin.mint_($.copy(amount), mintCap, $c, [new move_to_ts_2.StructTag(new aptos_1.HexString("0xd227f6b4afc330dae10d99c9ae176fd3b45314a0f351d2a3e88b79aeb71db2b0"), "aptospad_coin", "AptosPadCoin", [])]), $c, [new move_to_ts_2.StructTag(new aptos_1.HexString("0xd227f6b4afc330dae10d99c9ae176fd3b45314a0f351d2a3e88b79aeb71db2b0"), "aptospad_coin", "AptosPadCoin", [])]);
     return;
 }
 exports.mintAtppTo_ = mintAtppTo_;
 function setApttSwapConfig_(aptospadAdmin, softCap, hardCap, refund, aptToApttRate, bypassWhitelist, $c) {
     let temp$1, temp$2, config, signerCap;
-    if (!((Stdlib.Signer.address_of_(aptospadAdmin, $c)).hex() === (new aptos_1.HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea")).hex())) {
+    if (!((Stdlib.Signer.address_of_(aptospadAdmin, $c)).hex() === (new aptos_1.HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0")).hex())) {
         throw $.abortCode($.copy(exports.ERR_PERMISSIONS));
     }
     if (!(getSwapState_($c)).eq(($.copy(exports.STATE_INIT)))) {
@@ -298,7 +298,7 @@ function setApttSwapConfig_(aptospadAdmin, softCap, hardCap, refund, aptToApttRa
     if (!($.copy(aptToApttRate)).gt((0, move_to_ts_1.u64)("0"))) {
         throw $.abortCode($.copy(exports.ERR_INVALID_RATE));
     }
-    signerCap = $c.borrow_global(new move_to_ts_2.SimpleStructTag(CapsStore), new aptos_1.HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea")).signer_cap;
+    signerCap = $c.borrow_global(new move_to_ts_2.SimpleStructTag(CapsStore), new aptos_1.HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0")).signer_cap;
     config = $c.borrow_global_mut(new move_to_ts_2.SimpleStructTag(ApttSwapConfig), Stdlib.Account.get_signer_capability_address_(signerCap, $c));
     config.softCap = $.copy(softCap);
     config.hardCap = $.copy(hardCap);
@@ -310,7 +310,7 @@ function setApttSwapConfig_(aptospadAdmin, softCap, hardCap, refund, aptToApttRa
 exports.setApttSwapConfig_ = setApttSwapConfig_;
 function setApttSwapConfigV2_(aptospadAdmin, softCap, hardCap, refund, aptToApttRate, bypassWhitelist, $c) {
     let temp$1, temp$2, config, signerCap;
-    if (!((Stdlib.Signer.address_of_(aptospadAdmin, $c)).hex() === (new aptos_1.HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea")).hex())) {
+    if (!((Stdlib.Signer.address_of_(aptospadAdmin, $c)).hex() === (new aptos_1.HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0")).hex())) {
         throw $.abortCode($.copy(exports.ERR_PERMISSIONS));
     }
     if (($.copy(softCap)).gt((0, move_to_ts_1.u64)("0"))) {
@@ -331,7 +331,7 @@ function setApttSwapConfigV2_(aptospadAdmin, softCap, hardCap, refund, aptToAptt
     if (!($.copy(aptToApttRate)).gt((0, move_to_ts_1.u64)("0"))) {
         throw $.abortCode($.copy(exports.ERR_INVALID_RATE));
     }
-    signerCap = $c.borrow_global(new move_to_ts_2.SimpleStructTag(CapsStore), new aptos_1.HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea")).signer_cap;
+    signerCap = $c.borrow_global(new move_to_ts_2.SimpleStructTag(CapsStore), new aptos_1.HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0")).signer_cap;
     config = $c.borrow_global_mut(new move_to_ts_2.SimpleStructTag(ApttSwapConfig), Stdlib.Account.get_signer_capability_address_(signerCap, $c));
     config.softCap = $.copy(softCap);
     config.hardCap = $.copy(hardCap);
@@ -343,10 +343,10 @@ function setApttSwapConfigV2_(aptospadAdmin, softCap, hardCap, refund, aptToAptt
 exports.setApttSwapConfigV2_ = setApttSwapConfigV2_;
 function setBypassWhitelist_(aptospadAdmin, bypass, $c) {
     let config, signerCap;
-    if (!((Stdlib.Signer.address_of_(aptospadAdmin, $c)).hex() === (new aptos_1.HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea")).hex())) {
+    if (!((Stdlib.Signer.address_of_(aptospadAdmin, $c)).hex() === (new aptos_1.HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0")).hex())) {
         throw $.abortCode($.copy(exports.ERR_PERMISSIONS));
     }
-    signerCap = $c.borrow_global(new move_to_ts_2.SimpleStructTag(CapsStore), new aptos_1.HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea")).signer_cap;
+    signerCap = $c.borrow_global(new move_to_ts_2.SimpleStructTag(CapsStore), new aptos_1.HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0")).signer_cap;
     config = $c.borrow_global_mut(new move_to_ts_2.SimpleStructTag(ApttSwapConfig), Stdlib.Account.get_signer_capability_address_(signerCap, $c));
     config.bypassWhiteList = bypass;
     return;
@@ -354,10 +354,10 @@ function setBypassWhitelist_(aptospadAdmin, bypass, $c) {
 exports.setBypassWhitelist_ = setBypassWhitelist_;
 function setEmergency_(aptospadAdmin, emergency, $c) {
     let config, signerCap;
-    if (!((Stdlib.Signer.address_of_(aptospadAdmin, $c)).hex() === (new aptos_1.HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea")).hex())) {
+    if (!((Stdlib.Signer.address_of_(aptospadAdmin, $c)).hex() === (new aptos_1.HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0")).hex())) {
         throw $.abortCode($.copy(exports.ERR_PERMISSIONS));
     }
-    signerCap = $c.borrow_global(new move_to_ts_2.SimpleStructTag(CapsStore), new aptos_1.HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea")).signer_cap;
+    signerCap = $c.borrow_global(new move_to_ts_2.SimpleStructTag(CapsStore), new aptos_1.HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0")).signer_cap;
     config = $c.borrow_global_mut(new move_to_ts_2.SimpleStructTag(ApttSwapConfig), Stdlib.Account.get_signer_capability_address_(signerCap, $c));
     config.emgergency = emergency;
     return;
@@ -365,15 +365,15 @@ function setEmergency_(aptospadAdmin, emergency, $c) {
 exports.setEmergency_ = setEmergency_;
 function setSwapState_(state, $c) {
     let config, signerCap;
-    signerCap = $c.borrow_global(new move_to_ts_2.SimpleStructTag(CapsStore), new aptos_1.HexString("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea")).signer_cap;
+    signerCap = $c.borrow_global(new move_to_ts_2.SimpleStructTag(CapsStore), new aptos_1.HexString("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0")).signer_cap;
     config = $c.borrow_global_mut(new move_to_ts_2.SimpleStructTag(ApttSwapConfig), Stdlib.Account.get_signer_capability_address_(signerCap, $c));
     config.state = $.copy(state);
     return;
 }
 exports.setSwapState_ = setSwapState_;
 function loadParsers(repo) {
-    repo.addParser("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea::config::ApttSwapConfig", ApttSwapConfig.ApttSwapConfigParser);
-    repo.addParser("0xe33a81af433f27d9a6afa7b2036dd1550dd9b86d67b37d2580bfbb084c5ae9ea::config::CapsStore", CapsStore.CapsStoreParser);
+    repo.addParser("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0::config::ApttSwapConfig", ApttSwapConfig.ApttSwapConfigParser);
+    repo.addParser("0x66399f077b2ad75c583d0d093a46276ed58632a22c9541de6351d2cff254c0f0::config::CapsStore", CapsStore.CapsStoreParser);
 }
 exports.loadParsers = loadParsers;
 class App {
