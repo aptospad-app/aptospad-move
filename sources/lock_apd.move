@@ -154,9 +154,10 @@ module aptospad::lock_apd {
             let (level, prob, hold, holdExpire, lock, lockExpire) = computeLevel(totalApdAmt, config);
 
             state.lottery_prob = prob;
+            state.apd_amount = totalApdAmt;
+
             if(level > state.level) {
                 state.level = level;
-                state.apd_amount = totalApdAmt;
                 state.hold_time = hold;
                 state.hold_expire_time = holdExpire;
                 state.lock_time = lock;
