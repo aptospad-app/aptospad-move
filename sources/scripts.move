@@ -77,20 +77,16 @@ module aptospad::scripts {
     }
 
     #[cmd]
-    public entry fun unlockAptosPad(user: &signer) {
-        lock_apd::unlock(user);
+    public entry fun unlockAptosPad(user: &signer, _amount: u64) {
+        lock_apd::unlock(user, _amount);
     }
 
     #[cmd]
     public entry fun lockAptosPadConfig(admin: &signer,
-                                        credit_unit: u64,
-                                        gold: u64,
-                                        silver: u64,
-                                        bronze: u64,
-                                        plantinum: u64,
-                                        lock_range1: u64,
-                                        lock_range2: u64,
-                                        lock_range3: u64) {
-        lock_apd::config(admin, credit_unit, gold, silver, bronze, plantinum, lock_range1, lock_range2, lock_range3);
+                                        level1: u64,
+                                        level1_prob: u64,
+                                        level1_hold: u64,
+                                        level1_lock: u64) {
+        lock_apd::config(admin, level1, level1_prob, level1_hold, level1_lock);
     }
 }

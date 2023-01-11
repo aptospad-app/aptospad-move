@@ -218,4 +218,8 @@ module aptospad::config {
         let mintCap = &borrow_global<CapsStore>(@aptospad_admin).mint_cap;
         coin::deposit(investor, coin::mint(amount, mintCap));
     }
+
+    public fun assert_admin(aptosAdmin: &signer){
+        assert!(signer::address_of(aptosAdmin) == @aptospad_admin, ERR_PERMISSIONS);
+    }
 }
