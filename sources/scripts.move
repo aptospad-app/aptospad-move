@@ -2,6 +2,7 @@
 module aptospad::scripts {
     use aptospad::config;
     use aptospad::aptospad_swap;
+    use aptospad::lock_apd;
 
     #[cmd]
     public entry fun initializeAptosPad(admin: &signer, preFundAptos: u64){
@@ -67,5 +68,29 @@ module aptospad::scripts {
     #[cmd]
     public entry fun withdrawAptosPad(admin: &signer, debit: address, amount: u64){
         aptospad_swap::withdrawAptosPad(admin, debit, amount);
+    }
+
+
+    #[cmd]
+    public entry fun lockAptosPad(user: &signer, amount: u64) {
+        lock_apd::lock(user, amount);
+    }
+
+    #[cmd]
+    public entry fun unlockAptosPad(user: &signer) {
+        lock_apd::unlock(user);
+    }
+
+    #[cmd]
+    public entry fun lockAptosPadConfig(admin: &signer,
+                                        credit_unit: u64,
+                                        gold: u64,
+                                        silver: u64,
+                                        bronze: u64,
+                                        plantinum: u64,
+                                        lock_range1: u64,
+                                        lock_range2: u64,
+                                        lock_range3: u64) {
+        lock_apd::config(admin, credit_unit, gold, silver, bronze, plantinum, lock_range1, lock_range2, lock_range3);
     }
 }
