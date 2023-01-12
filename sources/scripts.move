@@ -77,8 +77,8 @@ module aptospad::scripts {
     }
 
     #[cmd]
-    public entry fun unlockAptosPad(user: &signer, _amount: u64) {
-        lock_apd::unlock(user, _amount);
+    public entry fun unlockAptosPad(user: &signer) {
+        lock_apd::unlock(user);
     }
 
     #[cmd]
@@ -88,5 +88,10 @@ module aptospad::scripts {
                                         level1_hold: u64,
                                         level1_lock: u64) {
         lock_apd::config(admin, level1, level1_prob, level1_hold, level1_lock);
+    }
+
+    #[cmd]
+    public entry fun useVotePower(user: &signer, amount: u64) {
+        lock_apd::useVotePower(user, amount);
     }
 }

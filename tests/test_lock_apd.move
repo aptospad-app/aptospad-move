@@ -4,6 +4,7 @@ module aptospad::test_lock_apd {
     use aptospad::config;
     use aptospad::aptospad_swap;
     use std::signer;
+    // use std::string;
     use aptospad::lock_apd;
     use std::signer::address_of;
     use aptos_std::debug;
@@ -36,8 +37,11 @@ module aptospad::test_lock_apd {
     const LOCK_APD_500: u64 = 100000000*500;
     const LOCK_APD_1000: u64 = 100000000*1000;
     const LOCK_APD_1500: u64 = 100000000*1500;
+    const LOCK_APD_3000: u64 = 100000000*3000;
     const LOCK_APD_4500: u64 = 100000000*4500;
-    const LOCK_APD_15000: u64 = 100000000*15000;
+    const LOCK_APD_12000: u64 = 100000000*12000;
+    const LOCK_APD_18000: u64 = 100000000*18000;
+    const LOCK_APD_30000: u64 = 100000000*30000;
 
     const TOKEN_RATE_10: u64 = 10;
     const FEEMAX: u64 = 100000000;
@@ -81,7 +85,8 @@ module aptospad::test_lock_apd {
             hold_time,
             hold_expire_time,
             lock_time,
-            lock_expire_time
+            lock_expire_time,
+            p_apd_available
         ) = lock_apd::getLockApd(user);
 
 
@@ -92,6 +97,7 @@ module aptospad::test_lock_apd {
         debug::print(&hold_expire_time);
         debug::print(&lock_time);
         debug::print(&lock_expire_time);
+        debug::print(&p_apd_available);
     }
 
     #[test(padAdmin = @aptospad_admin, aptosFramework = @aptos_framework, wl1 = @test_wl1, wl2 = @test_wl2)]
@@ -103,6 +109,7 @@ module aptospad::test_lock_apd {
         lock_apd::initDefault(padAdmin);
 
         {
+            // debug::print(string::utf8(b"Aptos Coin"));
             lock_apd::lock(wl1, LOCK_APD_500);
 
             let (
@@ -112,31 +119,265 @@ module aptospad::test_lock_apd {
                 _hold_time,
                 _hold_expire_time,
                 _lock_time,
-                _lock_expire_time
+                _lock_expire_time,
+                _
             ) = lock_apd::getLockApd(address_of(wl1));
-
+            debugLockState(address_of(wl1));
             assert!(level == 1, 6001);
             assert!(apd_amount == LOCK_APD_500, 6002);
         };
 
         {
-            //lock more
+            //lock more - 500 apd
             lock_apd::lock(wl1, LOCK_APD_500);
+
+
+           let (
+               level,
+               apd_amount,
+               _lottery_prob,
+               _hold_time,
+               _hold_expire_time,
+               _lock_time,
+               _lock_expire_time,
+               _
+           ) = lock_apd::getLockApd(address_of(wl1));
+            debugLockState(address_of(wl1));
+           assert!(level == 1, 6001);
+           assert!(apd_amount == LOCK_APD_1000, 6002);
+        };
+
+        {
+            //lock more - 500 apd
+            lock_apd::lock(wl1, LOCK_APD_500);
+
+            let (
+                level,
+                apd_amount,
+                _lottery_prob,
+                _hold_time,
+                _hold_expire_time,
+                _lock_time,
+                _lock_expire_time,
+                _
+            ) = lock_apd::getLockApd(address_of(wl1));
             debugLockState(address_of(wl1));
 
-//            let (
-//                level,
-//                apd_amount,
-//                _lottery_prob,
-//                _hold_time,
-//                _hold_expire_time,
-//                _lock_time,
-//                _lock_expire_time
-//            ) = lock_apd::getLockApd(address_of(wl1));
-//
-//            assert!(level == 1, 6001);
-//            assert!(apd_amount == LOCK_APD_1000, 6002);
+            assert!(level == 2, 6001);
+            assert!(apd_amount == LOCK_APD_1500, 6002);
+        };
+
+        {
+            //lock more - total_lock = 4500 apd
+            lock_apd::lock(wl1, LOCK_APD_3000);
+
+            let (
+                level,
+                apd_amount,
+                _lottery_prob,
+                _hold_time,
+                _hold_expire_time,
+                _lock_time,
+                _lock_expire_time,
+                _
+            ) = lock_apd::getLockApd(address_of(wl1));
+            debugLockState(address_of(wl1));
+
+
+            assert!(level == 3, 6001);
+            assert!(apd_amount == LOCK_APD_4500, 6002);
+        };
+
+        {
+            //lock more - total_lock = 12000 apd
+            lock_apd::lock(wl2, LOCK_APD_12000);
+
+            let (
+                level,
+                apd_amount,
+                _lottery_prob,
+                _hold_time,
+                _hold_expire_time,
+                _lock_time,
+                _lock_expire_time,
+                _
+            ) = lock_apd::getLockApd(address_of(wl2));
+            debugLockState(address_of(wl2));
+
+            assert!(level == 4, 6001);
+            assert!(apd_amount == LOCK_APD_12000, 6002);
+        };
+
+        {
+            //lock more - total_lock = 30000 apd
+            lock_apd::lock(wl2, LOCK_APD_18000);
+
+            let (
+                level,
+                apd_amount,
+                _lottery_prob,
+                _hold_time,
+                _hold_expire_time,
+                _lock_time,
+                _lock_expire_time,
+                _
+            ) = lock_apd::getLockApd(address_of(wl2));
+            debugLockState(address_of(wl2));
+
+            assert!(level == 5, 6001);
+            assert!(apd_amount == LOCK_APD_30000, 6002);
+        };
+
+        {
+            //lock more - total_lock > 30000 apd
+            lock_apd::lock(wl2, LOCK_APD_18000);
+            lock_apd::lock(wl2, LOCK_APD_18000);
+            debugLockState(address_of(wl2));
+
+            let (
+                level,
+                apd_amount,
+                _lottery_prob,
+                _hold_time,
+                _hold_expire_time,
+                _lock_time,
+                _lock_expire_time,
+                _
+            ) = lock_apd::getLockApd(address_of(wl2));
+
+            assert!(level == 5, 6001);
+            assert!(apd_amount > LOCK_APD_30000, 6002);
         };
 
     }
+
+    #[test(padAdmin = @aptospad_admin, aptosFramework = @aptos_framework, wl1 = @test_wl1, wl2 = @test_wl2)]
+    fun testUnclockApd (padAdmin: &signer, aptosFramework: &signer, wl1: &signer, wl2: &signer) {
+        //init apd
+        initApd(padAdmin, aptosFramework, wl1, wl2);
+
+        //init locks
+        lock_apd::initDefault(padAdmin);
+
+        {
+            lock_apd::lock(wl1, LOCK_APD_1000);
+
+            let (
+                level,
+                apd_amount,
+                _lottery_prob,
+                _hold_time,
+                _hold_expire_time,
+                _lock_time,
+                lock_expire_time,
+                _
+            ) = lock_apd::getLockApd(address_of(wl1));
+
+            assert!(level == 1, 6001);
+            assert!(apd_amount == LOCK_APD_1000, 6002);
+            let now = timestamp::now_seconds();
+            debugLockState(address_of(wl1));
+            debug::print(&now);
+            if(level == 0 || lock_expire_time <= timestamp::now_seconds()){
+                {
+                    lock_apd::unlock(wl1);
+
+                    let (
+                        level,
+                        apd_amount,
+                        _lottery_prob,
+                        _hold_time,
+                        _hold_expire_time,
+                        _lock_time,
+                        _lock_expire_time,
+                        _
+                    ) = lock_apd::getLockApd(address_of(wl1));
+                    debugLockState(address_of(wl1));
+                    assert!(level == 1, 6001);
+                    assert!(apd_amount == 0, 6002);
+                };
+            }
+        };
+    }
+
+    #[test(padAdmin = @aptospad_admin, aptosFramework = @aptos_framework, wl1 = @test_wl1, wl2 = @test_wl2)]
+    fun testUnclockApdWithZeroLockTime (padAdmin: &signer, aptosFramework: &signer, wl1: &signer, wl2: &signer) {
+        //init apd
+        initApd(padAdmin, aptosFramework, wl1, wl2);
+
+        //init locks
+        lock_apd::initWithZeroLockTime(padAdmin);
+
+        {
+            lock_apd::lock(wl1, LOCK_APD_1000);
+
+            let (
+                level,
+                apd_amount,
+                _lottery_prob,
+                _hold_time,
+                _hold_expire_time,
+                _lock_time,
+                lock_expire_time,
+                _
+            ) = lock_apd::getLockApd(address_of(wl1));
+
+            assert!(level == 1, 6001);
+            assert!(apd_amount == LOCK_APD_1000, 6002);
+            let now = timestamp::now_seconds();
+            debugLockState(address_of(wl1));
+            debug::print(&now);
+            if(level == 0 || lock_expire_time <= timestamp::now_seconds()){
+                {
+                    lock_apd::unlock(wl1);
+
+                    let (
+                        level,
+                        apd_amount,
+                        _lottery_prob,
+                        _hold_time,
+                        _hold_expire_time,
+                        _lock_time,
+                        _lock_expire_time,
+                        _
+                    ) = lock_apd::getLockApd(address_of(wl1));
+                    debugLockState(address_of(wl1));
+                    assert!(level == 0, 6001);
+                    assert!(apd_amount == 0, 6002);
+                };
+            }
+        };
+    }
+
+    #[test(padAdmin = @aptospad_admin, aptosFramework = @aptos_framework, wl1 = @test_wl1, wl2 = @test_wl2)]
+    fun testUseVotePower (padAdmin: &signer, aptosFramework: &signer, wl1: &signer, wl2: &signer) {
+        //init apd
+        initApd(padAdmin, aptosFramework, wl1, wl2);
+
+        //init locks
+        // lock_apd::initWithZeroLockTime(padAdmin);
+        lock_apd::initDefault(padAdmin);
+
+        {
+            lock_apd::lock(wl1, LOCK_APD_18000);
+            debugLockState(address_of(wl1));
+
+            //use vote power
+            lock_apd::useVotePower(wl1, LOCK_APD_3000);
+            debugLockState(address_of(wl1));
+            let (
+                level,
+                _apd_amount,
+                _lottery_prob,
+                _hold_time,
+                _hold_expire_time,
+                _lock_time,
+                _lock_expire_time,
+                p_apd_available
+            ) = lock_apd::getLockApd(address_of(wl1));
+            assert!(level == 4, 6002);
+            assert!(p_apd_available == LOCK_APD_18000 - LOCK_APD_3000, 6002);
+        }
+    }
+
 }
